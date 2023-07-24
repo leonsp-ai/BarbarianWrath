@@ -56,7 +56,7 @@ Similarly, Early Armor is there to introduce a more gentle power curve between C
 
 <img width="1198" alt="Medium world map" src="https://github.com/leonsp-ai/BarbarianWrath/assets/60105412/a505813c-2b2b-4c78-a30a-43456c79cf94">
 
-This is an excellent world map created by an unknown author. It was originally downloaded from the Apolyton Civilization Site map collection. It uses the azimuthal collection
+This is an excellent world map created by an unknown author. It was originally downloaded from the Apolyton Civilization Site map collection. It uses the azimuthal projection
 
 ### Tiny (25x50)
 
