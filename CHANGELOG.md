@@ -1,0 +1,37 @@
+## 0.4.0
+
+### Changed
+
+- Swapped Celts with Incas to better distribute civilizations around the world map. Set the Inca leaders to Huayna Capac and Cura Occlo.
+
+## 0.3.0
+
+### Changed
+
+- Added a Composites tech (Recycling + Robotics) that grants access to Modern Armor and Drones. Modern Armor is similar to the one in Civilization 4. Drones are a long-range fighter that can't attack air units.
+- Added a Zeppelin unit available with Combustion. It is a weak bomber similar to the Airship in Civilization 4.
+- Swapped Greeks and Mongols so that it's possible to have Carthaginians and Greeks in the same game.
+- Changed the Aztec queen from Nazca [sic], a geographical feature on a different continent, to Tlapalizquixochtzin, who was the Queen Consort of Montezuma II.
+- Changed the Zulu queen from Shakala [sic], a made up word, to Mkabi, the Great Wife of Shaka's father.
+- Changed the Japanese queen from Amaterasu, a goddess, to Saigo, First Consort of Tokugawa.
+- Changed the Babylonian queen from Ishtari, a goddess, to Shammuramat, Queen of nearby Assyria.
+- Changed the Persian queen from Sheherezade, a legendary storyteller, to Purandokht, an Empress of Persia.
+- Changed the Greek queen from Hippolyta, a mythical figure, to Artemisia, Queen of Greek Karia.
+- Changed the Roman king from Caesar, a last name, to Julius Gaius.
+
+## 0.2.0
+
+### Changed
+
+- Buffed Grenadiers and moved them into a Legion -> Swordsmen -> Grenadiers -> Marines upgrade sequence.
+- Delayed Mobile Warfare until after Machine Tools and Mass Production to give Early Armor more time to shine.
+- Delayed Genetic Engineering until after Refrigeration and Miniaturization to make the Cure for Cancer a little  more plausible.
+
+### Fixed
+
+- Fixed: Cavalry expires with Early Armor so that cities automatically change production.
+- Fixed infinite road movement issue.
+
+## 0.1.0
+
+- Initial release.
