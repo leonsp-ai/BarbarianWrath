@@ -28,10 +28,6 @@ The Gunpowder technology and the Musketeer slot have hardcoded side effects. I i
 
 Similarly, Early Armor is there to introduce a more gentle power curve between Cavalry and Armor and to work with the default sound effects.
 
-## Screenshot
-
-<https://i.imgur.com/sVGdROd.jpg>
-
 ## Prerequisites
 
 - Civilization II: Test of Time (1999)
@@ -49,6 +45,44 @@ Similarly, Early Armor is there to introduce a more gentle power curve between C
 4. Launch Test of Time
 
 5. Start a Single Player Game > Play a Mod > Barbarian Wrath
+
+## Screenshot
+
+![Wrathful barbarian uprising](https://github.com/leonsp-ai/BarbarianWrath/assets/60105412/d08509d5-1216-4c5e-9453-bc66f3e94dcb)
+
+## World Maps
+
+### Medium (50x100)
+
+<img width="1198" alt="Medium world map" src="https://github.com/leonsp-ai/BarbarianWrath/assets/60105412/a505813c-2b2b-4c78-a30a-43456c79cf94">
+
+This is an excellent world map created by an unknown author. It was originally downloaded from the Apolyton Civilization Site map collection. It uses the azimuthal collection
+
+### Tiny (25x50)
+
+<img width="1007" alt="Tiny world map" src="https://github.com/leonsp-ai/BarbarianWrath/assets/60105412/628091fd-dcef-4924-9a03-1754a532af2f">
+
+Map resized for a closer, more intense game
+
+### Large (72x145)
+
+<img width="1171" alt="Large world map" src="https://github.com/leonsp-ai/BarbarianWrath/assets/60105412/6cb63019-d5f2-480d-9d7f-bf2c7a677d57">
+
+Map resized and redrawn for a more epic game
+
+## Scenarios
+
+### Rome
+
+<img width="1472" alt="Rome scenario" src="https://github.com/leonsp-ai/BarbarianWrath/assets/60105412/7af3dcd9-418b-421d-a44e-2b3ef6b99a6f">
+
+This is the original Rome scenario released with Civ2 in 1996. It has not been updated in any way
+
+### WW2
+
+<img width="1209" alt="WW2 scenario" src="https://github.com/leonsp-ai/BarbarianWrath/assets/60105412/9c3b75d8-5a6f-4d64-9781-045cf9ff9968">
+
+This is the original WW2 scenario released with Civ2 in 1996. It has not been updated in any way
 
 ## Credits
 
