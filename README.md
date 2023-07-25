@@ -33,6 +33,10 @@ Similarly, Early Armor is there to introduce a more gentle power curve between C
 - Civilization II: Test of Time (1999)
 - Test of Time Project Patch
 
+## Download
+
+- <https://github.com/leonsp-ai/BarbarianWrath/releases>
+
 ## Installation
 
 1.  Follow McMonkey's Test of Time Project Patch Installation Guide
