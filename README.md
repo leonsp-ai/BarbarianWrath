@@ -50,9 +50,16 @@ Similarly, Early Armor is there to introduce a more gentle power curve between C
 
 5. Start a Single Player Game > Play a Mod > Barbarian Wrath
 
-## Screenshot
+## Features
+
+### Barbarian uprisings
 
 ![Wrathful barbarian uprising](https://github.com/leonsp-ai/BarbarianWrath/assets/60105412/d08509d5-1216-4c5e-9453-bc66f3e94dcb)
+
+### Boats on rivers
+
+<img width="663" alt="Trireme on a river" src="https://github.com/leonsp-ai/BarbarianWrath/assets/60105412/79447a97-5af3-47cd-850b-4fcebde50488">
+
 
 ## World Maps
 
