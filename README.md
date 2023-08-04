@@ -81,6 +81,12 @@ Map resized for a closer, more intense game
 
 Map resized and redrawn for a more epic game
 
+### Atlantic (81x123)
+
+<img width="1306" alt="Atlantic map" src="https://github.com/leonsp-ai/BarbarianWrath/assets/60105412/32965999-4257-48c9-b8eb-5b69015b0ce1">
+
+Map adapted from the Imperial Ambition scenario
+
 ## Scenarios
 
 ### Rome
