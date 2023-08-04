@@ -1,3 +1,17 @@
+## 1.0.0
+
+- Added dependency on the optional Lua scripting setting in ToTPP.
+- Added the Atlantic map.
+- Buffed Barbarian combat strength at all difficulty levels to Deity level.
+- Buffed Barbarians against AI
+- Removed Barbarian Legion and Archer defensive nerfs.
+- Disabled city attacks and captures from destroying cities.
+- Removed Barbarian nerf on building units. Barbarians will build units regardless of how many cities they already control on the continent.
+- Doubled the AI unit limit so AI keeps building units.
+- Replaced Cleopatra with Hatshepsut as the more Egyptian pharaoh.
+- Replaced Sacajawea with Eagle Woman as the more Sioux chief.
+- Enabled river navigation by triremes, caravels, galleons, ironclads, destroyers, and transports.
+
 ## 0.4.0
 
 ### Changed

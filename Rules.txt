@@ -60,7 +60,11 @@ gametype=Original
 
 ; (This section is for ToTPP only)
 @COSMIC2
+AICapitalizationLimit, 1024
+BarbOffensiveUnitLimit, -1
+CityPopulationLossAttack, 2
 CityPopulationLossCapture, 2
+ProductionCarryOver, 0
 NoIncrementalRushBuy, 1
 NoStackKills, 1
 MovementMultipliers, 1
@@ -675,7 +679,7 @@ Democracy,      President,   President
 ;
 ;   Leaders
 ;
-;   leader, female, color, style, plural, adjective, ...
+;   male, female, color, style, plural, adjective, ...
 ;           ...attack, expand, civilize, ...
 ;           ...govt, male, female...<repeat>
 ;
@@ -696,11 +700,12 @@ Democracy,      President,   President
 ;
 ;   male, female = titles for leader of government
 ;
+; length limit is 23 chars
 @LEADERS
 Julius Gaius, Livia,               0, 1, 1, Romans,      Roman,       0,  1,  1,     1, Dictator, Dictator, 2, Imperator, Imperatrix
 Hammurabi,    Shammuramat,         0, 2, 0, Babylonians, Babylonian, -1, -1,  1,
 Frederick,    Maria Theresa,       0, 3, 3, Germans,     German,      1, -1,  1,     4, Archbishop, Archbishop, 6, Chancellor, Chancellor
-Ramesses,     Cleopatra,           1, 4, 0, Egyptians,   Egyptian,    0,  0,  1,     1, Pharaoh, Pharaoh, 2, Great Pharaoh, Great Pharaoh
+Ramesses,     Hatshepsut,          1, 4, 0, Egyptians,   Egyptian,    0,  0,  1,     1, Pharaoh, Pharaoh, 2, Great Pharaoh, Great Pharaoh
 Abe Lincoln,  E. Roosevelt,        0, 5, 1, Americans,   American,   -1,  0,  1,     4, Reverend, Reverend, 5, Speaker, Speaker
 Genghis Khan, Bortei,              0, 6, 0, Mongols,     Mongol,      1,  1, -1,
 Mohandas Gandhi,Indira Gandhi,     0, 7, 2, Indians,     Indian,     -1, -1,  0,     2, Maharaja, Maharaja,
@@ -717,7 +722,7 @@ Canute,       Gunnhild,            1, 3, 3, Vikings,     Viking,      1,  1,  0,
 Philip II,    Isabella,            1, 4, 3, Spanish,     Spanish,    -1,  1, -1,     4, Archbishop, Archbishop
 Xerxes,       Purandokht,          0, 5, 0, Persians,    Persian,     0, -1,  0,     2, Shah, Shah,  4, Ayatollah, Ayatollah
 Hannibal,     Dido,                0, 6, 1, Carthaginians, Carthaginian, 0,  0, -1,
-Sitting Bull, Sacajawea,           0, 7, 0, Sioux,       Sioux,       0,  0,  0,     1, Chief, Chief, 2, Great Chief, Great Chief
+Sitting Bull, Eagle Woman,         0, 7, 0, Sioux,       Sioux,       0,  0,  0,     1, Chief, Chief, 2, Great Chief, Great Chief
 
 Saladin,    ...,     0, 5, Arabs,       Arab,        1,  0,  1,     4, Ayatollah, Ayatollah, 2, Sultan, Sultana
 Cunobelin,    Boadicea,            1, 1, 0, Celts,       Celtic,     -1,  1,  0,     4, Druid, Druid
@@ -966,18 +971,18 @@ Enraged
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Helicopter
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Stlth Ftr.
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Stlth Bmbr.
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Trireme
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Caravel
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Galleon
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Frigate
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Ironclad
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Destroyer
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 100000000  ;Trireme
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 100000000  ;Caravel
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 100000000  ;Galleon
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 100000000  ;Frigate
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 100000000  ;Ironclad
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 100000000  ;Destroyer
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Cruiser
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;AEGIS Cruiser
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Battleship
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Submarine
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Carrier
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Transport
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 100000000  ;Transport
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Cruise Msl.
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Nuclear Msl.
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Diplomat

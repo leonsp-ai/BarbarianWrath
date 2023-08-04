@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <title>Code Builder for canBuildSettings.lua</title>
+        <style>
+        #h1-title {
+            text-align: center;
+        }
+        #content, html, body {
+            height: 98%;
+        }
+        .number-input { width: 20px; }
+        .float-input { width: 40px; }
+        #left-hand-side{
+            width: 48%;
+            float:left;
+            height: 90%;
+            overflow-y: auto;
+        }
+        #setting-generator {
+            padding-bottom: 80%;
+        }
+        #right-hand-side {
+            width: 48%;
+            float:right;
+            height: 90%;
+            overflow-y: auto;
+        }
+        #list-generator {
+            padding-bottom: 80%;
+        }
+        </style>
+    </head>
+
+    <body>
+        <h1 id="h1-title"> Can Build Settings Code Generator</h1>
+        <h3 id="h3-warning" hidden=true> After you have finalized your object.lua file, run the script makeObjectJS.lua (in your Scripts folder, where you found this file) from the Civ II Lua Console, and replace Scripts\object.js with the generated file.</h3>
+        <div id='left-hand-side'>
+            <form action="autoCanBuild.html" id="setting-generator" novalidate>
+                <fieldset>
+                    <label for="choose-item">Choose an item:</label>
+                    <select name="choose-item" id="choose-item">
+                    </select>
+                </fieldset>
+                <fieldset id="forbidden-tribes">
+                    <legend id="forbidden-tribes-legend"></legend>
+                </fieldset>
+                <fieldset id="forbidden-maps">
+                    <legend id="forbidden-maps-legend"></legend>
+                </fieldset>
+                <fieldset id="location">
+                    <legend id="location-legend"></legend>
+                    <select id="location-select"></select>
+                </fieldset>
+                <fieldset id="forbidden-location">
+                    <legend id="forbidden-location-legend"></legend>
+                    <select id="forbidden-location-select"></select>
+                </fieldset>
+                <fieldset id="all-improvements">
+                    <legend id="all-improvements-legend"></legend>
+                    <select id="all-improvements-select"></select>
+                </fieldset>
+                <fieldset id="some-improvements">
+                    <legend id="some-improvements-legend"></legend>
+                    <label for="number-of-improvements">Minimum number of improvements:</label>
+                    <input type="text" id="number-of-improvements" value="0" class="number-input">
+                    <select id="some-improvements-select"></select>
+                </fieldset>
+                <fieldset id="forbidden-improvements">
+                    <legend id="forbidden-improvements-legend"></legend>
+                    <select id="forbidden-improvements-select"></select>
+                </fieldset>
+                <fieldset id="all-wonders">
+                    <legend id="all-wonders-legend"></legend>
+                    <select id="all-wonders-select"></select>
+                </fieldset>
+                <fieldset id="some-wonders">
+                    <legend id="some-wonders-legend"></legend>
+                    <label for="number-of-wonders">Minimum number of wonders:</label>
+                    <input type="text" id="number-of-wonders" value="0" class="number-input">
+                    <select id="some-wonders-select"></select>
+                </fieldset>
+                <fieldset id="all-techs">
+                    <legend id="all-techs-legend"></legend>
+                    <select id="all-techs-select"></select>
+                </fieldset>
+                <fieldset id="some-techs">
+                    <legend id="some-techs-legend"></legend>
+                    <label for="number-of-techs">Minimum number of technologies:</label>
+                    <input type="text" id="number-of-techs" value="0" class="number-input">
+                    <select id="some-techs-select"></select>
+                </fieldset>
+                <fieldset id="forbidden-techs">
+                    <legend id="forbidden-techs-legend"></legend>
+                    <select id="forbidden-techs-select"></select>
+                </fieldset>
+                <fieldset id="all-flags-match">
+                    <legend id="all-flags-match-legend"></legend>
+                    <select id="all-flags-match-select"></select>
+                    <ol id="all-flags-match-list"></ol>
+                </fieldset>
+                <fieldset id="some-flags-match">
+                    <legend id="some-flags-match-legend"></legend>
+                    <label for="number-of-flags">Minimum number of flags:</label>
+                    <input type="text" id="number-of-flags" value="0" class="number-input">
+                    <select id="some-flags-match-select"></select>
+                    <ol id="some-flags-match-list"></ol>
+                </fieldset>
+                <fieldset id="city-population">
+                    <legend id="city-population-legend"></legend>
+                    <label for="minimum-population">Minimum population:</label>
+                    <input type="text" id="minimum-population" class="number-input">
+                    <label for="maximum-population">maximum population:</label>
+                    <input type="text" id="maximum-population" class="number-input">
+                </fieldset>
+                <fieldset id="turn-restriction">
+                    <legend id="turn-restriction-legend"></legend>
+                    <label for="first-turn">First turn available:</label>
+                    <input type="text" id="first-turn" class="number-input">
+                    <label for="last-turn">Last turn available:</label>
+                    <input type="text" id="last-turn" class="number-input">
+                </fieldset>
+                <fieldset id="forbidden-alternate-production">
+                    <legend id="forbidden-alternate-production-legend"></legend>
+                    <select id="forbidden-alternate-production-select"></select>
+                </fieldset>
+                <fieldset id="require-some-as-alternate-production">
+                    <legend id="require-some-as-alternate-production-legend"></legend>
+                    <label for="number-of-alternate-production">Minimum number of alternate production:</label>
+                    <input type="text" id="number-of-alternate-production" value="0" class="number-input">
+                    <select id="require-some-as-alternate-production-select"></select>
+                </fieldset>
+                <fieldset id="max-number-tribe">
+                    <legend id="max-number-tribe-legend"></legend>
+                    <input type="radio" id="max-number-tribe-radio-unlimited" name="max-number-tribe-radio">
+                    <label for="max-number-tribe-radio-unlimited">Allow unlimited production for each tribe.</legend>
+                    <input type="radio" id="max-number-tribe-radio-limited" name="max-number-tribe-radio">
+                    <label for="max-number-tribe-radio-limited">Limit the ownership for each tribe.</legend>
+                    <br>
+                    <div id="max-number-tribe-settings">
+                        <label for="max-number-tribe-base">Base limit:</label>
+                        <input type="text" id="max-number-tribe-base" value="0" class="float-input">
+                        <br>
+                        <label for="max-number-tribe-min">Notwithstanding other calculations, this is the minimum limit:</label>
+                        <input type="text" id="max-number-tribe-min" value="0" class="float-input">
+                        <br>
+                        <label for="max-number-tribe-max">Notwithstanding other calculations, this is the maximum limit:</label>
+                        <input type="text" id="max-number-tribe-max" value="0" class="float-input">
+                        <br>
+                        <label for="max-number-tribe-turn-increment">For each turn elapsed, increase the tribe ownership limit by this amount:</label>
+                        <input type="text" id="max-number-tribe-turn-increment" value="0" class="float-input">
+                        <br>
+                        <br>
+                        <label for="max-number-tribe-tribe-totals-select">Increase the tribe's ownership limit by the specified amount, for each of the following items owned by the tribe:</label>
+                        <br>
+                        <label for="max-number-tribe-tribe-cities-increment">For each city the tribe owns, increase the tribe ownership limit by this amount:</label>
+                        <input type="text" id="max-number-tribe-tribe-cities-increment" value="0" class="float-input">
+                        <br>
+                        <label for="max-number-tribe-tribe-population-increment">For each population point of the tribe's cities, increase the tribe ownership limit by this amount:</label>
+                        <input type="text" id="max-number-tribe-tribe-population-increment" value="0" class="float-input">
+                        <br>
+                        <label for="max-number-global-global-totals-select">For each item in the selected list owned by the tribe, increment the tribe's ownership limit by the specified amount:</label>
+                        <br>
+                        <select id="max-number-tribe-tribe-totals-select"></select>
+                        <table id="max-number-tribe-tribe-totals-list"></table>
+                        <br>
+                        <br>
+                        <label for="max-number-tribe-global-totals-select">Increase the tribe's ownership limit by the specified amount, for each of the following items owned by anyone.</label>
+                        <br>
+                        <label for="max-number-tribe-global-cities-increment">For each city in the world, increase the tribe ownership limit by this amount:</label>
+                        <input type="text" id="max-number-tribe-global-cities-increment" value="0" class="float-input">
+                        <br>
+                        <label for="max-number-tribe-global-population-increment">For each population point in the world, increase the tribe ownership limit by this amount:</label>
+                        <input type="text" id="max-number-tribe-global-population-increment" value="0" class="float-input">
+                        <br>
+                        <label for="max-number-global-global-totals-select">For each item in the selected list owned by anyone, increment the tribe's ownership limit by the specified amount:</label>
+                        <br>
+                        <select id="max-number-tribe-global-totals-select"></select>
+                        <table id="max-number-tribe-global-totals-list"></table>
+                        <br>
+                        <br>
+                        <label for="max-number-tribe-active-wonders-tribe-select">Increase the tribe's ownership limit by the specified amount for each wonder owned by the tribe that is not expired:</label>
+                        <br>
+                        <select id="max-number-tribe-active-wonders-tribe-select"></select>
+                        <table id="max-number-tribe-active-wonders-tribe-list"></table>
+                        <br>
+                        <br>
+                        <label for="max-number-tribe-active-wonders-foreign-select">Increase the tribe's ownership limit by the specified amount for each wonder owned by a foreign tribe that is not expired:</label>
+                        <br>
+                        <select id="max-number-tribe-active-wonders-foreign-select"></select>
+                        <table id="max-number-tribe-active-wonders-foreign-list"></table>
+                        <br>
+                        <br>
+                        <label for="max-number-tribe-discovered-techs-select">Increase the tribe's ownership limit by the specified amount (once) if the technology has been discovered by any tribe:</label>
+                        <br>
+                        <select id="max-number-tribe-discovered-techs-select"></select>
+                        <table id="max-number-tribe-discovered-techs-list"></table>
+                        <br>
+                        <br>
+                        <label for="max-number-tribe-true-flags-select">Increase the tribe's ownership limit by the specified amount for each flag that has a true value:</label>
+                        <br>
+                        <select id="max-number-tribe-true-flags-select"></select>
+                        <table id="max-number-tribe-true-flags-list"></table>
+                        <br>
+                        <br>
+                        <label for="max-number-tribe-counter-values-select">For each counter, multiply the counter's value by the specified amount, and add the product to the tribe's ownership limit.</label>
+                        <br>
+                        <select id="max-number-tribe-counter-values-select"></select>
+                        <table id="max-number-tribe-counter-values-list"></table>
+                        <br>
+                        <br>
+                        <label for="max-number-tribe-shared-limit-select">These items count towards the ownership limit.</label>
+                        <br>
+                        <select id="max-number-tribe-shared-limit-select"></select>
+                        <table id="max-number-tribe-shared-limit-list"></table>
+                    </div>
+                </fieldset>
+                <fieldset id="max-number-global">
+                    <legend id="max-number-global-legend"></legend>
+                    <input type="radio" id="max-number-global-radio-unlimited" name="max-number-global-radio">
+                    <label for="max-number-tribe-radio-unlimited">Allow unlimited production for all tribes together.</legend>
+                    <input type="radio" id="max-number-global-radio-limited" name="max-number-global-radio" >
+                    <label for="max-number-tribe-global-limited">Limit the ownership for all tribes together.</legend>
+                    <br>
+                    <div id="max-number-global-settings">
+                        <label for="max-number-global-base">Base limit:</label>
+                        <input type="text" id="max-number-global-base" value="0" class="float-input">
+                        <br>
+                        <label for="max-number-global-min">Notwithstanding other calculations, this is the minimum limit:</label>
+                        <input type="text" id="max-number-global-min" value="0" class="float-input">
+                        <br>
+                        <label for="max-number-global-max">Notwithstanding other calculations, this is the maximum limit:</label>
+                        <input type="text" id="max-number-global-max" value="0" class="float-input">
+                        <br>
+                        <label for="max-number-global-turn-increment">For each turn elapsed, increase the tribe ownership limit by this amount:</label>
+                        <input type="text" id="max-number-global-turn-increment" value="0" class="float-input">
+                        <br>
+                        <br>
+                        <label for="max-number-global-global-cities-increment">For each city in the world, increase the global ownership limit by this amount:</label>
+                        <input type="text" id="max-number-global-global-cities-increment" value="0" class="float-input">
+                        <br>
+                        <label for="max-number-global-global-population-increment">For each population point in the world, increase the global ownership limit by this amount:</label>
+                        <input type="text" id="max-number-global-global-population-increment" value="0" class="float-input">
+                        <br>
+                        <label for="max-number-global-global-totals-select">For each item in the selected list owned by anyone, increment the global ownership limit by the specified amount:</label>
+                        <br>
+                        <select id="max-number-global-global-totals-select"></select>
+                        <table id="max-number-global-global-totals-list"></table>
+                        <br>
+                        <br>
+                        <label for="max-number-global-active-wonders-select">Increase the global ownership limit by the specified amount for each wonder owned by anyone that is not expired:</label>
+                        <br>
+                        <select id="max-number-global-active-wonders-select"></select>
+                        <table id="max-number-global-active-wonders-list"></table>
+                        <br>
+                        <br>
+                        <label for="max-number-global-discovered-techs-select">Increase the global ownership limit by the specified amount (once) if the technology has been discovered by any tribe:</label>
+                        <br>
+                        <select id="max-number-global-discovered-techs-select"></select>
+                        <table id="max-number-global-discovered-techs-list"></table>
+                        <br>
+                        <br>
+                        <label for="max-number-global-true-flags-select">Increase the global ownership limit by the specified amount for each flag that has a true value:</label>
+                        <br>
+                        <select id="max-number-global-true-flags-select"></select>
+                        <table id="max-number-global-true-flags-list"></table>
+                        <br>
+                        <br>
+                        <label for="max-number-global-counter-values-select">For each counter, multiply the counter's value by the specified amount, and add the product to the global ownership limit.</label>
+                        <br>
+                        <select id="max-number-global-counter-values-select"></select>
+                        <table id="max-number-global-counter-values-list"></table>
+                        <br>
+                        <br>
+                        <label for="max-number-global-shared-limit-select">These items count towards the ownership limit.</label>
+                        <br>
+                        <select id="max-number-global-shared-limit-select"></select>
+                        <table id="max-number-global-shared-limit-list"></table>
+                    </div>
+                </fieldset>
+                <fieldset id="binary-settings">
+                    <ul>
+                        <li><input type="checkbox" class="binary-settings-checkbox" id="computer-only-checkbox"><span>Only tribes controlled by an AI can build <span class="item-name"></span>.</span></li>
+                        <li><input type="checkbox" class="binary-settings-checkbox" id="human-only-checkbox"><span>Only tribes controlled by a human can build <span class="item-name"></span>.</span></li>
+                        <li><input type="checkbox" class="binary-settings-checkbox" id="coastal-only-checkbox"><span>Only cities with the "coastal" attribute can build <span class="item-name"></span>.</span></li>
+                        <li><input type="checkbox" class="binary-settings-checkbox" id="shipbuild-only-checkbox"><span>Only cities with the "can build ships" attribute can build <span class="item-name"></span>.</span></li>
+                        <li><input type="checkbox" class="binary-settings-checkbox" id="hydro-only-checkbox"><span>Only cities with the "can build hydro plant" attribute can build <span class="item-name"></span>.</span></li>
+                        <li><input type="checkbox" class="binary-settings-checkbox" id="override-default-checkbox"><span>Ignore Civ II's standard requirements for building <span class="item-name"></span> and consider only the requirements specified by Lua.</span></li>
+                        <li><input type="checkbox" class="binary-settings-checkbox" id="override-supplementary-checkbox"><span>Ignore any supplementary requirements for building <span class="item-name"></span> that have been specified elsewhere using the <code>canBuildSettings.registerSupplementalCondition</code> function.</span></li>
+                    </ul>
+                </fieldset>
+
+
+
+                <div id="setting-output">
+                    <button type="submit" id="generate-code-button">Generate Code</button>
+                    <br>
+                    <code id="setting-output-code"></code>
+                </div>
+            </form>
+        </div>
+        <div id="right-hand-side">
+            <div id="list-catalogue">
+                <ul id="list-catalogue-list">
+                </ul>
+            </div>
+            <div id="list-generator">
+
+            </div>
+        </div>
+
+        <script src="object.js"></script>
+        <script src="autoCanBuild.js"></script>
+    </body>
+</html>
+
+
