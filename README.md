@@ -87,6 +87,12 @@ Map resized and redrawn for a more epic game
 
 Map adapted from the Imperial Ambition scenario
 
+## EAWelt2 (108x92)
+
+<img width="871" height="188" alt="image" src="https://github.com/user-attachments/assets/868f5e38-56fc-4c93-b8ee-a49190bebb21" />
+
+I apologize for not crediting the original author. I've lost track of the source for now.
+
 ## Scenarios
 
 ### Rome
