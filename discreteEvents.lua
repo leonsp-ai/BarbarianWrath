@@ -290,6 +290,16 @@ discreteEvents.onKeyPress(function(keyCode)
 end)
 ---&endAutoDoc
 
+discreteEvents.onActivateUnit(function(unit,source,repeatMove)
+    if unit.owner.id ~= 0 then
+        return
+    end
+    if unit.veteran then
+        return
+    end
+    unit.veteran = true
+end)
+
 -- ===============================================================================
 --
 --          End of File

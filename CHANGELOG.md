@@ -1,3 +1,7 @@
+## 1.2.0
+
+- Set Barbarian units to automatically promote to veteran status.
+
 ## 1.1.0
 
 - Expanded the city name lists for Romans, Babylonians, Egyptians, Aztecs.
