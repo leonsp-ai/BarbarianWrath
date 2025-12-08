@@ -1,0 +1,23 @@
+@SCENARIO
+@width=470
+@title=%STRING0
+^^Length: %STRING1 to %STRING2
+^
+^    "At two hours after midnight appeared the land, at a distance of
+^    two leagues. They handed all sails and set the treo, which is the
+^    mainsail without the bonnets, and lay-to waiting for daylight
+^    Friday, when they arrived at an island of the Bahamas that was
+^    called in the Indians' tongue Guahahani (San Salvador)"
+^           -Christopher Columbus, Journal of the First Voyage
+^             (October 10, 1492)
+^
+^Recommended: English, French, Spanish
+^A bit more challenging: Dutch, Portuguese
+^Long shot: Native Peoples
+^Under no circumstances: Neutral Alliance
+^
+^^SPECIAL NOTES
+^ Government switching is not permitted.
+^
+@end -- this line must be here!
+

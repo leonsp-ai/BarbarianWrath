@@ -11,7 +11,7 @@
 ;
 
 @ROMANS
-Rome
+Roma
 Veii
 Antium
 Cumae
@@ -55,6 +55,68 @@ Bagacum
 Lauriacum
 Teurnia
 Curia
+Cosa
+Ariminum
+Belum
+Placentia
+Tarraco
+Italica
+Modoetia
+Salernum
+Bononia
+Forum Livii
+Regium Lepidi
+Aquileia
+Corduba
+Valentia
+Scalabis
+Villa Euracini
+Palmyra
+Narbo Martius
+Massa
+Pistoria
+Confloenta
+Gerunda
+Pompaelo
+Naissus
+Brigantium
+Florentia
+Vesontio
+Iulia Aemona
+Tungrorum
+Hispalis
+Pola
+Iader
+Salona
+Narona
+Epidaurum
+Raurica
+Noviodunum
+Siscia
+Marsonia
+Treverorum
+Legionis
+Taurinorum
+Salassorum
+Emerita
+Caesarina
+Lucus
+Novaesium
+Vetera
+Pons Drusi
+Ovilava
+Iuvavum
+Vindelicorum
+Turicum
+Asturica
+Borbetomagus
+Bracara
+Sirmium
+Sorviodurum
+Mogontiacum
+Argentoratum
+Bonna
+Noviomagus
 @STOP
 
 @BABYLONIANS
@@ -85,6 +147,27 @@ Adab
 Telloh
 Nina
 Ebla
+Dur-Athara
+Halule
+Pumbedita
+Sure
+Nehar Pekod
+Armanum
+Azupiranu
+Tell Leilan
+Marad
+Nuzi
+Tell Brak
+Abu Salabikh
+Akshak
+Bad-tibira
+Borsippa
+Der
+Dilbat
+Enegi
+Eshnunna
+Girsu
+Harbidum
 @STOP
 
 @GERMANS
@@ -108,11 +191,11 @@ Brandenburg
 
 @EGYPTIANS
 Thebes
-Memphis
+Men-nefer
 Heliopolis
 Elephantine
 Alexandria
-Pi-Ramesses
+Per-Ramessu
 Giza
 Byblos
 El-Amarna
@@ -123,7 +206,7 @@ Avaris
 Lisht
 Buto
 Edfu
-Pithom
+Per-Atum
 Busiris
 Kahun
 Athribis
@@ -131,11 +214,81 @@ Mendes
 El-Ashmunein
 Tanis
 Buhen
-Bubastis
+Per-Bast
 This
 Oryx
 Sebennytus
 Cairo
+Khem
+Yamu
+Raqote
+Khito
+Ptkheka
+Zau
+Per-Wadjet
+Khasut
+Timinhor
+Piemro
+Thonis
+Menouthis
+Pikuat
+Djedu
+Hut-hery-ib
+Taremu
+Setennu
+Tjebnutjer
+Pachnamunis
+Iunu
+Tjaru
+Per-Amun
+Weprehwy
+Tamiat
+Djedet
+Semabehdet
+Djanet
+Hut-waret
+Per-Sopdu
+Abu
+Swenett
+Nubt
+Behdet
+Nekheb
+Nekhen
+Ta-senet
+Waset
+Per-Hathor
+Iuny
+Sumenu
+Djerty
+Madu
+Iushenshen
+Gesy
+Gebtu
+Iunet
+Seshesh
+Abdju
+Tjenu
+Ipu
+Hut-Repyt
+Tjebu
+Shashotep
+Per-Nemty
+Zawty
+Khemenu
+Herwer
+Hebenu
+Per-Imen-mat-khent
+Saka
+Tayu-djayet
+Per-Medjed
+Itjtawy
+Shedet
+Tepihu
+Chenem-Waset
+Iken
+Buhen
+Berenice
+Tao
 @STOP
 
 @AMERICANS
@@ -321,6 +474,20 @@ Chapultepec
 Itzapalapa
 Ayotzinco
 Iztapam
+Tenayuca
+Xalapa
+Teloloapan
+Mitla
+Mixquic
+Coyotepec
+Zacatula
+Yucunudahui
+Ecatepec
+Mazatan
+Iztapalapa
+Tlamanalco
+Huaxyacac
+Acatitlan
 @STOP
 
 @CHINESE

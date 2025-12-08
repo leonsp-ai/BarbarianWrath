@@ -306,7 +306,7 @@ Game Name:
 @title=%STRING0
 @width=240
 ^^Moving or resizing the window for
-^^extended periods, can interfere with 
+^^extended periods, can interfere with
 ^^the game.  You will be disconnected
 ^^if you persist.
 
@@ -653,7 +653,7 @@ Sire, our power is %STRING0 and our reputation is %STRING1.
 @width=200
 @title=View Credits
 @options
-Civilization II 
+Civilization II
 Civilization II Multiplayer Gold
 Fantastic Worlds
 Conflicts in Civilization
@@ -662,7 +662,7 @@ Conflicts in Civilization
 @width=200
 @title=View Credits
 @options
-Civilization II 
+Civilization II
 Civilization II Multiplayer Gold
 
 @NOMODEMS
@@ -813,7 +813,7 @@ Dial-Up Networking (2 player only)
 @button=Repeat Search
 We were unable to find the Civilization II : Test of Time CD-ROM.
 Please check that it is in a valid CD-ROM drive and then repeat the
-search by selecting "Repeat Search" below. If you select cancel the 
+search by selecting "Repeat Search" below. If you select cancel the
 game will exit.
 
 @PASSWORDNOCHEAT2
@@ -4921,8 +4921,8 @@ This scenario is now complete.
 
 
 This game is now complete.
-Ce jeu est maintenant complété.
-Diese Spiel ist nun vollständig.
+Ce jeu est maintenant complï¿½tï¿½.
+Diese Spiel ist nun vollstï¿½ndig.
 
 
 
@@ -5395,13 +5395,13 @@ History records that the year %STRING2 marked the end of
 the long reign of %STRING0, legendary leader of the %STRING1.
 
 @LEGAL
-Use of this product is subject to the terms of a license agreement   
+Use of this product is subject to the terms of a license agreement
 found in the product's "ReadMe" file.
-                                                                                                        
-                                                                                                        
-                       
-Civilization II : Test of Time ™ 1999 Hasbro Interactive, Inc.
-                              
+
+
+
+Civilization II : Test of Time ï¿½ 1999 Hasbro Interactive, Inc.
+
 (C) 1999 Hasbro Interactive, Inc.  All Rights Reserved
 
 @IMPORTMORE

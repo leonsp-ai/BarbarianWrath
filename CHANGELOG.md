@@ -1,3 +1,10 @@
+## 1.1.0
+
+- Expanded the city name lists for Romans, Babylonians, Egyptians, Aztecs.
+- Moved City Walls, Coastal Fortresses, Port Facilities, Airports, SAM Batteries, and SDI Defences into separate technologies to discourage the city auto-governor from building them.
+- Bundled the unmodified Age of Discovery scenario from Conflicts in Civilization with the mod, not including events.
+- Bundled the EAWELT2 map for yet another polar-centered world map.
+
 ## 1.0.0
 
 - Added dependency on the optional Lua scripting setting in ToTPP.
