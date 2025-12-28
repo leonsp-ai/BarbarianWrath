@@ -1,6 +1,6 @@
 --
 local versionNumber = 1
-local fileModified = false -- set this to true if you change this file for your scenario
+local fileModified = true -- set this to true if you change this file for your scenario
 -- if another file requires this file, it checks the version number to ensure that the
 -- version is recent enough to have all the expected functionality
 -- if you set fileModified to true, the error generated if this file is out of date will
@@ -58,6 +58,7 @@ local flag = require("flag")
 local counter = require("counter")
 local civlua = require("civluaModified")
 
+local barbUnitsTwinnedThisTurn = 0
 
 -- ===============================================================================
 --
@@ -74,7 +75,7 @@ end)
 ---&endAutoDoc
 
 ---&autoDoc onCityDestroyed
-discreteEvents.onCityDestroyed(function(city) 
+discreteEvents.onCityDestroyed(function(city)
     if _global.eventTesting then
         civ.ui.text("City destroyed discrete event test")
     end
@@ -88,7 +89,7 @@ discreteEvents.onBribeUnit(function(unit,previousOwner)
 end)
 ---&endAutoDoc
 ---&autoDoc onCityFounded
-discreteEvents.onCityFounded(function(city) 
+discreteEvents.onCityFounded(function(city)
     if _global.eventTesting then
         civ.ui.text("discreteEvents.onCityFounded for "..city.name)
     end
@@ -104,47 +105,47 @@ discreteEvents.onCityFounded(function(city)
 end)
 ---&endAutoDoc
 ---&autoDoc onCityProcessed
-discreteEvents.onCityProcessed(function(city) 
+discreteEvents.onCityProcessed(function(city)
     --civ.ui.text("City processed discrete event test for city "..city.name)
 
 end)
 ---&endAutoDoc
 ---&autoDoc onCityProduction
-discreteEvents.onCityProduction(function(city,item) 
+discreteEvents.onCityProduction(function(city,item)
     --civ.ui.text("City production discrete event test")
 
 end)
 ---&endAutoDoc
 ---&autoDoc onCityTaken
-discreteEvents.onCityTaken(function(city,defender) 
+discreteEvents.onCityTaken(function(city,defender)
     --civ.ui.text(city.name.." taken from "..defender.name.." discrete event")
 
 
 end)
 ---&endAutoDoc
 ---&autoDoc onScenarioLoaded
-discreteEvents.onScenarioLoaded(function() 
+discreteEvents.onScenarioLoaded(function()
     --civ.ui.text("discrete event on scenario loaded")
 
 end)
 ---&endAutoDoc
 ---&autoDoc onTurn
-discreteEvents.onTurn(function(turn) 
+discreteEvents.onTurn(function(turn)
     --civ.ui.text("discrete on turn event 1")
 end)
 ---&endAutoDoc
 
-discreteEvents.onTurn(function(turn) 
+discreteEvents.onTurn(function(turn)
     --civ.ui.text("discrete on turn event 2")
 
 end)
 
-discreteEvents.onTurn(function(turn) 
+discreteEvents.onTurn(function(turn)
     --civ.ui.text("discrete on turn event 3")
 end)
 
 ---&autoDoc onUnitKilled
-discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation,winnerVetStatus,loserVetStatus) 
+discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation,winnerVetStatus,loserVetStatus)
     if _global.eventTesting then
         civ.ui.text(loser.type.name.." was killed by "..winner.type.name.." discrete event 1")
     end
@@ -152,7 +153,7 @@ end)
 ---&endAutoDoc
 
 ---&autoDoc onUnitDefeated
-discreteEvents.onUnitDefeated(function(loser,winner,aggressor,victim,loserLocation,winnerVetStatus,loserVetStatus) 
+discreteEvents.onUnitDefeated(function(loser,winner,aggressor,victim,loserLocation,winnerVetStatus,loserVetStatus)
     if _global.eventTesting then
     civ.ui.text(loser.type.name.." was defeated (possibly by event) by "..winner.type.name.." discrete event")
     end
@@ -163,7 +164,7 @@ discreteEvents.onTurn(function(turn)
     --civ.ui.text("discrete on turn event 4")
 end)
 ---&autoDoc onCityProcessingComplete
-discreteEvents.onCityProcessingComplete(function(turn,tribe) 
+discreteEvents.onCityProcessingComplete(function(turn,tribe)
     if _global.eventTesting then
         civ.ui.text("discreteEvents.onCityProcessingComplete for "..tribe.name.." on turn "..tostring(turn))
     end
@@ -171,21 +172,21 @@ end)
 ---&endAutoDoc
 
 ---&autoDoc onTribeTurnBegin
-discreteEvents.onTribeTurnBegin(function(turn,tribe) 
+discreteEvents.onTribeTurnBegin(function(turn,tribe)
     if _global.eventTesting then
         civ.ui.text("discreteEvents.onTribeTurnBegin for "..tribe.name.." on turn "..tostring(turn))
     end
 end)
 ---&endAutoDoc
 ---&autoDoc onTribeTurnEnd
-discreteEvents.onTribeTurnEnd(function(turn,tribe) 
+discreteEvents.onTribeTurnEnd(function(turn,tribe)
     if _global.eventTesting then
         civ.ui.text("discreteEvents.onTribeTurnEnd for "..tribe.name.." on turn "..tostring(turn))
     end
 end)
 ---&endAutoDoc
 
-discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation,winnerVetStatus,loserVetStatus) 
+discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation,winnerVetStatus,loserVetStatus)
     if _global.eventTesting then
         civ.ui.text(loser.type.name.." was killed by "..winner.type.name.." discrete event 2")
     end
@@ -210,7 +211,7 @@ discreteEvents.onGameEnds(function(reason)
 end)
 ---&endAutoDoc
 ---&autoDoc onSchism
--- On Schism 
+-- On Schism
 -- Return true (default) if the tribe can schism,
 -- and false otherwise.
 -- This is combined with the consolidated events and the
@@ -223,7 +224,7 @@ end)
 ---&endAutoDoc
 
 ---&autoDoc onNegotiation
--- On Negotiation 
+-- On Negotiation
 -- Return true if the talker can contact the listener,
 -- and false otherwise.
 -- This is combined with the consolidated events and the
@@ -239,14 +240,14 @@ end)
 -- Checking if a unit can found a city
 -- Return true if the unit can found a city
 -- return false if it can't
--- If any one of the consolidated event, the discrete events, 
+-- If any one of the consolidated event, the discrete events,
 -- or the separate file event return false, then the city
 -- can't be built
 -- Notes: Returning true does NOT override any normal city
 -- building condition (like no adjacent cities, or cities at sea)
--- Registers a function that is called to determine if `unit` can found 
--- a city at the unit's location. `advancedTribe` is `true` when picking 
--- up a hut with `unit` triggers an advanced tribe. 
+-- Registers a function that is called to determine if `unit` can found
+-- a city at the unit's location. `advancedTribe` is `true` when picking
+-- up a hut with `unit` triggers an advanced tribe.
 -- Return `true` to allow, `false` to disallow.
 discreteEvents.onCanFoundCity(function(unit,advancedTribe)
     if _global.eventTesting then
@@ -290,26 +291,86 @@ discreteEvents.onKeyPress(function(keyCode)
 end)
 ---&endAutoDoc
 
+discreteEvents.onTurn(function(turn)
+    barbUnitsTwinnedThisTurn = 0
+
+end)
+
 discreteEvents.onActivateUnit(function(unit,source,repeatMove)
     if unit.owner.id ~= 0 then
-        return
+        return -- only barbarians
     end
     if unit.veteran then
-        return
+        return -- skip veterans
     end
     unit.veteran = true
+
+    local too_many_per_tile = 3
+    local twin_unit_count = 1
+    local unit_or_units = unit.location.units()
+    local w,h,maps = civ.getAtlasDimensions()
+    local twin_limit = math.ceil(math.sqrt(w*h)/12)
+    if not civ.isUnit(unit_or_units) and #unit_or_units >= too_many_per_tile then
+        -- civ.ui.text(string.format("not creating a twin -- too crowded: %d, %d", barbUnitsTwinnedThisTurn, twin_limit))
+        return -- don't multiply plentiful barbarians
+    end
+    if barbUnitsTwinnedThisTurn >= twin_limit then
+        -- 4 on a small map
+        -- 6 on a normal map
+        -- 8 on a large map
+        -- civ.ui.text(string.format("not creating a twin -- too often: %d, %d", barbUnitsTwinnedThisTurn, twin_limit))
+        return -- don't multiply too often per turn
+    end
+    if unit.type.id == 46 then
+        barbUnitsTwinnedThisTurn = barbUnitsTwinnedThisTurn - 1
+        -- civ.ui.text(string.format("leader twin does not count: %d, %d, %s", barbUnitsTwinnedThisTurn, twin_limit, unit.type.name))
+    end
+    -- civ.ui.text(string.format("creating a twin for a veteran: %d, %d, %s", barbUnitsTwinnedThisTurn, twin_limit, unit.type.name))
+    civ.createUnit(unit.type, unit.owner, unit.location, {count=twin_unit_count, veteran=true})
+    barbUnitsTwinnedThisTurn = barbUnitsTwinnedThisTurn + 1
 end)
+
+discreteEvents.onCityTaken(function(city,defender)
+    if city.owner.id ~= 0 then
+        return -- only for barbarians
+    end
+    local reward_unit_count = 2
+    local too_many_per_tile = 2
+    local unit_or_units = city.location.units()
+    local new_unit_type
+    if civ.isUnit(unit_or_units) then
+        new_unit_type = unit_or_units.type
+    elseif #unit_or_units > 0 then
+        new_unit_type = unit_or_units[0].type
+    elseif civ.isUnitType(city.currentProduction) then
+        new_unit_type = city.currentProduction
+    else
+        -- civ.ui.text(string.format("not rewarding -- no unit type available: %d", barbUnitsTwinnedThisTurn))
+        return
+    end
+    if not civ.isUnit(unit_or_units) and #unit_or_units >= too_many_per_tile then
+        -- civ.ui.text(string.format("not rewarding -- too crowded: %d", barbUnitsTwinnedThisTurn))
+        return -- don't multiply plentiful barbarians
+    end
+    civ.ui.text(
+        string.format(
+            "BARBARIANS TAKE %s! %s devastated. More %s flock to the red banner.",
+            string.upper(city.name), defender.name, new_unit_type.name
+        ))
+    civ.createUnit(new_unit_type, city.owner, city.location, {count=reward_unit_count, veteran=true})
+end)
+
 
 -- ===============================================================================
 --
 --          End of File
 --
 -- ===============================================================================
---      In order to register discrete events, you don't need 
+--      In order to register discrete events, you don't need
 --      to return anything, but the file must be 'required'
 --      by another file.  Discrete Events can be registered in any file,
 --      provided it has the following require line:
---      
+--
 --      local discreteEvents = require("discreteEventsRegistrar")
 
 local versionTable = {}

@@ -130,7 +130,8 @@ local function computeCombatStatistics(attacker, defender, isSneakAttack)
         aBarbarianAttackerVsAiDefender=1,
         aBarbarianAttackerVsDefendersOnlyCity=1,
         aBarbarianAttackerVsDefendersCapitalCity=1,
-        aBarbarianAttackerVsDefenderWithGreatWall=.66,
+        aBarbarianAttackerVsDefenderWithGreatWall=.9,
+        aGreatWallVsBarbarianDefender=1.1,
         dBarbarianDefenderArchers=1,
         dBarbarianDefenderLegion=1
     }

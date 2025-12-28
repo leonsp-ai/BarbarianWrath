@@ -19,9 +19,9 @@ gametype=Original
 ;   of the game.  GREAT discretion is advised if you
 ;   opt to change these.  Values too far out of the
 ;   expected range can cause the game to behave strangely.
-;   All values entered in rules.txt are bounded by +/-127. 
-;   However, this does not mean that all numbers within this 
-;   range will work properly, for example, unit costs must 
+;   All values entered in rules.txt are bounded by +/-127.
+;   However, this does not mean that all numbers within this
+;   range will work properly, for example, unit costs must
 ;   not exceed 17.
 ;
 @COSMIC
@@ -49,8 +49,8 @@ gametype=Original
 5       ; Max effective science rate in fundamentalism (x10, so 5 = 50%)
 1	; Value of each citizen to the Civilization Score.
 20	; Value of each wonder to the Civilization Score.
-1	; Reward for landing on A. Centauri first = this multiplier*(# of habitats)*(prob. of success) 
--10	; Cost to Civilization Score (+ or -) for each extant non-AI controlled polluted tile. 
+1	; Reward for landing on A. Centauri first = this multiplier*(# of habitats)*(prob. of success)
+-10	; Cost to Civilization Score (+ or -) for each extant non-AI controlled polluted tile.
 1	; For each turn of peace after turn 199, this amount *3 is added to Civilization Score.
 5	; Value to the Civilization Score of each future tech researched.
 0	; Penalty assessed to Civilization Score each time player betrays another race.
@@ -72,6 +72,7 @@ RailroadMultiplier, 1, 12
 RoadMultiplier, 1, 3
 RiverMultiplier, 1, 3
 AlpineMultiplier, 1, 3
+NavigableRiversIntercardinal, 0 ; allow diagonal river sailing
 
 ;   Civilization Advances
 ;
@@ -205,11 +206,11 @@ Extra Advance 6,    3, 0,  no,  no,  0, 0    ; X6
 Extra Advance 7,    3, 0,  no,  no,  0, 0    ; X799
 
 ;
-; Above 11 tech slots (U1 to X8) allow you to define your own 
-; civilization advances if desired.  Supply the name, the AI 
+; Above 11 tech slots (U1 to X8) allow you to define your own
+; civilization advances if desired.  Supply the name, the AI
 ; value, and the prerequisites.
 ;
-; Then use the "U1", "U2", etc. 
+; Then use the "U1", "U2", etc.
 ; identifier to incorporate it into the tech chain as a
 ; prerequisite for other techs, units, city improvements.
 ;
@@ -384,7 +385,7 @@ nil,        ; Cure for Cancer
 ;
 ; until, domain,  move,rng,  att,def  hit,firepwr  cost,hold,  role, preq,  flags
 @UNITS
-Settlers,     Exp, 0,  1.,0,  0a,1d,  2h,1f,  4,0,  5, nil, 0000000000000000
+Settlers,     Exp, 0,  1.,0,  0a,1d,  2h,1f,  4,0,  5, nil, 0000000000000000 ; 0
 Engineers,    nil, 0,  2.,0,  0a,2d,  2h,1f,  4,0,  5, Exp, 0000000000000000
 Warriors,     Feu, 0,  1.,0,  1a,1d,  1h,1f,  1,0,  1, nil, 0000000000000000
 Phalanx,      Feu, 0,  1.,0,  1a,2d,  1h,1f,  2,0,  1, Bro, 0000000000000000
@@ -394,7 +395,7 @@ Pikemen,      Gun, 0,  1.,0,  1a,2d,  1h,1f,  2,0,  1, Feu, 0000010000000000
 Grenadiers,   Amp, 0,  1.,0,  6a,3d,  2h,1f,  3,0,  0, Met, 0000000000000100
 Alpine Troops,nil, 0,  1.,0,  5a,5d,  2h,1f,  5,0,  1, Tac, 0000001000000000
 Partisans,    nil, 0,  1.,0,  4a,4d,  2h,1f,  5,0,  1, Gue, 0000001000000010
-Fanatics,     nil, 0,  1.,0,  4a,4d,  2h,1f,  2,0,  1, Fun, 0000100000000000
+Fanatics,     nil, 0,  1.,0,  4a,4d,  2h,1f,  2,0,  1, Fun, 0000100000000000 ; 10
 Marines,      nil, 0,  1.,0,  8a,5d,  2h,1f,  6,0,  0, Amp, 0000000000000100
 Riflemen,     nil, 0,  1.,0,  5a,4d,  2h,1f,  4,0,  1, Csc, 0000000000000000
 Paratroopers, nil, 0,  1.,0,  6a,4d,  2h,1f,  6,0,  1, CA,  0000000100000000
@@ -404,7 +405,7 @@ Elephant,     MT,  0,  2.,0,  4a,1d,  1h,1f,  4,0,  0, PT,  0000000000000000
 Crusaders,    Ldr, 0,  2.,0,  5a,1d,  1h,1f,  4,0,  0, MT,  0000000000000000
 Knights,      Ldr, 0,  2.,0,  4a,2d,  1h,1f,  4,0,  0, Chi, 0000000000000000
 Dragoons,     Tac, 0,  2.,0,  5a,2d,  2h,1f,  5,0,  0, Ldr, 0000000000000000
-Cavalry,      Aut, 0,  2.,0,  8a,3d,  2h,1f,  6,0,  0, Tac, 0000000000000000
+Cavalry,      Aut, 0,  2.,0,  8a,3d,  2h,1f,  6,0,  0, Tac, 0000000000000000 ; 20
 Early Armor,  Mob, 0,  3.,0,  9a,4d,  2h,1f,  7,0,  0, Aut, 0000000000000000
 Armor,        U1,  0,  3.,0, 10a,5d,  3h,1f,  8,0,  0, Mob, 0000000000000000
 Catapult,     Met, 0,  1.,0,  6a,1d,  1h,1f,  4,0,  0, Mat, 0000000000000000
@@ -414,7 +415,7 @@ Cannon,       Too, 0,  1.,0,  8a,1d,  2h,1f,  4,0,  0, Met, 0000000000000000
 Fighter,      Sth, 1, 10.,1,  4a,3d,  2h,2f,  6,0,  3, Fli, 0000000000010001
 Bomber,       Sth, 1,  8.,2, 12a,1d,  2h,2f, 12,0,  0, AFl, 0000000000000001
 Helicopter,   nil, 1,  6.,0, 10a,3d,  2h,2f, 10,0,  0, CA,  0100000000000001
-Stlth Ftr.,   nil, 1, 14.,1,  8a,4d,  2h,2f,  8,0,  3, Sth, 0000000000010001
+Stlth Ftr.,   nil, 1, 14.,1,  8a,4d,  2h,2f,  8,0,  3, Sth, 0000000000010001 ; 30
 Stlth Bmbr.,  nil, 1, 12.,2, 14a,5d,  2h,2f, 16,0,  0, Sth, 0000000000000001
 Trireme,      Nav, 2,  3.,0,  1a,1d,  1h,1f,  4,2,  4, Map, 0000000000100000
 Caravel,      Mag, 2,  3.,0,  2a,1d,  1h,1f,  4,3,  4, Nav, 0000000000000000
@@ -424,7 +425,7 @@ Ironclad,     E1,  2,  4.,0,  4a,4d,  3h,1f,  6,0,  2, SE,  0000000000000000
 Destroyer,    nil, 2,  6.,0,  4a,4d,  3h,1f,  6,0,  2, E1,  0100000000000001
 Cruiser,      Roc, 2,  5.,0,  6a,6d,  3h,2f,  8,0,  2, Stl, 0100000000000001
 AEGIS Cruiser,nil, 2,  5.,0,  8a,8d,  3h,2f, 10,0,  2, Roc, 0110000000000001
-Battleship,   nil, 2,  4.,0, 12a,12d, 4h,2f, 16,0,  2, Aut, 0000000000000001
+Battleship,   nil, 2,  4.,0, 12a,12d, 4h,2f, 16,0,  2, Aut, 0000000000000001 ; 40
 Submarine,    nil, 2,  3.,0, 10a,2d,  3h,2f,  6,0,  2, Cmb, 0000000000001001
 Carrier,      nil, 2,  5.,0,  1a,9d,  4h,2f, 16,0,  2, AFl, 0000000010000001
 Transport,    nil, 2,  5.,0,  0a,3d,  3h,1f,  5,8,  4, Ind, 0000000000000000
@@ -434,7 +435,7 @@ Diplomat,     Esp, 0,  2.,0,  0a,0d,  1h,1f,  3,0,  6, Wri, 0000000000000010
 Spy,          nil, 0,  3.,0,  0a,0d,  1h,1f,  3,0,  6, Esp, 0000000000000011
 Caravan,      Cor, 0,  1.,0,  0a,1d,  1h,1f,  5,0,  7, Tra, 0000000000000010
 Freight,      nil, 0,  2.,0,  0a,1d,  1h,1f,  5,0,  7, Cor, 0000000000000010
-Explorer,     Gue, 0,  1.,0,  0a,1d,  1h,1f,  3,0,  0, Sea, 0000001000000010
+Explorer,     Gue, 0,  1.,0,  0a,1d,  1h,1f,  3,0,  0, Sea, 0000001000000010 ; 50
 Extra Land,   nil, 0,  1.,0,  1a,1d,  1h,1f,  5,0,  0, no,  0000000000000000
 Extra Ship,   nil, 2,  4.,0,  4a,2d,  2h,1f,  5,1,  2, no,  0000000000000000
 Extra Air,    nil, 1,  8.,4,  8a,8d,  2h,2f, 10,0,  0, no,  0000000000000000
@@ -466,7 +467,7 @@ not used y,   nil, 0,  1.,0,  0a,1d,  2h,1f,  4,0,  5, no,  0000000000000000
 not used z,   nil, 0,  1.,0,  0a,1d,  2h,1f,  4,0,  5, no,  0000000000000000
 
 ;
-; Note: the above 11 unit types (extra land, ship, air, and test units) are 
+; Note: the above 11 unit types (extra land, ship, air, and test units) are
 ; available for user defined unit types.  If these units are given prerequisites
 ; other than "no" they will appear in the game when the specified
 ; technology is reached.  Use if you want to create your own unit types
@@ -980,7 +981,7 @@ Enraged
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Cruiser
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;AEGIS Cruiser
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Battleship
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Submarine
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 100000000  ;Submarine
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Carrier
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 100000000  ;Transport
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Cruise Msl.
@@ -994,31 +995,31 @@ Enraged
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Extra Ship
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Extra Air
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit a
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit b 
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit c 
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit d 
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit e 
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit f 
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit g 
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit h 
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit i 
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit j 
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit k 
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit l 
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit m 
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit n 
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit o 
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit b
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit c
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit d
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit e
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit f
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit g
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit h
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit i
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit j
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit k
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit l
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit m
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit n
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit o
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit p
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;Archers (Test Unit q)
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;Musketeers (Test Unit r)
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;Horsemen (Test Unit s)
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;Modern Armor (Test Unit t) 
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;Modern Armor (Test Unit t)
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;Drone (Test Unit u)
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;Zeppelin (Test Unit v)
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit w 
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit w
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit x
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit y
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit z 
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 000000000  ;Test Unit z
 		
 
 @MAP_TRANSPORT_RELATIONSHIPS
@@ -1031,25 +1032,25 @@ Enraged
 @INITIAL_SETTINGS
 0,0,3	;Romans
 0,0,3	;Babylonians
-0,0,3	;Germans  
-0,0,3	;Egyptians 
-0,0,3	;Americans  
+0,0,3	;Germans
+0,0,3	;Egyptians
+0,0,3	;Americans
 0,0,3	;Mongols (Greeks)
-0,0,3	;Indians  
-0,0,3	;Russians    
-0,0,3	;Zulus       
-0,0,3	;French     
-0,0,3	;Aztecs     
-0,0,3	;Chinese   
-0,0,3	;English    
-0,0,3	;Greeks (Mongols)    
-0,0,3	;Celts      
-0,0,3	;Japanese    
-0,0,3	;Vikings    
-0,0,3	;Spanish     
-0,0,3	;Persians   
+0,0,3	;Indians
+0,0,3	;Russians
+0,0,3	;Zulus
+0,0,3	;French
+0,0,3	;Aztecs
+0,0,3	;Chinese
+0,0,3	;English
+0,0,3	;Greeks (Mongols)
+0,0,3	;Celts
+0,0,3	;Japanese
+0,0,3	;Vikings
+0,0,3	;Spanish
+0,0,3	;Persians
 0,0,3	;Carthaginians
-0,0,3	;Sioux      
+0,0,3	;Sioux
 
 @SOUNDS
 <none>  	    ; Settlers

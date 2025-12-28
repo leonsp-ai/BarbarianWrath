@@ -1,3 +1,11 @@
+## 1.3.0
+
+- Barbarians receive duplicates of any new units, up to 6 per turn on a normal map.
+- Barbarians receive reinforcements whenever they take a city.
+- Expanded the German city list.
+- Nerfed the Great Wall effect against Barbarians.
+- Allowed ships to sail diagonally on rivers.
+
 ## 1.2.0
 
 - Set Barbarian units to automatically promote to veteran status.

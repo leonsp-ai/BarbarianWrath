@@ -1027,7 +1027,7 @@ Map Y Size:
 Villages Only
 Roving Bands
 Restless Tribes
-Raging Hordes
+Raging Hordes (Recommended)
 Barbarian Wrath
 
 @RULES
