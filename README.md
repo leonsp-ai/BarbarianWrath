@@ -102,9 +102,17 @@ Map adapted from the Imperial Ambition scenario
 
 <img width="871" height="188" alt="image" src="https://github.com/user-attachments/assets/868f5e38-56fc-4c93-b8ee-a49190bebb21" />
 
-I apologize for not crediting the original author. I've lost track of the source for now.
+I apologize for not crediting the original author. I've lost track of the source. Please let me know if you know the author.
 
 ## Scenarios
+
+The scenarios have been converted but not modified, which means that some of the starting units will be a tier higher than originally intended. The scenarios also do not include any scenario-specific events. 
+
+### Age of Discovery
+
+<img width="1211" height="487" alt="image" src="https://github.com/user-attachments/assets/d1785475-d8ca-4d24-9ff7-94a09434f64f" />
+
+This is the Age of Discovery scenario released with the official Conflicts in Civilization expansion pack in 1996. The original scenario had some flavour text events which are omitted.
 
 ### Rome
 
