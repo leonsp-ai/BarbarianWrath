@@ -383,21 +383,17 @@ discreteEvents.onActivateUnit(
         local w, h, maps = civ.getAtlasDimensions()
         local twin_limit = math.ceil(math.sqrt(w * h) / 12)
         if not civ.isUnit(unit_or_units) and #unit_or_units >= too_many_per_tile then
-            -- civ.ui.text(string.format("not creating a twin -- too crowded: %d, %d", barbUnitsTwinnedCount, twin_limit))
             return -- don't multiply plentiful barbarians
         end
         if barbUnitsTwinnedCount >= twin_limit then
             -- 4 on a small map
             -- 6 on a normal map
             -- 8 on a large map
-            -- civ.ui.text(string.format("not creating a twin -- too often: %d, %d", barbUnitsTwinnedCount, twin_limit))
             return -- don't multiply too often per turn
         end
         if unit.type.id == 46 then
             barbUnitsTwinnedCount = barbUnitsTwinnedCount - 1
-        -- civ.ui.text(string.format("leader twin does not count: %d, %d, %s", barbUnitsTwinnedCount, twin_limit, unit.type.name))
         end
-        -- civ.ui.text(string.format("creating a twin for a veteran: %d, %d, %s", barbUnitsTwinnedCount, twin_limit, unit.type.name))
         civ.createUnit(unit.type, unit.owner, unit.location, {count = twin_unit_count, veteran = true})
         barbUnitsTwinnedCount = barbUnitsTwinnedCount + 1
         table.insert(barbUnitsTwinnedList, unit.type.name)
@@ -420,11 +416,9 @@ discreteEvents.onCityTaken(
         elseif civ.isUnitType(city.currentProduction) then
             new_unit_type = city.currentProduction
         else
-            -- civ.ui.text(string.format("not rewarding -- no unit type available: %d", barbUnitsTwinnedCount))
-            return
+            return -- cannot determine unit type
         end
         if not civ.isUnit(unit_or_units) and #unit_or_units >= too_many_per_tile then
-            -- civ.ui.text(string.format("not rewarding -- too crowded: %d", barbUnitsTwinnedCount))
             return -- don't multiply plentiful barbarians
         end
         civ.ui.text(
