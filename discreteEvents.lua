@@ -348,12 +348,12 @@ discreteEvents.onTurn(
         local barbSummary
         if #barbUnitsTwinnedList >= 3 then
             barbSummary = string.format(
-                "%s and %s",
+                "%s, and %s",
                 table.concat(barbUnitsTwinnedList, ", ", 1, #barbUnitsTwinnedList - 1),
                 barbUnitsTwinnedList[#barbUnitsTwinnedList]
             )
         elseif #barbUnitsTwinnedList == 2 then
-            barbSummary = table.concat(barbUnitsTwinnedList, ", and ")
+            barbSummary = table.concat(barbUnitsTwinnedList, " and ")
         elseif #barbUnitsTwinnedList == 1 then
             barbSummary = barbUnitsTwinnedList[1]
         end
