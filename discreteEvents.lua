@@ -58,7 +58,8 @@ local flag = require("flag")
 local counter = require("counter")
 local civlua = require("civluaModified")
 
-local barbUnitsTwinnedThisTurn = 0
+local barbUnitsTwinnedCount = 0
+local barbUnitsTwinnedList = {}
 
 -- ===============================================================================
 --
@@ -292,8 +293,16 @@ end)
 ---&endAutoDoc
 
 discreteEvents.onTurn(function(turn)
-    barbUnitsTwinnedThisTurn = 0
-
+    if #barbUnitsTwinnedList > 0 then
+        civ.ui.text(
+            string.format(
+                "BARBARIANS ON A RAMPAGE! The ranks of the red horde swell with %s.",
+                table.concat(barbUnitsTwinnedList, ", ")
+            )
+        )
+    end
+    barbUnitsTwinnedCount = 0
+    barbUnitsTwinnedList = {}
 end)
 
 discreteEvents.onActivateUnit(function(unit,source,repeatMove)
@@ -311,23 +320,24 @@ discreteEvents.onActivateUnit(function(unit,source,repeatMove)
     local w,h,maps = civ.getAtlasDimensions()
     local twin_limit = math.ceil(math.sqrt(w*h)/12)
     if not civ.isUnit(unit_or_units) and #unit_or_units >= too_many_per_tile then
-        -- civ.ui.text(string.format("not creating a twin -- too crowded: %d, %d", barbUnitsTwinnedThisTurn, twin_limit))
+        -- civ.ui.text(string.format("not creating a twin -- too crowded: %d, %d", barbUnitsTwinnedCount, twin_limit))
         return -- don't multiply plentiful barbarians
     end
-    if barbUnitsTwinnedThisTurn >= twin_limit then
+    if barbUnitsTwinnedCount >= twin_limit then
         -- 4 on a small map
         -- 6 on a normal map
         -- 8 on a large map
-        -- civ.ui.text(string.format("not creating a twin -- too often: %d, %d", barbUnitsTwinnedThisTurn, twin_limit))
+        -- civ.ui.text(string.format("not creating a twin -- too often: %d, %d", barbUnitsTwinnedCount, twin_limit))
         return -- don't multiply too often per turn
     end
     if unit.type.id == 46 then
-        barbUnitsTwinnedThisTurn = barbUnitsTwinnedThisTurn - 1
-        -- civ.ui.text(string.format("leader twin does not count: %d, %d, %s", barbUnitsTwinnedThisTurn, twin_limit, unit.type.name))
+        barbUnitsTwinnedCount = barbUnitsTwinnedCount - 1
+        -- civ.ui.text(string.format("leader twin does not count: %d, %d, %s", barbUnitsTwinnedCount, twin_limit, unit.type.name))
     end
-    -- civ.ui.text(string.format("creating a twin for a veteran: %d, %d, %s", barbUnitsTwinnedThisTurn, twin_limit, unit.type.name))
+    -- civ.ui.text(string.format("creating a twin for a veteran: %d, %d, %s", barbUnitsTwinnedCount, twin_limit, unit.type.name))
     civ.createUnit(unit.type, unit.owner, unit.location, {count=twin_unit_count, veteran=true})
-    barbUnitsTwinnedThisTurn = barbUnitsTwinnedThisTurn + 1
+    barbUnitsTwinnedCount = barbUnitsTwinnedCount + 1
+    table.insert(barbUnitsTwinnedList, unit.type)
 end)
 
 discreteEvents.onCityTaken(function(city,defender)
@@ -345,18 +355,19 @@ discreteEvents.onCityTaken(function(city,defender)
     elseif civ.isUnitType(city.currentProduction) then
         new_unit_type = city.currentProduction
     else
-        -- civ.ui.text(string.format("not rewarding -- no unit type available: %d", barbUnitsTwinnedThisTurn))
+        -- civ.ui.text(string.format("not rewarding -- no unit type available: %d", barbUnitsTwinnedCount))
         return
     end
     if not civ.isUnit(unit_or_units) and #unit_or_units >= too_many_per_tile then
-        -- civ.ui.text(string.format("not rewarding -- too crowded: %d", barbUnitsTwinnedThisTurn))
+        -- civ.ui.text(string.format("not rewarding -- too crowded: %d", barbUnitsTwinnedCount))
         return -- don't multiply plentiful barbarians
     end
     civ.ui.text(
         string.format(
             "BARBARIANS TAKE %s! %s devastated. More %s flock to the red banner.",
             string.upper(city.name), defender.name, new_unit_type.name
-        ))
+        )
+    )
     civ.createUnit(new_unit_type, city.owner, city.location, {count=reward_unit_count, veteran=true})
 end)
 
