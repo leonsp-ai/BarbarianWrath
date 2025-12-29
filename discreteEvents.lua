@@ -68,134 +68,168 @@ local barbUnitsTwinnedList = {}
 -- ===============================================================================
 ---&autoDoc onActivateUnit
 --Registers a function to be called every time a unit is activated. The callback takes the unit activated as a parameter, and the source of unit activation. `source` is `true` if activated by keyboard or mouse click, `false` if activated by the game itself. `repeatMove` is `true` if it's a repeat activation caused by moving, `false` otherwise.
-discreteEvents.onActivateUnit(function(unit,source,repeatMove)
-    if _global.eventTesting then
-        civ.ui.text("Unit activation Discrete Event")
+discreteEvents.onActivateUnit(
+    function(unit, source, repeatMove)
+        if _global.eventTesting then
+            civ.ui.text("Unit activation Discrete Event")
+        end
     end
-end)
+)
 ---&endAutoDoc
 
 ---&autoDoc onCityDestroyed
-discreteEvents.onCityDestroyed(function(city)
-    if _global.eventTesting then
-        civ.ui.text("City destroyed discrete event test")
-    end
-end)
----&endAutoDoc
----&autoDoc onBribeUnit
-discreteEvents.onBribeUnit(function(unit,previousOwner)
-    if _global.eventTesting then
-        civ.ui.text("Bribe unit discrete event test")
-    end
-end)
----&endAutoDoc
----&autoDoc onCityFounded
-discreteEvents.onCityFounded(function(city)
-    if _global.eventTesting then
-        civ.ui.text("discreteEvents.onCityFounded for "..city.name)
-    end
-    -- the cityCancelled() function is executed if the player
-    -- decides not to found the city after all
-    -- (so you can undo terrain changes, etc.
-    local function cityCancelled()
+discreteEvents.onCityDestroyed(
+    function(city)
         if _global.eventTesting then
-            civ.ui.text("discreteEvents.onCityFounded city cancelled for "..city.name)
+            civ.ui.text("City destroyed discrete event test")
         end
     end
-    return cityCancelled
-end)
+)
+---&endAutoDoc
+---&autoDoc onBribeUnit
+discreteEvents.onBribeUnit(
+    function(unit, previousOwner)
+        if _global.eventTesting then
+            civ.ui.text("Bribe unit discrete event test")
+        end
+    end
+)
+---&endAutoDoc
+---&autoDoc onCityFounded
+discreteEvents.onCityFounded(
+    function(city)
+        if _global.eventTesting then
+            civ.ui.text("discreteEvents.onCityFounded for " .. city.name)
+        end
+        -- the cityCancelled() function is executed if the player
+        -- decides not to found the city after all
+        -- (so you can undo terrain changes, etc.
+        local function cityCancelled()
+            if _global.eventTesting then
+                civ.ui.text("discreteEvents.onCityFounded city cancelled for " .. city.name)
+            end
+        end
+        return cityCancelled
+    end
+)
 ---&endAutoDoc
 ---&autoDoc onCityProcessed
-discreteEvents.onCityProcessed(function(city)
-    --civ.ui.text("City processed discrete event test for city "..city.name)
-
-end)
+discreteEvents.onCityProcessed(
+    function(city)
+        --civ.ui.text("City processed discrete event test for city "..city.name)
+    end
+)
 ---&endAutoDoc
 ---&autoDoc onCityProduction
-discreteEvents.onCityProduction(function(city,item)
-    --civ.ui.text("City production discrete event test")
-
-end)
+discreteEvents.onCityProduction(
+    function(city, item)
+        --civ.ui.text("City production discrete event test")
+    end
+)
 ---&endAutoDoc
 ---&autoDoc onCityTaken
-discreteEvents.onCityTaken(function(city,defender)
-    --civ.ui.text(city.name.." taken from "..defender.name.." discrete event")
-
-
-end)
+discreteEvents.onCityTaken(
+    function(city, defender)
+        --civ.ui.text(city.name.." taken from "..defender.name.." discrete event")
+    end
+)
 ---&endAutoDoc
 ---&autoDoc onScenarioLoaded
-discreteEvents.onScenarioLoaded(function()
-    --civ.ui.text("discrete event on scenario loaded")
-
-end)
+discreteEvents.onScenarioLoaded(
+    function()
+        --civ.ui.text("discrete event on scenario loaded")
+    end
+)
 ---&endAutoDoc
 ---&autoDoc onTurn
-discreteEvents.onTurn(function(turn)
-    --civ.ui.text("discrete on turn event 1")
-end)
+discreteEvents.onTurn(
+    function(turn)
+        --civ.ui.text("discrete on turn event 1")
+    end
+)
 ---&endAutoDoc
 
-discreteEvents.onTurn(function(turn)
-    --civ.ui.text("discrete on turn event 2")
+discreteEvents.onTurn(
+    function(turn)
+        --civ.ui.text("discrete on turn event 2")
+    end
+)
 
-end)
-
-discreteEvents.onTurn(function(turn)
-    --civ.ui.text("discrete on turn event 3")
-end)
+discreteEvents.onTurn(
+    function(turn)
+        --civ.ui.text("discrete on turn event 3")
+    end
+)
 
 ---&autoDoc onUnitKilled
-discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation,winnerVetStatus,loserVetStatus)
-    if _global.eventTesting then
-        civ.ui.text(loser.type.name.." was killed by "..winner.type.name.." discrete event 1")
+discreteEvents.onUnitKilled(
+    function(loser, winner, aggressor, victim, loserLocation, winnerVetStatus, loserVetStatus)
+        if _global.eventTesting then
+            civ.ui.text(loser.type.name .. " was killed by " .. winner.type.name .. " discrete event 1")
+        end
     end
-end)
+)
 ---&endAutoDoc
 
 ---&autoDoc onUnitDefeated
-discreteEvents.onUnitDefeated(function(loser,winner,aggressor,victim,loserLocation,winnerVetStatus,loserVetStatus)
-    if _global.eventTesting then
-    civ.ui.text(loser.type.name.." was defeated (possibly by event) by "..winner.type.name.." discrete event")
+discreteEvents.onUnitDefeated(
+    function(loser, winner, aggressor, victim, loserLocation, winnerVetStatus, loserVetStatus)
+        if _global.eventTesting then
+            civ.ui.text(
+                loser.type.name .. " was defeated (possibly by event) by " .. winner.type.name .. " discrete event"
+            )
+        end
     end
-end)
+)
 ---&endAutoDoc
 
-discreteEvents.onTurn(function(turn)
-    --civ.ui.text("discrete on turn event 4")
-end)
----&autoDoc onCityProcessingComplete
-discreteEvents.onCityProcessingComplete(function(turn,tribe)
-    if _global.eventTesting then
-        civ.ui.text("discreteEvents.onCityProcessingComplete for "..tribe.name.." on turn "..tostring(turn))
+discreteEvents.onTurn(
+    function(turn)
+        --civ.ui.text("discrete on turn event 4")
     end
-end)
+)
+---&autoDoc onCityProcessingComplete
+discreteEvents.onCityProcessingComplete(
+    function(turn, tribe)
+        if _global.eventTesting then
+            civ.ui.text("discreteEvents.onCityProcessingComplete for " .. tribe.name .. " on turn " .. tostring(turn))
+        end
+    end
+)
 ---&endAutoDoc
 
 ---&autoDoc onTribeTurnBegin
-discreteEvents.onTribeTurnBegin(function(turn,tribe)
-    if _global.eventTesting then
-        civ.ui.text("discreteEvents.onTribeTurnBegin for "..tribe.name.." on turn "..tostring(turn))
+discreteEvents.onTribeTurnBegin(
+    function(turn, tribe)
+        if _global.eventTesting then
+            civ.ui.text("discreteEvents.onTribeTurnBegin for " .. tribe.name .. " on turn " .. tostring(turn))
+        end
     end
-end)
+)
 ---&endAutoDoc
 ---&autoDoc onTribeTurnEnd
-discreteEvents.onTribeTurnEnd(function(turn,tribe)
-    if _global.eventTesting then
-        civ.ui.text("discreteEvents.onTribeTurnEnd for "..tribe.name.." on turn "..tostring(turn))
+discreteEvents.onTribeTurnEnd(
+    function(turn, tribe)
+        if _global.eventTesting then
+            civ.ui.text("discreteEvents.onTribeTurnEnd for " .. tribe.name .. " on turn " .. tostring(turn))
+        end
     end
-end)
+)
 ---&endAutoDoc
 
-discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation,winnerVetStatus,loserVetStatus)
-    if _global.eventTesting then
-        civ.ui.text(loser.type.name.." was killed by "..winner.type.name.." discrete event 2")
+discreteEvents.onUnitKilled(
+    function(loser, winner, aggressor, victim, loserLocation, winnerVetStatus, loserVetStatus)
+        if _global.eventTesting then
+            civ.ui.text(loser.type.name .. " was killed by " .. winner.type.name .. " discrete event 2")
+        end
     end
-end)
+)
 ---&autoDoc onCentauriArrival
-discreteEvents.onCentauriArrival(function(tribe)
-    --civ.ui.text(tribe.name.." arrived at centauri discrete event")
-end)
+discreteEvents.onCentauriArrival(
+    function(tribe)
+        --civ.ui.text(tribe.name.." arrived at centauri discrete event")
+    end
+)
 ---&endAutoDoc
 ---&autoDoc onGameEnds
 -- On Game Ends
@@ -206,10 +240,12 @@ end)
 -- If any of these return false, then game end is prevented
 -- Not documented or experimented with much
 -- based on legacy event engine code, reason is an integer
-discreteEvents.onGameEnds(function(reason)
-    -- return false to stop the game from ending
-    return true
-end)
+discreteEvents.onGameEnds(
+    function(reason)
+        -- return false to stop the game from ending
+        return true
+    end
+)
 ---&endAutoDoc
 ---&autoDoc onSchism
 -- On Schism
@@ -218,10 +254,11 @@ end)
 -- This is combined with the consolidated events and the
 -- legacy events, as well as a separate onSchism.lua file
 -- If any of these return false, then schism is prevented
-discreteEvents.onSchism(function(tribe)
-
-    return true
-end)
+discreteEvents.onSchism(
+    function(tribe)
+        return true
+    end
+)
 ---&endAutoDoc
 
 ---&autoDoc onNegotiation
@@ -231,10 +268,11 @@ end)
 -- This is combined with the consolidated events and the
 -- legacy events, as well as a separate onNegotiation.lua file
 -- If any of these return false, then negotiation is prevented
-discreteEvents.onNegotiation(function(talker,listener)
-
-    return true
-end)
+discreteEvents.onNegotiation(
+    function(talker, listener)
+        return true
+    end
+)
 ---&endAutoDoc
 
 ---&autoDoc onCanFoundCity
@@ -250,33 +288,44 @@ end)
 -- a city at the unit's location. `advancedTribe` is `true` when picking
 -- up a hut with `unit` triggers an advanced tribe.
 -- Return `true` to allow, `false` to disallow.
-discreteEvents.onCanFoundCity(function(unit,advancedTribe)
-    if _global.eventTesting then
-        civ.ui.text("discreteEvents.onCanFoundCity for "..unit.type.name)
+discreteEvents.onCanFoundCity(
+    function(unit, advancedTribe)
+        if _global.eventTesting then
+            civ.ui.text("discreteEvents.onCanFoundCity for " .. unit.type.name)
+        end
+        return true
     end
-    return true
-end)
+)
 ---&endAutoDoc
 ---&autoDoc onEnterTile
 -- onEnterTile(unit,previousTile)
 -- executes when a unit successfully enters a tile (so not when it attacks
 -- a unit or fails to enter a tile because it lacks movement points)
-discreteEvents.onEnterTile(function(unit,previousTile,previousDomainSpec)
-    if _global.eventTesting then
-        civ.ui.text("discreteEvents.onEnterTile: "..unit.type.name.." has entered tile ("..text.coordinates(unit.location)..") from tile ("..text.coordinates(previousTile)..").")
+discreteEvents.onEnterTile(
+    function(unit, previousTile, previousDomainSpec)
+        if _global.eventTesting then
+            civ.ui.text(
+                "discreteEvents.onEnterTile: " ..
+                    unit.type.name ..
+                        " has entered tile (" ..
+                            text.coordinates(unit.location) .. ") from tile (" .. text.coordinates(previousTile) .. ")."
+            )
+        end
     end
-end)
+)
 ---&endAutoDoc
 ---&autoDoc onFinalOrderGiven
 -- onFinalOrderGiven(unit)
 -- executes when a unit has been given its final order for the turn.
 -- that is, when a new unit is active and the previous unit has spent
 -- all its movement points
-discreteEvents.onFinalOrderGiven(function(unit)
-    if _global.eventTesting then
-        civ.ui.text("discreteEvents.onFinalOrderGiven: "..unit.type.name.." has been given its order.")
+discreteEvents.onFinalOrderGiven(
+    function(unit)
+        if _global.eventTesting then
+            civ.ui.text("discreteEvents.onFinalOrderGiven: " .. unit.type.name .. " has been given its order.")
+        end
     end
-end)
+)
 ---&endAutoDoc
 
 -- Key press events are probably best registered in
@@ -285,92 +334,110 @@ end)
 ---&autoDoc onKeyPress
 -- The keyCode is an integer that corresponds to a particular key on the keyboard.
 -- The keyboard module provides names for these codes.
-discreteEvents.onKeyPress(function(keyCode)
-    if _global.eventTesting and keyboard.backspace == keyCode then
-        civ.ui.text("discreteEvents.onKeyPress: The backspace key has been pressed.")
+discreteEvents.onKeyPress(
+    function(keyCode)
+        if _global.eventTesting and keyboard.backspace == keyCode then
+            civ.ui.text("discreteEvents.onKeyPress: The backspace key has been pressed.")
+        end
     end
-end)
+)
 ---&endAutoDoc
 
-discreteEvents.onTurn(function(turn)
-    if #barbUnitsTwinnedList > 0 then
+discreteEvents.onTurn(
+    function(turn)
+        local barbSummary
+        if #barbUnitsTwinnedList >= 3 then
+            barbSummary = string.format(
+                "%s and %s",
+                table.concat(barbUnitsTwinnedList, ", ", 1, #barbUnitsTwinnedList - 1),
+                barbUnitsTwinnedList[#barbUnitsTwinnedList]
+            )
+        elseif #barbUnitsTwinnedList == 2 then
+            barbSummary = table.concat(barbUnitsTwinnedList, ", and ")
+        elseif #barbUnitsTwinnedList == 1 then
+            barbSummary = barbUnitsTwinnedList[1]
+        end
+        if #barbUnitsTwinnedList > 0 then
+            civ.ui.text(
+                string.format("BARBARIANS ON A RAMPAGE! The ranks of the red horde swell with %s.", barbSummary)
+            )
+        end
+        barbUnitsTwinnedCount = 0
+        barbUnitsTwinnedList = {}
+    end
+)
+
+discreteEvents.onActivateUnit(
+    function(unit, source, repeatMove)
+        if unit.owner.id ~= 0 then
+            return -- only barbarians
+        end
+        if unit.veteran then
+            return -- skip veterans
+        end
+        unit.veteran = true
+
+        local too_many_per_tile = 3
+        local twin_unit_count = 1
+        local unit_or_units = unit.location.units()
+        local w, h, maps = civ.getAtlasDimensions()
+        local twin_limit = math.ceil(math.sqrt(w * h) / 12)
+        if not civ.isUnit(unit_or_units) and #unit_or_units >= too_many_per_tile then
+            -- civ.ui.text(string.format("not creating a twin -- too crowded: %d, %d", barbUnitsTwinnedCount, twin_limit))
+            return -- don't multiply plentiful barbarians
+        end
+        if barbUnitsTwinnedCount >= twin_limit then
+            -- 4 on a small map
+            -- 6 on a normal map
+            -- 8 on a large map
+            -- civ.ui.text(string.format("not creating a twin -- too often: %d, %d", barbUnitsTwinnedCount, twin_limit))
+            return -- don't multiply too often per turn
+        end
+        if unit.type.id == 46 then
+            barbUnitsTwinnedCount = barbUnitsTwinnedCount - 1
+        -- civ.ui.text(string.format("leader twin does not count: %d, %d, %s", barbUnitsTwinnedCount, twin_limit, unit.type.name))
+        end
+        -- civ.ui.text(string.format("creating a twin for a veteran: %d, %d, %s", barbUnitsTwinnedCount, twin_limit, unit.type.name))
+        civ.createUnit(unit.type, unit.owner, unit.location, {count = twin_unit_count, veteran = true})
+        barbUnitsTwinnedCount = barbUnitsTwinnedCount + 1
+        table.insert(barbUnitsTwinnedList, unit.type.name)
+    end
+)
+
+discreteEvents.onCityTaken(
+    function(city, defender)
+        if city.owner.id ~= 0 then
+            return -- only for barbarians
+        end
+        local reward_unit_count = 2
+        local too_many_per_tile = 2
+        local unit_or_units = city.location.units()
+        local new_unit_type
+        if civ.isUnit(unit_or_units) then
+            new_unit_type = unit_or_units.type
+        elseif #unit_or_units > 0 then
+            new_unit_type = unit_or_units[1].type
+        elseif civ.isUnitType(city.currentProduction) then
+            new_unit_type = city.currentProduction
+        else
+            -- civ.ui.text(string.format("not rewarding -- no unit type available: %d", barbUnitsTwinnedCount))
+            return
+        end
+        if not civ.isUnit(unit_or_units) and #unit_or_units >= too_many_per_tile then
+            -- civ.ui.text(string.format("not rewarding -- too crowded: %d", barbUnitsTwinnedCount))
+            return -- don't multiply plentiful barbarians
+        end
         civ.ui.text(
             string.format(
-                "BARBARIANS ON A RAMPAGE! The ranks of the red horde swell with %s.",
-                table.concat(barbUnitsTwinnedList, ", ")
+                "BARBARIANS TAKE %s! %s devastated. More %s flock to the red banner.",
+                string.upper(city.name),
+                defender.name,
+                new_unit_type.name
             )
         )
+        civ.createUnit(new_unit_type, city.owner, city.location, {count = reward_unit_count, veteran = true})
     end
-    barbUnitsTwinnedCount = 0
-    barbUnitsTwinnedList = {}
-end)
-
-discreteEvents.onActivateUnit(function(unit,source,repeatMove)
-    if unit.owner.id ~= 0 then
-        return -- only barbarians
-    end
-    if unit.veteran then
-        return -- skip veterans
-    end
-    unit.veteran = true
-
-    local too_many_per_tile = 3
-    local twin_unit_count = 1
-    local unit_or_units = unit.location.units()
-    local w,h,maps = civ.getAtlasDimensions()
-    local twin_limit = math.ceil(math.sqrt(w*h)/12)
-    if not civ.isUnit(unit_or_units) and #unit_or_units >= too_many_per_tile then
-        -- civ.ui.text(string.format("not creating a twin -- too crowded: %d, %d", barbUnitsTwinnedCount, twin_limit))
-        return -- don't multiply plentiful barbarians
-    end
-    if barbUnitsTwinnedCount >= twin_limit then
-        -- 4 on a small map
-        -- 6 on a normal map
-        -- 8 on a large map
-        -- civ.ui.text(string.format("not creating a twin -- too often: %d, %d", barbUnitsTwinnedCount, twin_limit))
-        return -- don't multiply too often per turn
-    end
-    if unit.type.id == 46 then
-        barbUnitsTwinnedCount = barbUnitsTwinnedCount - 1
-        -- civ.ui.text(string.format("leader twin does not count: %d, %d, %s", barbUnitsTwinnedCount, twin_limit, unit.type.name))
-    end
-    -- civ.ui.text(string.format("creating a twin for a veteran: %d, %d, %s", barbUnitsTwinnedCount, twin_limit, unit.type.name))
-    civ.createUnit(unit.type, unit.owner, unit.location, {count=twin_unit_count, veteran=true})
-    barbUnitsTwinnedCount = barbUnitsTwinnedCount + 1
-    table.insert(barbUnitsTwinnedList, unit.type)
-end)
-
-discreteEvents.onCityTaken(function(city,defender)
-    if city.owner.id ~= 0 then
-        return -- only for barbarians
-    end
-    local reward_unit_count = 2
-    local too_many_per_tile = 2
-    local unit_or_units = city.location.units()
-    local new_unit_type
-    if civ.isUnit(unit_or_units) then
-        new_unit_type = unit_or_units.type
-    elseif #unit_or_units > 0 then
-        new_unit_type = unit_or_units[0].type
-    elseif civ.isUnitType(city.currentProduction) then
-        new_unit_type = city.currentProduction
-    else
-        -- civ.ui.text(string.format("not rewarding -- no unit type available: %d", barbUnitsTwinnedCount))
-        return
-    end
-    if not civ.isUnit(unit_or_units) and #unit_or_units >= too_many_per_tile then
-        -- civ.ui.text(string.format("not rewarding -- too crowded: %d", barbUnitsTwinnedCount))
-        return -- don't multiply plentiful barbarians
-    end
-    civ.ui.text(
-        string.format(
-            "BARBARIANS TAKE %s! %s devastated. More %s flock to the red banner.",
-            string.upper(city.name), defender.name, new_unit_type.name
-        )
-    )
-    civ.createUnit(new_unit_type, city.owner, city.location, {count=reward_unit_count, veteran=true})
-end)
-
+)
 
 -- ===============================================================================
 --
@@ -385,6 +452,5 @@ end)
 --      local discreteEvents = require("discreteEventsRegistrar")
 
 local versionTable = {}
-gen.versionFunctions(versionTable,versionNumber,fileModified,"MechanicsFiles".."\\".."discreteEvents.lua")
+gen.versionFunctions(versionTable, versionNumber, fileModified, "MechanicsFiles" .. "\\" .. "discreteEvents.lua")
 return versionTable
-
