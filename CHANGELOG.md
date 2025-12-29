@@ -1,6 +1,6 @@
 ## 1.3.0
 
-- Barbarians receive duplicates of any new units, up to 6 per turn on a normal map.
+- Barbarians receive duplicates of any new units, up to 6 per turn on a medium 50x80 map.
 - Barbarians receive reinforcements whenever they take a city.
 - Expanded the German city list.
 - Nerfed the Great Wall effect against Barbarians.
