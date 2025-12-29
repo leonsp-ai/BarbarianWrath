@@ -2,7 +2,8 @@
 
 ## Features
 
-- Barbarians are a tier ahead of the vanilla game
+- Barbarian units are a tier ahead of the vanilla game
+- Barbarians receive reinforcements with every unit they build and every city they take!
 - Option to play on the secret Barbarian Wrath intensity
 - Both the vanilla Civilization II scenarios, Rome and WW2, converted to the Test of Time format
 - Three world maps with a unique polar perspective
@@ -22,11 +23,21 @@ Instead of Partisans and Cavalry, you'll face Alpine Troops and Early Armor.
 
 Greater barbarian presence is also a good influence on the AI. When the AI is busy fending off barbarians it has less time to be a jerk.
 
-## Why Grenadiers?
+### Why Grenadiers?
 
 The Gunpowder technology and the Musketeer slot have hardcoded side effects. I introduced Grenadiers with a higher attack than Musketeers but same defense to work around those side effects. They become available with Metallurgy.
 
 Similarly, Early Armor is there to introduce a more gentle power curve between Cavalry and Armor and to work with the default sound effects.
+
+## Hints and Tips
+
+Barbarian units are cheap to bribe.
+
+Whenever you bribe a barbarian city, you gain not only the city but also every unit around the city.
+
+Fortify chokepoints. Consider settling on rivers or on hills.
+
+Since stack wipes are disabled, you unfortunately cannot stack wipe a barbarian doom stack.
 
 ## Prerequisites
 
