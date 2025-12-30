@@ -355,7 +355,7 @@ discreteEvents.onTurn(
         elseif #barbUnitsTwinnedList == 2 then
             barbSummary = table.concat(barbUnitsTwinnedList, " and ")
         elseif #barbUnitsTwinnedList == 1 then
-            barbSummary = barbUnitsTwinnedList[1]
+            barbSummary = string.format("a %s", barbUnitsTwinnedList[1])
         end
         if #barbUnitsTwinnedList > 0 then
             civ.ui.text(
@@ -375,28 +375,40 @@ discreteEvents.onActivateUnit(
         if unit.veteran then
             return -- skip veterans
         end
-        unit.veteran = true
 
-        local too_many_per_tile = 3
+        local too_many_per_tile = 6
         local twin_unit_count = 1
         local unit_or_units = unit.location.units()
         local w, h, maps = civ.getAtlasDimensions()
-        local twin_limit = math.ceil(math.sqrt(w * h) / 12)
+        local twin_limit = math.ceil(math.sqrt(w * h) / 6)
         if not civ.isUnit(unit_or_units) and #unit_or_units >= too_many_per_tile then
             return -- don't multiply plentiful barbarians
         end
         if barbUnitsTwinnedCount >= twin_limit then
-            -- 4 on a small map
-            -- 6 on a normal map
-            -- 8 on a large map
+            -- 8 on a small map
+            -- 12 on a normal map
+            -- 16 on a large map
             return -- don't multiply too often per turn
         end
-        if unit.type.id == 46 then
-            barbUnitsTwinnedCount = barbUnitsTwinnedCount - 1
+        if unit.type.domain ~= 0 then
+            return -- don't multiply boats
         end
-        civ.createUnit(unit.type, unit.owner, unit.location, {count = twin_unit_count, veteran = true})
-        barbUnitsTwinnedCount = barbUnitsTwinnedCount + 1
-        table.insert(barbUnitsTwinnedList, unit.type.name)
+        local l = unit.location
+        local tile = civ.getTile(l.x, l.y, l.z)
+        local bt = tile.baseTerrain
+        if bt.abbrev == "Oce" then
+            return -- don't multiply at sea
+        end
+        unit.veteran = true
+
+        local newUnits = gen.createUnit(unit.type, unit.owner, {unit.location}, {count = twin_unit_count, homeCity = nil, veteran = true})
+        if #newUnits > 0 then
+            if unit.type.id ~= 46 then
+                -- Barbarian leaders don't count against the limit
+                barbUnitsTwinnedCount = barbUnitsTwinnedCount + 1
+            end
+            table.insert(barbUnitsTwinnedList, unit.type.name)
+        end
     end
 )
 
@@ -406,7 +418,7 @@ discreteEvents.onCityTaken(
             return -- only for barbarians
         end
         local reward_unit_count = 2
-        local too_many_per_tile = 2
+        local too_many_per_tile = 3
         local unit_or_units = city.location.units()
         local new_unit_type
         if civ.isUnit(unit_or_units) then
@@ -421,6 +433,17 @@ discreteEvents.onCityTaken(
         if not civ.isUnit(unit_or_units) and #unit_or_units >= too_many_per_tile then
             return -- don't multiply plentiful barbarians
         end
+        local newUnits = gen.createUnit(new_unit_type, city.owner, {city.location}, {count = reward_unit_count, homeCity = nil, veteran = true})
+        if #newUnits == 0 then
+            civ.ui.text(
+                string.format(
+                    "BARBARIANS TAKE %s! %s devastated. The outpost is too remote to reinforce.",
+                    string.upper(city.name),
+                    defender.name
+                )
+            )
+            return -- could not reinforce
+        end
         civ.ui.text(
             string.format(
                 "BARBARIANS TAKE %s! %s devastated. More %s flock to the red banner.",
@@ -429,7 +452,6 @@ discreteEvents.onCityTaken(
                 new_unit_type.name
             )
         )
-        civ.createUnit(new_unit_type, city.owner, city.location, {count = reward_unit_count, veteran = true})
     end
 )
 
