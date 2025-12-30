@@ -1,3 +1,10 @@
+## 1.3.1
+
+- Fixed Barbarian unit creation so that it correctly sets the veteran flag. This prevents creating an infinite wave of new units. Thank you Prof. Garfield!
+- Added error handling for Barbarian unit creation.
+- Delayed Barbarian veteran promotion until the units are on land. This allows them to be twinned while using veterancy as the marker to distinguish between twinned and non-twinned units.
+- Relaxed the Barbarian unit creation limits. Since the horde no longer doubles every turn, the initial horde can be larger.
+
 ## 1.3.0
 
 - Barbarians receive duplicates of any new units, up to 6 per turn on a medium 50x80 map.
