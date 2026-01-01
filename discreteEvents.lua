@@ -344,6 +344,41 @@ local barbUnitsTwinnedCount = 0
 local barbUnitsTwinnedList = {}
 local maxCapitalSize = {}
 local lastSizeFixTurn = {}
+local unitAliases = {
+    diplomat = civ.getUnitType(46),
+
+    cavalry = civ.getUnitType(20),
+    chariot = civ.getUnitType(15),
+    crusaders = civ.getUnitType(17),
+    elephant = civ.getUnitType(16),
+    dragoons = civ.getUnitType(19),
+    knights = civ.getUnitType(18),
+
+    grenadiers = civ.getUnitType(7),
+    legion = civ.getUnitType(4),
+    marines = civ.getUnitType(11),
+    swordsmen = civ.getUnitType(5),
+
+    boudica = civ.getUnitType(76),
+    hengist = civ.getUnitType(78),
+    pyrrhus = civ.getUnitType(52),
+    spartacus = civ.getUnitType(77),
+}
+
+local heroes = {
+    boudica = {retinue="chariot", taunt="'Heave we not been robbed entirely of our possessions, while for what litle remains we must pay tribute?'\n\nBoudica of the Iceni leads a horde of chariots against the cities of the world."},
+    spartacus = {retinue="legion", taunt="'Maybe there's no peace in this world, for us or for anyone else. I don't know. But I do know that as long as we live, we must stay true to ourselves. We march tonight!'\n\nSpartacus leads legions of the enslaved in revolt against the cities of the world."},
+    hengist = {retinue="swordsmen", taunt="'The people are worthless, but the land is rich!'\n\nHengist leads a horde of swordsmen against the cities of the world."},
+    florine = {retinue="crusaders", taunt="'Pierced by seven arrows but still fighting, she seeks to open a passage towards the mountains!'\n\nFlorine of Burgundy leads rampaging crusaders against the cities of the world."},
+}
+
+discreteEvents.onScenarioLoaded(
+    function()
+        for hero, _ in pairs(heroes) do
+            data.defineFlag(hero)
+        end
+    end
+)
 
 -- handle barbarian management
 discreteEvents.onTurn(
@@ -412,22 +447,47 @@ discreteEvents.onCityProcessingComplete(
         local foodSurplus = foodProd - (2 * capital.size + foodSupport)
         if foodSurplus > 0  then
             if lastSizeFixTurn[capital.name] and lastSizeFixTurn[capital.name] - turn <= 5 then
-                -- civ.ui.text(
-                --     string.format(
-                --         "DEBUG: We last fixed %s's population %d turns ago. Accelerating.",
-                --         capital.name, lastSizeFixTurn[capital.name] - turn
-                --     )
-                -- )
+                civ.ui.text(
+                    string.format(
+                        "DEBUG: We last fixed %s's population %d turns ago. Accelerating.",
+                        capital.name, lastSizeFixTurn[capital.name] - turn
+                    )
+                )
                 maxCapitalSize[capital.name] = maxCapitalSize[capital.name] + 1
             end
-            -- civ.ui.text(
-            --     string.format(
-            --         "BUG FIX! %s is smaller at %d than the all time high of %d. Restoring the %s population.",
-            --         capital.name, capital.size, maxCapitalSize[capital.name], tribe.adjective
-            --     )
-            -- )
+            civ.ui.text(
+                string.format(
+                    "BUG FIX! %s is smaller at %d than the all time high of %d. Restoring the %s population.",
+                    capital.name, capital.size, maxCapitalSize[capital.name], tribe.adjective
+                )
+            )
             capital.size = maxCapitalSize[capital.name]
             lastSizeFixTurn[capital.name] = turn
+        end
+    end
+)
+
+-- prevent barbarian cities from building heroes
+discreteEvents.onTurn(
+    function(turn)
+        for city in civ.iterateCities() do
+            if city.owner.id ~= 0 then
+                return -- not barbarian
+            end
+            if not civ.isUnitType(city.currentProduction) then
+                return -- not building a unit
+            end
+            for hero, details in pairs(heroes) do
+                if city.currentProduction == unitAliases[hero] then
+                    civ.ui.text(
+                        string.format(
+                            "DEBUG: %s is building a %s. Setting it to build %s instead",
+                            city.name, hero, details.retinue
+                        )
+                    )
+                    city.currentProduction = unitAliases[retinue]
+                end
+            end
         end
     end
 )
@@ -468,14 +528,32 @@ discreteEvents.onActivateUnit(
 
         local newUnits = gen.createUnit(unit.type, unit.owner, {unit.location}, {count = twin_unit_count, homeCity = nil, veteran = true})
         if #newUnits > 0 then
-            if unit.type.id ~= 46 then
+            if unit.type ~= unitAliases.diplomat then
                 -- Barbarian leaders don't count against the limit
                 barbUnitsTwinnedCount = barbUnitsTwinnedCount + 1
             end
             table.insert(barbUnitsTwinnedList, unit.type.name)
         end
+
+        for hero, details in pairs(heroes) do
+            emergeHeroAtUnit(unit, unitAliases[details.retinue], hero, unitAliases[hero], details.taunt)
+        end
     end
 )
+
+local function emergeHeroAtUnit(unit, retinue, flagName, hero, taunt)
+    if unit.type == retinue and not data.flagGetValue(flagName) then
+        local heroUnit = gen.createUnit(hero, unit.owner, {unit.location}, {homeCity = nil, veteran = true})
+        local retinue = gen.createUnit(retinue, unit.owner, {unit.location}, {count = 3, homeCity = nil, veteran = true})
+
+        if #heroUnit > 0 then
+            data.flagSetTrue(flagName)
+            civ.ui.text(taunt)
+        else
+            civ.ui.text(string.format("DEBUG: Failed to emerge hero: %s", flagName))
+        end
+    end
+end
 
 discreteEvents.onCityTaken(
     function(city, defender)
