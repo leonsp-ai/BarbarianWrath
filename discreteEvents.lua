@@ -58,9 +58,6 @@ local flag = require("flag")
 local counter = require("counter")
 local civlua = require("civluaModified")
 
-local barbUnitsTwinnedCount = 0
-local barbUnitsTwinnedList = {}
-
 -- ===============================================================================
 --
 --          Discrete Events
@@ -343,6 +340,12 @@ discreteEvents.onKeyPress(
 )
 ---&endAutoDoc
 
+local barbUnitsTwinnedCount = 0
+local barbUnitsTwinnedList = {}
+local maxCapitalSize = {}
+local lastSizeFixTurn = {}
+
+-- handle barbarian management
 discreteEvents.onTurn(
     function(turn)
         local barbSummary
@@ -364,6 +367,68 @@ discreteEvents.onTurn(
         end
         barbUnitsTwinnedCount = 0
         barbUnitsTwinnedList = {}
+    end
+)
+
+local function countSettlers(city)
+    local settlers = 0
+    for unit in civ.iterateUnits() do
+        if unit.homeCity and unit.homeCity == city and gen.isRequiresFoodSupport(unit.type) then
+            settlers = settlers +1
+        end
+    end
+    return settlers
+end
+
+local function settlerSupport(tribe, city)
+    local settlers = countSettlers(city)
+    local settlersEat = (tribe.government <= 2) and civ.cosmic.settlersEatLow or civ.cosmic.settlersEatHigh
+    return settlers * settlersEat
+end
+
+-- handle city size
+discreteEvents.onCityProcessingComplete(
+    function(turn, tribe)
+        if tribe.id == 0 then
+            return -- barbarians
+        end
+        local capital = civlua.findCapital(tribe)
+        if capital == nil then
+            return -- no capital
+        end
+
+        if maxCapitalSize[capital.name] == nil then
+            maxCapitalSize[capital.name] = capital.size
+            return
+        else
+            maxCapitalSize[capital.name] = math.max(maxCapitalSize[capital.name], capital.size)
+        end
+
+        if capital.size >= maxCapitalSize[capital.name] then
+            return
+        end
+        local foodProd = gen.computeBaseProduction(capital)
+        local foodSupport = settlerSupport(tribe, capital)
+        local foodSurplus = foodProd - (2 * capital.size + foodSupport)
+        if foodSurplus > 0  then
+            if lastSizeFixTurn[capital.name] and lastSizeFixTurn[capital.name] - turn <= 5 then
+                -- civ.ui.text(
+                --     string.format(
+                --         "DEBUG: We last fixed %s's population %d turns ago. Accelerating.",
+                --         capital.name, lastSizeFixTurn[capital.name] - turn
+                --     )
+                -- )
+                maxCapitalSize[capital.name] = maxCapitalSize[capital.name] + 1
+            end
+            -- civ.ui.text(
+            --     string.format(
+            --         "BUG FIX! %s is smaller at %d than the all time high of %d. Restoring the %s population.",
+            --         capital.name, capital.size, maxCapitalSize[capital.name], tribe.adjective
+            --     )
+            -- )
+            capital.size = maxCapitalSize[capital.name]
+            lastSizeFixTurn[capital.name] = turn
+        end
     end
 )
 
