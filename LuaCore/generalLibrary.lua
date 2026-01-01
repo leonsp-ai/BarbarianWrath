@@ -1,4 +1,4 @@
-local versionNumber = 7
+local versionNumber = 15
 local fileModified = false -- set this to true if you change this file for your scenario
 -- if another file requires this file, it checks the version number to ensure that the
 -- version is recent enough to have all the expected functionality
@@ -74,6 +74,12 @@ gen.constants = {
     maxTerrainID = 191,
     maxMaps = 4,
     maxMapID = 3,
+    maxTechID = 252,
+    maxTechGroups = 8,
+    maxTechGroupID = 7,
+    techGroupCanOwnCanResearch = 0,
+    techGroupCanOwnCannotResearch = 1,
+    techGroupCannotOwnCannotResearch = 2,
     roleAttack = 0,
     roleDefend = 1,
     roleNavalSuperiority = 2,
@@ -113,6 +119,8 @@ gen.constants = {
     cityStyleClassical = 1,
     cityStyleFarEast = 2,
     cityStyleMedieval = 3,
+    oceanBaseTerrainType = 10,
+    deletedUnitCoordinate = 65336
 }
 gen.c = gen.constants
 
@@ -168,7 +176,7 @@ function gen.registerAuthoritativeDefaultRules(aDRTable)
     authoritativeDefaultRules = aDRTable
 end
 
----@module customCosmic
+---@module "customCosmic"
 local customCosmic = {}
 
 --[[ This function is used to register the customCosmic functions,
@@ -224,12 +232,12 @@ local checkBits = gen.checkBits
 -- gen.setBits(integer,string)-->integer
 -- Helper function (provided to this library as setBits and gen.setBits)
 
--- sets binary bits in an integer/bitmask to 1 or 0 based on
+-- Sets binary bits in an integer/bitmask to 1 or 0 based on
 -- the information provided by a string.  Characters that 
 -- are not 1 or 0 leave the corresponding bit unchanged
 -- Last character of the string corresponds to the 1's bit
 -- in the integer (string lines up to the least significant
--- part of the number)
+-- part of the number).
 --[[
 ```lua
 gen.setBits(0b00000000,"xx10xxxx")-->0b00100000
@@ -239,11 +247,10 @@ gen.setBits(0b10101011,"xx10xwqp")-->0b10101011
 gen.setBits(0b10101011,"xx11xwqp")-->0b10111011
 ```]]
 -- note: lua does not actually accept integers specified in binary (though it does for hexidecimal)
----comment
 ---@param bitmask integer|bitmask the bitmask to change
 ---@param bitString string specification of bits to set
 ---@return bitmask bitmask The integer/bitmask after the bits have been set
-local function setBits(bitmask,bitString)
+function gen.setBits(bitmask,bitString)
     local strlen = string.len(bitString)
     for i=1,strlen do
         local bitInt = 1<<(i-1)
@@ -256,7 +263,7 @@ local function setBits(bitmask,bitString)
     ---@cast bitmask bitmask
     return bitmask
 end
-gen.setBits = setBits
+local setBits = gen.setBits
 
 -- gen.printBits(integer,numOfBits or nil) --> string
 
@@ -264,7 +271,7 @@ gen.setBits = setBits
 -- including the numOfBits least significant bits
 -- if numOfBits is nil, it defaults to 32
 ---@param bitmask bitmask the bits to print
----@param numOfBits integer the number of bits to show (default 32)
+---@param numOfBits? integer the number of bits to show (default 32)
 ---@return string binaryRepresentation
 function gen.bitmaskToString(bitmask,numOfBits)
     if not numOfBits then
@@ -470,12 +477,8 @@ one of the following forms: {[1]=x,[2]=y,[3]=z}, {[1]=x,[2]=y}
 (and assumes z=0), {x=x,y=y,z=z}, or {x=x, y=y} (and assumes z=0).
 The x,y,z values (but not keys) correspond to tile coordinates.
 ]]
----@alias tileAnalog 
----| tileObject
----| table {x=xCoord,y=yCoord,z=zCoord} or {xCoord,yCoord,zCoord} if zCoord nil, use map 0
---[[
-# Can be:<br><br>tileObject<br><br>{[1]=xCoord,[2]=yCoord,[3]=zCoord}<br>Converted to civ.getTile(xCoord,yCoord,zCoord) <br><br>{[1]=xCoord,[2]=yCoord}<br>Converted to civ.getTile(xCoord,yCoord,0)<br><br>{x=xCoord,y=yCoord,z=zCoord}<br>Converted to civ.getTile(xCoord,yCoord,zCoord) <br><br>{x=xCoord,y=yCoord}<br>Converted to civ.getTile(xCoord,yCoord,0)
-]]
+---@alias tileAnalog tileObject|{[1]:integer,[2]:integer,[3]:integer}|{[1]:integer,[2]:integer}|{x:integer,y:integer,z:integer}|{x:integer,y:integer} # Can be:<br><br>tileObject<br><br>{[1]:xCoord,[2]:yCoord,[3]:zCoord}<br>Converted to civ.getTile(xCoord,yCoord,zCoord) <br><br>{[1]:xCoord,[2]:yCoord}<br>Converted to civ.getTile(xCoord,yCoord,0)<br><br>{x:xCoord,y:yCoord,z:zCoord}<br>Converted to civ.getTile(xCoord,yCoord,zCoord) <br><br>{x:xCoord,y:yCoord}<br>Converted to civ.getTile(xCoord,yCoord,0)
+
 
 -- toTile(tile or table)-->tile
 -- gen.toTile(tile or table)-->tile
@@ -678,8 +681,10 @@ end
 
 -- gen.hasIrrigation(tile)-->boolean
 
--- returns true if tile has irrigation but no farm
--- returns false otherwise
+-- Returns true if tile has irrigation but no farm.
+-- Returns false otherwise.
+-- If you need to know if a tile has irrigation or farmland,
+-- use gen.hasAgriculture(tile)
 ---@param tile tileAnalog # Can be:<br><br>tileObject<br><br>{[1]=xCoord,[2]=yCoord,[3]=zCoord}<br>Converted to civ.getTile(xCoord,yCoord,zCoord) <br><br>{[1]=xCoord,[2]=yCoord}<br>Converted to civ.getTile(xCoord,yCoord,0)<br><br>{x=xCoord,y=yCoord,z=zCoord}<br>Converted to civ.getTile(xCoord,yCoord,zCoord) <br><br>{x=xCoord,y=yCoord}<br>Converted to civ.getTile(xCoord,yCoord,0)
 ---@return boolean
 function gen.hasIrrigation(tile)
@@ -1453,7 +1458,7 @@ end
 ---@param unit unitObject
 ---@return boolean
 function gen.isNoOrder(unit) 
-    return unit.order == 0xFF
+    return unit.order == -1 --0xFF
 end
 
 -- gen.setToNoOrders(unit)-->void
@@ -2642,6 +2647,7 @@ end
 -- Returns the movement allowance of a unit after
 -- taking into account Nuclear Power tech, Magellan's Expedition, and Lighthouse.
 -- Returns "atomic" movement points (that is, the movement recorded by `unit.moveSpent`, or "regular" movement points * `totpp.movementMultipliers.aggregate`
+-- Takes into account the customCosmic module if it is enabled
 ---@param unit unitObject
 ---@return integer atomicMovementPoints
 function gen.fullHealthMovementAllowance(unit)
@@ -2673,6 +2679,7 @@ gen.wonderModifiedMoves = gen.fullHealthMovementAllowance
 -- Returns movement allowance for a unit after taking damage
 -- into account.
 -- Returns "atomic" movement points (that is, the movement recorded by `unit.moveSpent`, or "regular" movement points * `totpp.movementMultipliers.aggregate`
+-- Takes into account the customCosmic module if it is enabled
 ---@param unit unitObject
 ---@return integer atomicMovementPoints
 function gen.maxMoves(unit)
@@ -2714,6 +2721,7 @@ local maxMoves = gen.maxMoves
 -- gen.moveRemaining(unit)
 
 -- Returns gen.maxMoves-unit.moveSpent
+-- Takes into account the customCosmic module if it is enabled
 -- bug fixed by Knighttime
 ---@param unit unitObject
 ---@return integer atomicMovementPoints
@@ -3105,7 +3113,7 @@ function gen.rehomeUnitsInCapturedCity(city,defender)
 				end
 			end
 			unit.homeCity = bestCitySoFar
-			if unit.type.role <= 5 then
+			if unit.type.role <= 5 and bestCitySoFar ~= nil then
 				citySupportTable[bestCitySoFar.id]= (citySupportTable[bestCitySoFar.id] or 0)+1
 			end
 		end
@@ -3125,6 +3133,7 @@ function gen.homeToNearestCity(unit)
     local function dist(unit,city)
         return tileDist(unit.location,city.location,0)
     end
+    print(tostring(bestCity))
     for city in civ.iterateCities() do
         if city.owner == unit.owner and dist(unit,city) < bestDist and
             gen.cityCanSupportAnotherUnit(city) then
@@ -3132,6 +3141,7 @@ function gen.homeToNearestCity(unit)
             bestDist = dist(unit,city)
         end
     end
+    print(tostring(bestCity))
     if bestCity then
         unit.homeCity = bestCity
     end
@@ -3263,7 +3273,9 @@ function gen.selectNextActiveUnit(activeUnit,source,customWeightFn)
         for index,value in pairs(waitingUnits) do
             waitingUnits[index]=false
         end
-        gen.clearWaiting(bestWaitingUnit)
+        if bestWaitingUnit then
+            gen.clearWaiting(bestWaitingUnit)
+        end
     else
         gen.clearWaiting(bestNotWaitingUnit)
     end
@@ -3467,7 +3479,7 @@ function gen.getTerrainFromID(id)
     terrainType = terrainType // 3
     local res = id % 3
     if authoritativeDefaultRules then
-        local numTerrain = authoritativeDefaultRules["@COSMIC2"]["NumberOfTerrainTypes"][z]
+        local numTerrain = authoritativeDefaultRules["cosmic2"]["NumberOfTerrainTypes"][z]
         if z > (maps-1) or terrainType > (numTerrain-1) then
             return nil
         end
@@ -3498,6 +3510,9 @@ gen.getTerrainFromId = gen.getTerrainFromID
 function gen.unitTypeOnTile(tile,unitTypeTable,excludeFromCheck)
     if civ.isUnitType(unitTypeTable) then
         unitTypeTable = {unitTypeTable}
+    end
+    if type(unitTypeTable) ~= "table" then
+        error("gen.unitTypeOnTile: Arg #2 must be a unit type or table of unit types.  Received: "..tostring(unitTypeTable))
     end
     local exclusionSet = {}
     if civ.isUnit(excludeFromCheck) then
@@ -3558,6 +3573,32 @@ function gen.getAdjacentTiles(tile)
 end
 local getAdjacentTiles = gen.getAdjacentTiles
 
+
+--[[Returns true if `tile` is a valid location for a unit of type
+`unitType`, with owner `tribe`, false otherwise.  This is the method
+used to determine if a unit can be placed on a tile using the macro events.  (So false for a ground unit on the ocean even if a  ship
+is present).  Copy of function written by The Nameless One in 
+civlua.lua.  Re-written here so that generalLibrary.lua has no
+dependencies.]]
+---@param unitType unitTypeObject
+---@param tribe tribeObject
+---@param tile tileObject
+---@return boolean
+function gen.isValidUnitLocation(unitType, tribe, tile)
+  if tile and unitType:canEnter(tile) and
+    (tile.defender == nil or tile.defender == tribe) then
+    local city = tile.city
+    if unitType.domain == gen.c.domainSea then
+      return tile.terrain.type == gen.c.oceanBaseTerrainType or
+        city ~= nil and city.coastal and city.owner == tribe
+    else
+      return (tile.terrain.type ~= gen.c.oceanBaseTerrainType or unitType.domain == gen.c.domainAir) and
+        (city == nil or city.owner == tribe)
+    end
+  end
+  return false
+end
+
 -- gen.moveUnitAdjacent(unit,destRankFn=suitableDefault)-->tile or false
 
 -- Moves the unit to an adjacent tile, choosing the tile based on  
@@ -3570,7 +3611,7 @@ local getAdjacentTiles = gen.getAdjacentTiles
 ---@return tileObject|false destination The tile the unit was moved to, or false if it could not be moved.
 function gen.moveUnitAdjacent(unit,destRankFn)
     local function defaultDestinationRank(theUnit,destTile)
-        if (destTile.defender and destTile.defender ~=theUnit.owner) or(destTile.city and destTile.city.owner ~= theUnit.owner) or (not civ.canEnter(theUnit.type,destTile)) then
+        if (destTile.defender and destTile.defender ~=theUnit.owner) or(destTile.city and destTile.city.owner ~= theUnit.owner) or (not gen.isValidUnitLocation(theUnit.type,theUnit.owner,destTile)) then
             return false
         end
         if destTile.defender then
@@ -3755,17 +3796,17 @@ end
 -- returned.
 ---@param table any
 ---@return any
-local function copyTable(table)
+function gen.copyTable(table)
     if type(table) ~= "table" then
         return table
     end
     local newTable = {}
     for key,value in pairs(table) do
-        newTable[key] = copyTable(value)
+        newTable[key] = gen.copyTable(value)
     end
     return newTable
 end
-gen.copyTable = copyTable
+local copyTable = gen.copyTable
 
 -- Constructs (and returns) a new table with the same keys as the input, 
 -- as well as the same metatables. (The metatable is not copied, so that
@@ -4204,7 +4245,7 @@ function gen.getEphemeralTable()
 end
 
 --[[A state savable table can be saved in the 'state' table, which is to say, the table where data is saved to the saved game file. A state savable table is a table where the keys are integers and strings, and the values are integers, strings, and other state savable tables.]]
----@alias stateSavableTable table<string|number,string|number|table> | string | number
+---@alias stateSavableTable table<string|number,boolean|string|number|table>|string|number|boolean
 
 ---@type string|stateSavableTable
 local state = "stateNotLinked"
@@ -4255,8 +4296,9 @@ function gen.linkGeneralLibraryState(stateTable)
     genStateTable.tileMarkerTable = genStateTable.tileMarkerTable or {}
 end
 
-local fileFound, discreteEvents = gen.requireIfAvailable("discreteEventsRegistrar")
-if fileFound then
+
+local discreteEventsFileFound, discreteEvents = gen.requireIfAvailable("discreteEventsRegistrar")
+if discreteEventsFileFound then
     ---@cast discreteEvents -nil
     discreteEvents:minVersion(1)
     discreteEvents.linkStateToModules(function(state,stateTableKeys)
@@ -4404,7 +4446,7 @@ maps = nil or integer in 0-3 or table of integers
 ---@param center tileAnalog If table, must be a table of coordinates.
 ---@param radius integer How far away from the center you wish to get units.
 ---@param maps? integer|table If integer, get units from that map. If table, values are the maps to get the tiles from.  Get from all maps by default (for backwards compatibility).
----@return iterator
+---@return fun():unitObject
 function gen.nearbyUnits(center,radius,maps)
     maps = maps or {0,1,2,3}
 ---@diagnostic disable-next-line: return-type-mismatch
@@ -4419,10 +4461,10 @@ end
 
 
 
-local defeatFunction = nil
-local deathFunction = nil 
-local deletionFunction = nil
-local deathOutsideCombat = nil
+local defeatFunction = function(a,b,c,d,e,f,g) error("defeatFunction not registered.  Call gen.setDeathFunctions during initialization.  (This is done for you in the Lua Scenario Template") end
+local deathFunction = function(a) error("defeatFunction not registered.  Call gen.setDeathFunctions during initialization.  (This is done for you in the Lua Scenario Template") end 
+local deletionFunction = function(a,b) error("defeatFunction not registered.  Call gen.setDeathFunctions during initialization.  (This is done for you in the Lua Scenario Template") end
+local deathOutsideCombat = function(a) error("defeatFunction not registered.  Call gen.setDeathFunctions during initialization.  (This is done for you in the Lua Scenario Template") end
 -- gen.setDeathFunctions(defeatFunction,deathFunction,deletionFunction) --> void
 -- Registers event functions for when units are killed/deleted.
 -- If you are using the Lua Scenario Template, this is already
@@ -4743,7 +4785,7 @@ function gen.createUnit(unitType,tribe,locations,options)
     local capitals = {}
     if options.inCapital then
         for city in civ.iterateCities() do
-            if city.owner == tribe and city:hasImprovement(civ.getImprovement(1)) then
+            if city.owner == tribe and city:hasImprovement(civ.getImprovement(1)--[[@as improvementObject]]) then
                 capitals[city.id] = city.location
             end
         end
@@ -4767,7 +4809,7 @@ function gen.createUnit(unitType,tribe,locations,options)
     gen.makeArrayOneToN(placementTable)
     local returnUnits = {}
     if gen.isEmpty(placementTable) then
-        print("No units placed, since no valid location.")
+        print("gen.createUnit: No units placed, since no valid location.")
         return returnUnits
     end
     local numToPlace = options.count or 1
@@ -4811,6 +4853,7 @@ function gen.createUnit(unitType,tribe,locations,options)
     end
     return returnUnits
 end
+
 
 -- gen.getTileProduction(tile,city) --> integer (food), integer(shields), integer(trade)
 -- Returns the tile production values, presuming that the city
@@ -5013,7 +5056,7 @@ function gen.getTileProduction(tile,city,ignoreCustomCosmic)
 
         -- tiles with city or irrigation get the irrigation bonus, regardless of whether
         -- the tile can actually be irrigated
-        if tile.city or gen.hasIrrigation(tile) then
+        if tile.city or gen.hasAgriculture(tile) then
             food = food + baseTerrainData.irrigateBonus
         end
         -- don't need refrigeration tech to take advantage of farm production, just supermarket
@@ -5677,6 +5720,8 @@ gen.original.tOcean                   =civ.getTerrain(0,10,0)
 gen.original.tFish                    =civ.getTerrain(0,10,1) -- Fish Resource
 gen.original.tWhales                  =civ.getTerrain(0,10,2) -- Whale Resource
 --]=]
+
+gen.errorForNilKey(gen.original, "gen.original")
 
 --[=[
 gen.original = {
@@ -7579,7 +7624,7 @@ function gen.activateRangeForLandAndSea(restoreRangeFn,applyToAI)
         print("WARNING gen.activateRangeForLandAndSea: this function appears to have been run more than once, so nothing further was done.  If you don't have range for land and sea, seek help from Prof. Garfield.")
         return
     end
-    if not fileFound then
+    if not discreteEventsFileFound then
         print("WARNING gen.activateRangeForLandAndSea: discreteEventsRegistrar.lua was not found, so range for land and sea was not activated.")
         return
     end
@@ -8618,7 +8663,7 @@ function gen.isInteger(item)
 end
 
 ---Returns an iterator for all unitType objects.
----@return iterator
+---@return fun():unitTypeObject
 function gen.iterateUnitTypes()
 ---@diagnostic disable-next-line: return-type-mismatch
     return coroutine.wrap(function()
@@ -8629,7 +8674,7 @@ function gen.iterateUnitTypes()
 end
 
 ---Returns an iterator for all improvement objects.
----@return iterator
+---@return fun():improvementObject
 function gen.iterateImprovements()
 ---@diagnostic disable-next-line: return-type-mismatch
     return coroutine.wrap(function()
@@ -8640,7 +8685,7 @@ function gen.iterateImprovements()
 end
 
 ---Returns an iterator for all wonder objects.
----@return iterator
+---@return fun():wonderObject
 function gen.iterateWonders()
 ---@diagnostic disable-next-line: return-type-mismatch
     return coroutine.wrap(function()
@@ -8652,7 +8697,7 @@ end
 
 ---Returns an iterator for all baseTerrain objects (for maps that are
 --in the game).
----@return iterator
+---@return fun():baseTerrainObject
 function gen.iterateBaseTerrain()
     local _,_,maps = civ.getAtlasDimensions()
 ---@diagnostic disable-next-line: return-type-mismatch
@@ -8667,7 +8712,7 @@ end
 
 ---Returns an iterator for all terrain objects (for maps that
 --are in the game).
----@return iterator
+---@return fun():terrainObject
 function gen.iterateTerrain()
     local _,_,maps = civ.getAtlasDimensions()
     local noResource = gen.constants.resourceNone
@@ -8684,6 +8729,16 @@ function gen.iterateTerrain()
                     coroutine.yield(civ.getTerrain(z,t,whaleResource))
                 end
             end
+        end
+    end)
+end
+
+---Returns an iterator for all tech objects.
+---@return fun():techObject
+function gen.iterateTechs()
+    return coroutine.wrap(function()
+        for id = 0,gen.constants.maxTechID do
+            coroutine.yield(civ.getTech(id))
         end
     end)
 end
@@ -9032,8 +9087,352 @@ function gen.removeAllowedOnMap(unitType,map)
 end
 
 
+-- Takes a table of items, and an iterator or table of all possible
+-- items, and returns a list of all items that are not values
+-- in the table.  If the iterator is a table, only the
+-- values in the table are considered.
+-- These functions might be useful:
+-- `gen.iterateUnitTypes()`
+-- `gen.iterateImprovements()`
+-- `gen.iterateWonders()`
+-- `gen.iterateBaseTerrain()`
+-- `gen.iterateTerrain()`
+---@param list table<any,any>
+---@param itemIterator fun():any|table<any,any>
+---@return table<integer,any>
+function gen.complementList(list,itemIterator)
+    local complement = {}
+    local index = 1
+    local function isItemInList(item)
+        for _,listItem in pairs(list) do
+            if listItem == item then
+                return true
+            end
+        end
+        return false
+    end
+    if type(itemIterator) == "table" then
+        for _,item in pairs(itemIterator) do
+            if not isItemInList(item) then
+                complement[index] = item
+                index = index + 1
+            end
+        end
+    else
+        for item in itemIterator do
+            if not isItemInList(item) then
+                complement[index] = item
+                index = index + 1
+            end
+        end
+    end
+    return complement
+end
+
+--[[
+Returns an array of all the keys in the table with number values,
+in descending order, starting with the largest value at index 1.
+
+If there are multiple keys with the same value, the order of those
+keys is not guaranteed.
+
+Keys with non-number values are ignored.  If no key has a number value,
+an empty table is returned.
+]]
+---@param table table
+---@return table<integer,any>
+function gen.sortTableKeysInDescendingValueOrder(table)
+    local keys = {}
+    local index = 1
+    for key,value in pairs(table) do
+        if type(value) == "number" then
+            keys[index] = key
+            index = index + 1
+        end
+    end
+    _G.table.sort(keys,function(a,b)
+        return table[a] > table[b]
+    end)
+    return keys
+end
+
+--[[
+Returns an array of all the keys in the table with number values,
+in increasing order, starting with the smallest value at index 1.
+
+If there are multiple keys with the same value, the order of those
+keys is not guaranteed.
+
+Keys with non-number values are ignored.  If no key has a number value,
+an empty table is returned.
+]]
+---@param table table
+---@return table<integer,any>
+function gen.sortTableKeysInAscendingValueOrder(table)
+    local keys = {}
+    local index = 1
+    for key,value in pairs(table) do
+        if type(value) == "number" then
+            keys[index] = key
+            index = index + 1
+        end
+    end
+    table.sort(keys,function(a,b)
+        return table[a] < table[b]
+    end)
+    return keys
+end
+
+local changeUnitValidationInfo = function(unit) end
+
+--Registers a function that updates the validation information
+--for a unit, to be called when a unit's owner is changed.
+--(This is called in unitData.lua, and will probably not be used
+--directly by a scenario creator.)
+---@param changeValidationInfo fun(unit:unitObject)
+function gen.registerUpdateUnitValidationInfo(changeValidationInfo)
+    changeUnitValidationInfo = changeValidationInfo
+end
+
+local changeCityValidationInfo = function(city) end
+
+--Registers a function that updates the validation information
+--for a city, to be called when a city's owner is changed.
+--(This is called in cityData.lua, and will probably not be used
+--directly by a scenario creator.)
+---@param changeValidationInfo fun(city:cityObject)
+function gen.registerUpdateCityValidationInfo(changeValidationInfo)
+    changeCityValidationInfo = changeValidationInfo
+end
 
 
+
+
+--[[
+Changes the owner of the city and or units on the tile
+to newOwner from the current owner.
+]]
+---@param tile tileObject
+---@param newOwner tribeObject
+function gen.transferTileContents(tile,newOwner)
+    if tile.city then
+        local originalOwner = tile.city.owner
+        tile.city.owner = newOwner
+        changeCityValidationInfo(tile.city)
+        for unit in civ.iterateUnits() do
+            if unit.owner == originalOwner and unit.homeCity == tile.city and unit.location ~= tile then
+                print(tostring(unit))
+                gen.homeToNearestCity(unit)   
+            end
+        end
+    end
+    for unit in tile.units do
+        unit.owner = newOwner
+        gen.homeToNearestCity(unit)
+        changeUnitValidationInfo(unit)
+    end
+    tile.owner = newOwner
+end
+
+local registeredCityProductionFunction = function(city,item)
+    error("The function that is called during the onCityProduction event has not been registered with generalLibrary.lua.  You must register it in order to call gen.cityProduction.  Use the function gen.registerCityProductionFunction(cityProdFn).  This is done for you in the Lua Scenario Template.")
+end
+
+---Registers the function that is called when a city produces something
+---@param cityProductionFunction fun(city:cityObject,prod:improvementObject|unitObject|wonderObject)
+function gen.registerCityProductionFunction(cityProductionFunction)
+    registeredCityProductionFunction = cityProductionFunction
+end
+
+--[[
+Makes the `city` immediately produce the `item`.
+That is, the city is given the supplied city improvement or wonder,
+or a unit with the type specified.  The function registered to civ.scen.onCityProduction is also called.   
+
+No check is made if the production order is legal.  An item without
+appropriate pre-requisites can be created, or a wonder can be moved.
+]]
+---@param city cityObject
+---@param item unitTypeObject|improvementObject|wonderObject
+function gen.cityProduction(city,item)
+    ---@type improvementObject|unitObject|wonderObject
+---@diagnostic disable-next-line: assign-type-mismatch
+    local prod = item
+    if civ.isUnitType(item) then
+        prod = civ.createUnit(item--[[@as unitTypeObject]],city.owner,city.location)
+        if item.domain == gen.c.domainLand and city:hasImprovement(gen.original.iBarracks) then
+            prod.veteran = true
+        elseif item.domain == gen.c.domainSea and city:hasImprovement(gen.original.iPortFacility) then
+            prod.veteran = true
+        elseif item.domain == gen.c.domainAir and city:hasImprovement(gen.original.iAirport) then
+            prod.veteran = true
+        end
+    end
+    if civ.isImprovement(prod) then
+---@diagnostic disable-next-line: param-type-mismatch
+        city:addImprovement(prod)
+    end
+    if civ.isWonder(item) then
+        prod.city = city
+    end
+    registeredCityProductionFunction(city,prod)
+end
+
+
+--[[
+Rounds a number to a certain number of decimal places.
+If decimalPlaces is not supplied, the number is rounded to the nearest integer.
+If decimalPlaces is negative, the number is rounded to the nearest power of 10.
+gen.round(123.4567) --> 123
+gen.round(123.4567,2) --> 123.46
+gen.round(123.4567,-2) --> 100
+]]
+---@param number number
+---@param decimalPlaces integer # Default is 0.
+---@return number
+function gen.round(number,decimalPlaces)
+    decimalPlaces = decimalPlaces or 0
+    local factor = 10^decimalPlaces
+    return math.floor(number*factor+0.5)/factor
+end
+
+--[[
+Floors a number to a certain number of decimal places.
+If decimalPlaces is not supplied, the number is floored to the nearest integer.
+If decimalPlaces is negative, the number is floored to the nearest power of 10.
+gen.floor(123.4567) --> 123
+gen.floor(123.4567,2) --> 123.45
+gen.floor(123.4567,-2) --> 100
+]]
+---@param number number
+---@param decimalPlaces integer # Default is 0.
+---@return number
+function gen.floor(number,decimalPlaces)
+    decimalPlaces = decimalPlaces or 0
+    local factor = 10^decimalPlaces
+    return math.floor(number*factor)/factor
+end
+
+--[[
+Ceilings a number to a certain number of decimal places.
+If decimalPlaces is not supplied, the number is ceilinged to the nearest integer.
+If decimalPlaces is negative, the number is ceilinged to the nearest power of 10.
+gen.ceil(123.4567) --> 124
+gen.ceil(123.4567,2) --> 123.46
+gen.ceil(123.4567,-2) --> 200
+]]
+---@param number number
+---@param decimalPlaces integer # Default is 0.
+---@return number
+function gen.ceil(number,decimalPlaces)
+    decimalPlaces = decimalPlaces or 0
+    local factor = 10^decimalPlaces
+    return math.ceil(number*factor)/factor
+end
+
+
+-- the reserveCityWorkedTiles table reverses this
+-- chart of how city.workers determine which tiles are worked 
+--      #       #       #       #       #
+--          #       #       #       #       #
+--      #       #       #       #       #
+--          #       20      13      #       #
+--      #       12      8       9       #
+--          19      7       1       14      #
+--      #       6       21      2       #
+--          18      5       3       15      #
+--      #       11      4       10      #
+--          #       17      16      #       #
+--      #       #       #       #       #
+--          #       #       #       #       #
+-- This way, we can determine if a city is working a
+-- given tile.  The tile we're asking about is number
+-- 21 on this chart.  E.g. if we're asking about tile 13, 
+-- the corresponding value in the table is 17.  If we're 
+-- asking about tile 2, the corresponding value is 6.
+local reverseCityWorkedTiles = {
+    [1] = 5,
+    [2] = 6,
+    [3] = 7,
+    [4] = 8,
+    [5] = 1,
+    [6] = 2,
+    [7] = 3,
+    [8] = 4,
+    [9] = 11,
+    [10] = 12,
+    [11] = 9,
+    [12] = 10,
+    [13] = 17,
+    [14] = 18,
+    [15] = 19,
+    [16] = 20,
+    [17] = 13,
+    [18] = 14,
+    [19] = 15,
+    [20] = 16,
+    [21] = 21,
+}
+
+--[[
+Returns the city that is working the tile, or nil if no city is working the tile.
+Does not account for the bug where 2 cities on either side of the date line
+are working the same tile (which is fixed by a TOTPP patch anyway).
+]]
+---@param tile tileObject
+---@return cityObject|nil
+function gen.getCityWorkingTile(tile)
+    for index, possibleCityTile in pairs(gen.cityRadiusTiles(tile)) do
+        local city = possibleCityTile.city
+        local workerIndex = reverseCityWorkedTiles[index]
+        if city and gen.isBit1(city.workers,workerIndex) then
+            return city
+        end
+    end
+    return nil
+end
+
+--[[
+Returns the smallest and largest (number) keys in a table.
+Returns nil if there are no numerical keys in the table.
+]]
+---@param table table
+---@return number|nil smallestKey
+---@return number|nil largestKey
+function gen.extremeKeys(table)
+    local smallestKey = math.huge --[[@as number|nil]]
+    local largestKey = -math.huge --[[@as number|nil]]
+    for key,_ in pairs(table) do
+        if type(key) == "number" then
+            if key < smallestKey then
+                smallestKey = key
+            end
+            if key > largestKey then
+                largestKey = key
+            end
+        end
+    end
+    if smallestKey == math.huge then
+        smallestKey = nil
+    end
+    if largestKey == -math.huge then
+        largestKey = nil
+    end
+    return smallestKey,largestKey
+end
+
+--[[Returns true if a tile has the coordinates designated for deleted
+or killed units, and false otherwise.]]
+---@param tile tileObject
+---@return boolean
+function gen.isDeletedUnitTile(tile)
+    -- Deleted units are placed on tile (65336,65336,65336)
+    -- only need to check one of them, since this is well outside
+    -- the maximum map size
+    return tile.x == 65336 
+end
+
+-- If the console exists, make gen available through it.
 
 if rawget(_G,"console") then
     _G["console"].gen = gen

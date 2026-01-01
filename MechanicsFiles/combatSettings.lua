@@ -1,5 +1,5 @@
 --
-local versionNumber = 3
+local versionNumber = 5
 local fileModified = false -- set this to true if you change this file for your scenario
 -- if another file requires this file, it checks the version number to ensure that the
 -- version is recent enough to have all the expected functionality
@@ -29,6 +29,8 @@ local fileModified = false -- set this to true if you change this file for your 
 
 local register = {}
 local gen = require("generalLibrary"):minVersion(1)
+local landAirCargo = require("landAirCargo")
+local help         = require("help")
 gen.versionFunctions(register,versionNumber,fileModified,"MechanicsFiles".."\\".."combatSettings.lua")
 --
 local combatCalculator = require("combatCalculator"):recommendedVersion(2)
@@ -37,6 +39,7 @@ local text = require("text")
 local simpleSettings = require("simpleSettings"):recommendedVersion(1)
 local combatModifiers = require("combatModifiers"):minVersion(1)
 local leaderBonus = require("leaderBonus"):minVersion(1)
+local configuration = require("configuration")
 
 
 
@@ -123,25 +126,17 @@ Modifiers that can be disabled by setting their value to "0" (the numeric value,
 
 local function computeCombatStatistics(attacker, defender, isSneakAttack)
     
-    local combatModifierOverride = {
-        aCustomMult=1,
-        dCustomMult=1,
-        aBarbarianAttackerVsHumanDefender=1.5,
-        aBarbarianAttackerVsAiDefender=1,
-        aBarbarianAttackerVsDefendersOnlyCity=1,
-        aBarbarianAttackerVsDefendersCapitalCity=1,
-        aBarbarianAttackerVsDefenderWithGreatWall=.9,
-        aGreatWallVsBarbarianDefender=1.1,
-        dBarbarianDefenderArchers=1,
-        dBarbarianDefenderLegion=1
-    }
+    local combatModifierOverride = {aCustomMult=1,dCustomMult=1}
     -- Modifier from rules files:
-    local aMult, dMult = rules.combatGroupCustomModifiers(attacker,defender)
+    --local aMult, dMult = rules.combatGroupCustomModifiers(attacker,defender)
+    local aMult, dMult = 1,1
     combatModifierOverride.aCustomMult = combatModifierOverride.aCustomMult*aMult
     combatModifierOverride.dCustomMult = combatModifierOverride.dCustomMult*dMult
     combatModifiers.applyRegisteredRules(attacker,defender,combatModifierOverride)
+    dMult = landAirCargo.getDefenseModifier(defender)
+    combatModifierOverride.dCustomMult = combatModifierOverride.dCustomMult*dMult
 
-
+ 
 
 	local attackerStrength, attackerFirepower, defenderStrength, defenderFirepower,
 		   attackerStrengthModifiersApplied, attackerFirepowerModifiersApplied, 
@@ -161,6 +156,7 @@ local function computeCombatStatistics(attacker, defender, isSneakAttack)
     return attackerStrength, attackerFirepower, defenderStrength, defenderFirepower
 end
 
+help.registerComputeCombatStatisticsFunction(computeCombatStatistics)
 
 -- this is useful for defenderValueModifier
 local function tileHasCarrierUnit(tile)
@@ -195,6 +191,9 @@ local function defenderValueModifier(defender,tile,attacker)
         return 1e8
     end
     if defender.type.domain == domain.ground and tile.baseTerrain.type == 10 then
+        return -1e8
+    end
+    if not landAirCargo.canDefend(defender) then
         return -1e8
     end
     return 0
@@ -272,8 +271,10 @@ function register.onInitiateCombatMakeCoroutine(attacker,defender,attackerDie,at
         if attacker.owner.isHuman then
             text.simple("Our "..attacker.type.name.." unit can't fight the defending "..defender.type.name..".  The attack has been cancelled.","Defense Minister")
         end
-    end
     -- %Report Combat Strength%
+    elseif configuration.getSettingValue("displayCombatPower") and attacker.owner == civ.getPlayerTribe() then
+        text.simple("Attacker: "..tostring(calculatedAttackerStrength/8).." FP:"..calculatedAttackerFirepower.."\n^\n^Defender: "..tostring(calculatedDefenderStrength/8).." FP:"..calculatedDefenderFirepower)
+    end
     --civ.ui.text("Attacker: "..tostring(calculatedAttackerStrength/8).." FP:"..calculatedAttackerFirepower.." Defender: "..tostring(calculatedDefenderStrength/8).." FP:"..calculatedDefenderFirepower)
             
     return coroutine.create(function()

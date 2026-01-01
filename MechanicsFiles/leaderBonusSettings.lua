@@ -1,5 +1,5 @@
 
-local versionNumber = 1
+local versionNumber = 2
 local fileModified = false -- set this to true if you change this file for your scenario
 -- if another file requires this file, it checks the version number to ensure that the
 -- version is recent enough to have all the expected functionality
@@ -10,6 +10,8 @@ local fileModified = false -- set this to true if you change this file for your 
 local leaderBonus = require("leaderBonus"):minVersion(1)
 local traits = require("traits")
 local combatMod = require("combatModifiers")
+local gen = require("generalLibrary"):minVersion(4)
+local object = require("object")
 
 
 
@@ -94,7 +96,10 @@ local combatMod = require("combatModifiers")
     --  see below for the specifications for a combatModifier table
     
     --      combatSpec = table{
-    --      Note: all keys can be nil, in which case there is no modification
+--      Note: All keys can have a nil value, in which case there is no modification
+--      All keys can also be assigned a function(attacker,defender) --> nil|number (or boolean for some modifiers)
+--         If a function is assigned, it will be called with the attacker and defender
+--          as arguments, and the return value will be used as the value for that key
     --
     --          aCustomAdd = number -- add this to attack before multipliers are applied (negative number to subtract)
     --          dCustomAdd = number-- add this to defense before multipliers are applied (negative number to subract)
@@ -371,9 +376,6 @@ local combatMod = require("combatModifiers")
 --      uses the information in leaderClass.alwaysLeaderType and leaderClass.unitInitialization
 --      to commission units as leaders
 
-local gen = require("generalLibrary"):minVersion(4)
-local object = require("object")
-local traits = require("traits")
 
 --[[
 traits.allowedTraits("fighter","bomber","warship")
@@ -383,8 +385,8 @@ traits.assign({gen.original.uDestroyer, gen.original.uCruiser, gen.original.uAEG
         gen.original.uBattleship, gen.original.uCarrier},"warship")
         --]]
 
-        --[[
 
+--[[
 leaderBonus.registerLeaderClass({
     rank = "Vice-Admiral",
     seniority = 2,

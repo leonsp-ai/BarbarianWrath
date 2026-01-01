@@ -1,5 +1,5 @@
 
-local versionNumber = 5
+local versionNumber = 6
 local fileModified = false -- set this to true if you change this file for your scenario
 -- if another file requires this file, it checks the version number to ensure that the
 -- version is recent enough to have all the expected functionality
@@ -16,10 +16,12 @@ local fileModified = false -- set this to true if you change this file for your 
 --
 
 --          Lua Scenario Template Files
-require("registerCombatModifiers")
-require("leaderBonusSettings")
-require("customCosmicSettings")
-require("configurationSettings")
+
+
+require("helpSettings")
+
+
+
 
 
 --          Files For This Scenario
@@ -31,9 +33,10 @@ require("configurationSettings")
 
 --      Footer
 
+---@module "generalLibrary"
 local gen = require("generalLibrary"):minVersion(2)
 
 local register = {}
 gen.versionFunctions(register,versionNumber,fileModified,"MechanicsFiles".."\\".."registerFiles.lua")
-gen.minEventsLuaVersion(2,1,"registerFiles.lua")
+gen.minEventsLuaVersion(7,1,"registerFiles.lua")
 return register

@@ -1,5 +1,5 @@
 --
-local versionNumber = 1
+local versionNumber = 2
 local fileModified = false -- set this to true if you change this file for your scenario
 -- if another file requires this file, it checks the version number to ensure that the
 -- version is recent enough to have all the expected functionality
@@ -13,6 +13,7 @@ local fileModified = false -- set this to true if you change this file for your 
 --
 --
 
+---@module "generalLibrary"
 local gen = require("generalLibrary"):minVersion(1)
 local civlua = require("civlua")
 local diplomacy = require("diplomacy")
@@ -332,10 +333,17 @@ local function unitCanUnload(unit) --> true or string
     return getFailureMessage()
 end
 
+---@param unit unitObject
 local function groundUnitActivatedAtSea(unit)
     if unit.owner.isHuman or applyToAI then
         local cargoUnloadResult = unitCanUnload(unit)
         local shipUnloadResult = unit.carriedBy and unitCanUnload(unit.carriedBy)
+        --To prevent interference with the landAirCargo module
+        --If the unit is carried by a land or air unit, this should
+        --not apply, and the unit can always unload
+        if unit.carriedBy and unit.carriedBy.type.domain ~= gen.c.domainSea then
+            return
+        end
         if cargoUnloadResult == true then
             canUnload[unit.id] = gen.getTileId(unit.location)
         end
@@ -421,7 +429,7 @@ local function groundUnitActivatedOnLand(unit)
         for unitTypeId, holds in pairs(shipCapacityList) do
             local shipSettings = beachShipSettings[unitTypeId] or {}
             local shipBoardingCheckFn = shipSettings.boardingCheckFunction or defaultBoardingCheck
-            local shipType = civ.getUnitType(unitTypeId)
+            local shipType = civ.getUnitType(unitTypeId) --[[@as unitTypeObject]]
             -- unit must pass one of the beach, peacePort or alliedPort checks and
             -- also both boarding check functions
             -- also can't be forbidden by the forbidTransportTable
@@ -440,12 +448,20 @@ local function groundUnitActivatedOnLand(unit)
     end
 end
 
+
+local function tileName(tile)
+    if tile.city then
+        return tile.city.name
+    end
+    return "("..text.coordinates(tile)..")"
+end
+
 local function moveOrDeleteForbiddenCargo(ship,cargo,previousTile)
-    if previousTile.city and previousTile.city.owner == cargo.owner then
+    if previousTile.baseTerrain.type ~= 10 and (previousTile.defender == nil or previousTile.defender == cargo.owner) then
             cargo:teleport(previousTile)
             cargo.carriedBy = nil
             if cargo.owner.isHuman then
-                text.simple("In this scenario, "..cargo.type.name.." units can't be transported by "..ship.type.name.." units.  Your "..cargo.type.name.." has been moved to "..previousTile.city.name..".","Scenario Rules: Shipping")
+                text.simple("In this scenario, "..cargo.type.name.." units can't be transported by "..ship.type.name.." units.  Your "..cargo.type.name.." has been moved to "..tileName(previousTile)..".","Scenario Rules: Shipping")
             end
             return
     end
@@ -460,11 +476,11 @@ function navy.beachSettingsUnitActivation(unit)
         -- Ship holds don't need to be set to 0 when a sea or air unit is active
         resetShipHolds()
         local unitTypeID = unit.type.id
-        if unit.type.domain == 2 and unit.type.hold > 0 and unit.location.city
+        if unit.type.domain == 2 and unit.type.hold > 0 and unit.location.baseTerrain.type ~= 10
             and (unit.owner.isHuman or applyToAI) then
-            for unitInCity in unit.location.units do
-                if gen.isSleeping(unitInCity) and forbidTransportTable[unitTypeID][unitInCity.type.id] then
-                    gen.setToNoOrders(unitInCity)
+            for unitOnLand in unit.location.units do
+                if gen.isSleeping(unitOnLand) and forbidTransportTable[unitTypeID][unitOnLand.type.id] then
+                    gen.setToNoOrders(unitOnLand)
                 end
             end
         end
@@ -602,7 +618,7 @@ function navy.onEnterTile(unit,previousTile,previousDomainSpec)
     if carrierTable[unit.type.id] then
         for unitOnTile in unit.location.units do
             if (unitOnTile.carriedBy and unitOnTile.carriedBy.location == previousTile)
-                or carrierTable[unit.type.id].forbiddenUnits[unitOnTile.type.id] then
+                or (carrierTable[unit.type.id].forbiddenUnits[unitOnTile.type.id] and not unit.location.city) then
                 unitOnTile:teleport(previousTile)
             end
         end

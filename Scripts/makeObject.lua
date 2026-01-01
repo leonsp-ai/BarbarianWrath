@@ -38,11 +38,11 @@ io.output(file)
 
 
 local fileOutput = 
-[[local flag = require("flag")
-local counter = require("counter")
+[[local data = require("data")
 local text = require("text")
 local gen = require("generalLibrary")
 
+---@class object table
 local object = gen.makeDataTable({},"object")
 -- This line forbids reassignment of keys of the object table
 -- This should prevent errors
@@ -70,6 +70,7 @@ for i=0,255 do
         row = "object."..scrubKey(adv.name,"a")
         row = paddRow(row)
         row = row.."= civ.getTech("..tostring(i)..")"
+        row = row.." --[[@as techObject]]"
         if type(advancesNotes[i])=="string" then
             row = row.."   --"..advancesNotes[i]
         end
@@ -160,6 +161,7 @@ for i=0,civ.cosmic.numberOfUnitTypes-1 do
     row = "object."..scrubKey(unitType.name,"u")
     row = paddRow(row)
     row = row.."= civ.getUnitType("..tostring(i)..")"
+    row = row.." --[[@as unitTypeObject]]"
     if type(unitTypesNotes[i]) =="string" then
         row = row.."   --"..unitTypesNotes[i]
     end
@@ -186,6 +188,7 @@ for i=0,35 do
     row = "object."..scrubKey(imp.name,"i")
     row = paddRow(row)
     row = row.."= civ.getImprovement("..tostring(i)..")"
+    row = row.." --[[@as improvementObject]]"
     if type(improvementNotes[i]) == "string" then
         row = row.."   --"..improvementNotes[i]
     end
@@ -210,6 +213,7 @@ for i=0,7 do
     row = "object."..scrubKey(trb.name,"p")
     row = paddRow(row)
     row = row.."= civ.getTribe("..tostring(i)..")"
+    row = row.." --[[@as tribeObject]]"
     if type(tribeNotes[i]) == "string" then
         row = row.."   --"..tribeNotes[i]
     end
@@ -234,6 +238,7 @@ for i=0,27 do
     row = "object."..scrubKey(wdr.name,"w")
     row = paddRow(row)
     row = row.."= civ.getWonder("..tostring(i)..")"
+    row = row.." --[[@as wonderObject]]"
     if type(wonderNotes[i]) == "string" then
         row = row.."   --"..wonderNotes[i]
     end
@@ -260,7 +265,7 @@ for map = 0,n_maps-1 do
         if exists and bTer then
             row = "object."..scrubKey(bTer.name,"b")
             row = paddRow(row)
-            row = row.."=civ.getBaseTerrain("..tostring(map)..","..tostring(terrainIndex)..")  --"..bTer.abbrev
+            row = row.."=civ.getBaseTerrain("..tostring(map)..","..tostring(terrainIndex)..") --[[@as baseTerrainObject]]  --"..bTer.abbrev
             currentOutput = currentOutput..row.."\n"
         end
     end
@@ -287,6 +292,7 @@ for map = 0,n_maps-1 do
                 row = "object."..scrubKey(ter.name,"t")
                 row = paddRow(row)
                 row = row.."=civ.getTerrain("..tostring(map)..","..tostring(terrainIndex)..","..tostring(resource)..")"
+                row = row.." --[[@as terrainObject]]"
                 if resource == 1 then
                     row = row.." -- Fish Resource"
                 elseif resource == 2 then
@@ -321,10 +327,16 @@ fileOutput =
 --
 text.setImageTable(object,"object")-- The string "object" provides a name of the table for error messages.
 
+-- Uncomment the following line to register the units image.
+-- You can then use the function
+-- text.unitTypeImage(unitTypeOrID) --> imageObject | nil
+-- to get the image for a specific unit type.
+-- text.registerUnitsImage("units.bmp")
 
--- Flag and Counter Definitions
--- Flags and counters have to be defined somewhere, and this
--- is as good a place as any
+
+-- Flag, Counter and Phrase Definitions
+-- Flags, counters, and phrases have to be defined somewhere,
+-- and you may find it convenient to define some here.
 
 
 

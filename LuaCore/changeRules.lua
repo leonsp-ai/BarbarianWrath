@@ -1,6 +1,6 @@
 
 
-local versionNumber = 1
+local versionNumber = 3
 local fileModified = false -- set this to true if you change this file for your scenario
 -- if another file requires this file, it checks the version number to ensure that the
 -- version is recent enough to have all the expected functionality
@@ -528,23 +528,46 @@ local techAbbreviationToID = {
 ["XFA"] = 250,
 ["XFB"] = 251,
 ["XFC"] = 252,
-["no"] = false,
+--["no"] = false,
 }
 -- makes a function that reads the col entry of ruleRow
 -- interprets the string as the short form of a tech,
 -- then returns the tech
--- "no" is returned as false instead of nil
 local function toTech(col)
     return function(ruleRow) return techAbbreviationToID[ruleRow[col]] and civ.getTech(techAbbreviationToID[ruleRow[col]]) end
 end
 
+-- makes a function that reads the col entry of ruleRow
+-- interprets the string as the short form of a tech,
+-- then returns the tech
+-- "no" is returned as false instead of nil
+local function toPrereqTech(col)
+    return function(ruleRow) 
+        if ruleRow[col] == "no" then
+            return false
+        end
+        return techAbbreviationToID[ruleRow[col]] and civ.getTech(techAbbreviationToID[ruleRow[col]])
+    end
+end
 
 -- applyRuleRow(object,rowToKeyTable,ruleRow)
 -- rowToKeyTable = {[key]=convertFn(ruleRow)}
 local function applyRuleRow(object,rowToKeyTable,ruleRow)
     for key,convertFn in pairs(rowToKeyTable) do
-        local value = convertFn(ruleRow)
-        if value == false and (key == "prereq" or key == "prereq1" or key == "prereq2")
+        local value = nil
+        if key == "errorGen" then
+            -- do nothing in this case, this is in the table to produce error messages
+        else
+            local success,result = pcall(convertFn,ruleRow)
+            if success then
+                value = result
+            else
+                error(rowToKeyTable["errorGen"](object,key))
+            end
+        end
+        if key == "errorGen" then
+            -- do nothing in this case, this is in the table to produce error messages
+        elseif value == false and (key == "prereq" or key == "prereq1" or key == "prereq2")
             and type(object) == "userdata" then
             -- This means there is a prerequisite of no, which is represented by false
             -- at time of writing, lua doesn't distinguish between not having a prerequisite
@@ -702,6 +725,12 @@ local function c2MakeRowTable(startIndex,endIndex)
     end
 end
 local function readMovement(ruleRow,destTable)
+    if tostring(ruleRow[1]) == "0" then
+        error("changeRules module: movement multiplier keys in @COSMIC2 must be enabled.  "..tostring(ruleRow[0]).." is disabled.")
+    end
+    if not tonumber(ruleRow[2]) then
+        error("changeRules module: movement multiplier keys in @COSMIC2 must have a number as the second column.  "..tostring(ruleRow[0]).." has "..tostring(ruleRow[2]).." instead.")
+    end
     destTable[string.lower(ruleRow[0])] = tonumber(ruleRow[2])
 end
 
@@ -753,12 +782,17 @@ local cosmic2Instructions = {
 
 local function initializeCosmic2()
     local outputTable = gen.copyTable(cosmic2Defaults)
-    local cosmic2 = changeRules.currentlyAppliedRules["@COSMCI2"] or {}
+    local cosmic2 = changeRules.currentlyAppliedRules["@COSMIC2"] or {}
+    local movementMultiplierKeysNotFound = {["roadmultiplier"] = true,["rivermultiplier"] = true,["alpinemultiplier"] = true, ["railroadmultiplier"] = true}
     for _,ruleRow in pairs(cosmic2) do
         local rR0 = ruleRow[0]
         if type(rR0) == "string" and cosmic2Instructions[string.lower(rR0)] then
             cosmic2Instructions[string.lower(rR0)](ruleRow,outputTable)
+            movementMultiplierKeysNotFound[string.lower(rR0)] = nil
         end
+    end
+    for key,_ in pairs(movementMultiplierKeysNotFound) do
+        error("changeRules module: movement multiplier keys in @COSMIC2 must be used and enabled.  "..tostring(key).." is missing.")
     end
     local mt = { 
         __index = function (t,k) 
@@ -787,6 +821,16 @@ local initialCosmic2 = initializeCosmic2()
 
 
 
+local function constructErrorGenerator(getItemFromIDFn,rulesSectionName)
+    local function errorGenerator(object,failedKey)
+        local id = object.id
+        local item = getItemFromIDFn(id)
+        local message = "changeRules module: There appears to be an error in the "..rulesSectionName.." section of the supplied rules.txt file."
+        .."  The item with id "..tostring(id).." and name "..tostring(item.name).." does not have a valid value to populate the key '"..tostring(failedKey).."'"
+        return message
+    end
+    return errorGenerator
+end
 
 
 local baseNewDefaultUnit, isDefaultUnit, metatableDefaultUnit = 
@@ -799,13 +843,25 @@ local baseNewDefaultUnit, isDefaultUnit, metatableDefaultUnit =
     
 local unitTypeRowToKeyAUnits = {attack = toNum(5), cost = toNum(9), defense = toNum(6), domain = toNum(2), 
         expires = toTech(1), firepower = toNum(8), flags = flagStrToNum(13), hitpoints = toNum(7),
-        move = toNum(3),  prereq = toTech(12), range = toNum(4), role = toNum(11), }
+        move = toNum(3),  prereq = toPrereqTech(12), range = toNum(4), role = toNum(11), errorGen = constructErrorGenerator(civ.getUnitType,"@UNITS")}
 
 local unitTypeRowToKeyAUnits_Advanced = {advancedFlags = flagStrToNum(6), 
         buildTransport = flagStrToNum(3), minimumBribe = toNum(2),
         nativeTransport = flagStrToNum(5), notAllowedOnMap = flagStrToNum(1), 
-        tribeMayBuild = flagStrToNum(0), useTransport = flagStrToNum(4)}
+        tribeMayBuild = flagStrToNum(0), useTransport = flagStrToNum(4),
+        errorGen = constructErrorGenerator(civ.getUnitType,"@UNITS_ADVANCED")}
 
+local function getAttacksPerTurn(id,attacksSection)
+    if not attacksSection then
+        return nil
+    end
+    if attacksSection[id//10] == nil or attacksSection[id//10][id%10] == nil or tonumber(attacksSection[id//10][id%10]) == nil then
+        error("changeRules module: There appears to be an error in the @ATTACKS section of the supplied rules.txt file."
+        .."  The unitType with id "..tostring(id).." ("..civ.getUnitType(id).name..") does not have a valid value to populate the key attacksPerTurn.  Row: "..tostring(1+id//10)
+        .." Column: "..tostring(1+id%10))
+    end
+    return tonumber(attacksSection[id//10][id%10])
+end
 
 local function newDefaultUnit(id)
     if not civ.getUnitType(id) then
@@ -817,10 +873,11 @@ local function newDefaultUnit(id)
     local attacksSection = rulesTable["@ATTACKS"]
     local defaultUnit = {["id"]=id}
     applyRuleRow(defaultUnit,unitTypeRowToKeyAUnits,unitSection[id])
-    applyRuleRow(defaultUnit,{name = getStr(0)},unitSection[id])
+    applyRuleRow(defaultUnit,{name = getStr(0), errorGen = constructErrorGenerator(civ.getUnitType,"@UNITS")},unitSection[id])
     applyRuleRow(defaultUnit,unitTypeRowToKeyAUnits_Advanced,advancedSection[id])
     -- if no attacks section, attacksPerTurn is nil
-    defaultUnit["attacksPerTurn"] = attacksSection and tonumber(attacksSection[id//10][id%10])
+    --defaultUnit["attacksPerTurn"] = attacksSection and tonumber(attacksSection[id//10][id%10])
+    defaultUnit["attacksPerTurn"] = getAttacksPerTurn(id,attacksSection)
     return baseNewDefaultUnit(defaultUnit)
 end
 
@@ -831,7 +888,7 @@ local baseNewDefaultImprovement, isDefaultImprovement, metatableDefaultImproveme
 
 local improvementRowToKey = {cantSell = function(ruleRow) return (string.sub(ruleRow[4] or "00000000",-1,-1) == "1") end,
     cost = toNum(1), onCapture = function(ruleRow) return flagStringToNumber(string.sub(ruleRow[4] or "00000000",-3,-2)) end,
-    prereq = toTech(3), upkeep = toNum(2)}
+    prereq = toPrereqTech(3), upkeep = toNum(2), errorGen = constructErrorGenerator(civ.getImprovement,"@IMPROVE")}
 
 local function newDefaultImprovement(id)
     if not civ.getImprovement(id) then
@@ -841,7 +898,8 @@ local function newDefaultImprovement(id)
     local improvementSection = rulesTable["@IMPROVE"]
     local defaultImprovement = {["id"]=id}
     applyRuleRow(defaultImprovement,improvementRowToKey,improvementSection[id])
-    applyRuleRow(defaultImprovement,{name = getStr(0)},improvementSection[id])
+    applyRuleRow(defaultImprovement,{name = getStr(0), errorGen=constructErrorGenerator(civ.getImprovement,"@IMPROVE")
+    },improvementSection[id])
     return baseNewDefaultImprovement(defaultImprovement)
 end
 
@@ -849,10 +907,10 @@ local baseNewDefaultWonder, isDefaultWonder, metatableDefaultWonder =
     gen.createDataType("DefaultWonder", {cost = intVDI, expires = techVDI, id = intVDI,
         name = stringVDI, prereq = prereqVDI,},{},{},{id=true,name=true})
 
-local wonderRowToKeyImprove = {cost = toNum(1), --[[prereq = toTech(3),--]]}
+local wonderRowToKeyImprove = {cost = toNum(1), --[[prereq = toTech(3),--]] errorGen = constructErrorGenerator(civ.getWonder,"@IMPROVE")}
     -- note prereq is get only in TOTPPv18
     -- when updating, 
-local wonderRowToKeyEndWonder = {expires = toTech(0)}
+local wonderRowToKeyEndWonder = {expires = toTech(0), errorGen = constructErrorGenerator(civ.getWonder,"@ENDWONDER")}
 
 
 
@@ -866,7 +924,7 @@ local function newDefaultWonder(id)
     local defaultWonder = {["id"]=id}
     applyRuleRow(defaultWonder,wonderRowToKeyImprove,improvementSection[id+40])
     --  remove prereq=toTech(3) when wonder.prereq is fixed to be set and not just get
-    applyRuleRow(defaultWonder,{name = getStr(0),prereq = toTech(3),},improvementSection[id+40])
+    applyRuleRow(defaultWonder,{name = getStr(0),prereq = toPrereqTech(3),errorGen=constructErrorGenerator(civ.getWonder,"@IMPROVE")},improvementSection[id+40])
     applyRuleRow(defaultWonder,wonderRowToKeyEndWonder,endWonderSection[id])
     return baseNewDefaultWonder(defaultWonder)
 end
@@ -877,9 +935,9 @@ local baseNewDefaultTech, isDefaultTech, metatableDefaultTech =
     prereq2 = prereqVDI},{},{},{id=true,name=true})
 
 local techRowToKeyCivilize = {aiValue=toNum(1), category = toNum(6), epoch = toNum(5),
-    modifier=toNum(2), prereq1 = toTech(3), prereq2 = toTech(4)}
+    modifier=toNum(2), prereq1 = toPrereqTech(3), prereq2 = toPrereqTech(4), errorGen = constructErrorGenerator(civ.getTech,"@CIVILIZE")}
 
-local techRowToKeyCivilize2 = {group = toNum(0)}
+local techRowToKeyCivilize2 = {group = toNum(0), errorGen = constructErrorGenerator(civ.getTech,"@CIVILIZE2")}
 
 local function newDefaultTech(id)
     if not civ.getTech(id) then
@@ -890,7 +948,8 @@ local function newDefaultTech(id)
     local civilize2Section = rulesTable["@CIVILIZE2"]
     local defaultTech = {["id"]=id}
     applyRuleRow(defaultTech,techRowToKeyCivilize,civilizeSection[id])
-    applyRuleRow(defaultTech,{name = getStr(0)},civilizeSection[id])
+    applyRuleRow(defaultTech,{name = getStr(0), errorGen = constructErrorGenerator(civ.getTech,"@CIVILIZE")
+    },civilizeSection[id])
     applyRuleRow(defaultTech,techRowToKeyCivilize2,civilize2Section[id])
     return baseNewDefaultTech(defaultTech)
 end
@@ -993,6 +1052,25 @@ local function yesToTrue(col)
     return function(ruleRow) return string.lower(ruleRow[col]) == "yes" end
 end
 
+local function terrainErrorGenerator(object,failedKey)
+    local item = nil
+    local lineID = nil
+    if object.resource then
+        -- item is terrain
+        item = civ.getTerrain(object.map,object.type,object.resource)
+    else
+        -- item is baseTerrain
+        item = civ.getBaseTerrain(object.map,object.type)
+    end
+    local rulesSectionName = "@TERRAIN"
+    if object.map > 0 then
+        rulesSectionName = rulesSectionName..tostring(object.map)
+    end
+    local message = "changeRules module: There appears to be an error in the "..rulesSectionName.." section of the supplied rules.txt file."
+    .."  The terrain named '"..tostring(item.name).."' does not have a valid value to populate the key '"..tostring(failedKey).."'."
+    return message
+end
+
 local baseTerrainRowToKey0 = {
     canIrrigate = yesToTrue(6),
     canMine = yesToTrue(10),
@@ -1008,6 +1086,7 @@ local baseTerrainRowToKey0 = {
     mineTurns = toNum(12),
     moveCost = toNum(1),
     transformTo = toBaseTerrain(14,0),
+    errorGen = terrainErrorGenerator,
 }
 function console.printBaseTerrain(terrainID)
     local baseTer = civ.getBaseTerrain(0,terrainID)
@@ -1031,6 +1110,7 @@ local baseTerrainRowToKey1 = {
     mineTurns = toNum(12),
     moveCost = toNum(1),
     transformTo = toBaseTerrain(14,1),
+    errorGen = terrainErrorGenerator,
 }
 
 local baseTerrainRowToKey2 = {
@@ -1048,6 +1128,7 @@ local baseTerrainRowToKey2 = {
     mineTurns = toNum(12),
     moveCost = toNum(1),
     transformTo = toBaseTerrain(14,2),
+    errorGen = terrainErrorGenerator,
 }
 
 local baseTerrainRowToKey3 = {
@@ -1065,6 +1146,7 @@ local baseTerrainRowToKey3 = {
     mineTurns = toNum(12),
     moveCost = toNum(1),
     transformTo = toBaseTerrain(14,3),
+    errorGen = terrainErrorGenerator,
 }
 
 local bTRTK = {
@@ -1089,7 +1171,7 @@ local function newDefaultBaseTerrain(id)
     local terrainRules = changeRules.currentlyAppliedRules["@TERRAIN"..terrainSuffix]
     local defaultBaseTerrain = {["type"] = terrainType, map = z, abbrev = baseTerrainTypeToAbbreviations[terrainType],}
     applyRuleRow(defaultBaseTerrain, baseTerrainRowToKey, terrainRules[terrainType])
-    applyRuleRow(defaultBaseTerrain, {name=getStr(0)}, terrainRules[terrainType])
+    applyRuleRow(defaultBaseTerrain, {name=getStr(0),errorGen=terrainErrorGenerator}, terrainRules[terrainType])
     return baseNewDefaultBaseTerrain(defaultBaseTerrain)
 end
 
@@ -1109,6 +1191,7 @@ local terrainRowToKey = {
     food = toNum(3),
     shields = toNum(4),
     trade = toNum(5),
+    errorGen = terrainErrorGenerator,
 }
 
 local function newDefaultTerrain(id)
@@ -1137,7 +1220,7 @@ local function newDefaultTerrain(id)
     end
     local terrainRules = changeRules.currentlyAppliedRules["@TERRAIN"..terrainSuffix]
     applyRuleRow(defaultTerrain,terrainRowToKey,terrainRules[numTerrain*res+terrainType])
-    applyRuleRow(defaultTerrain,{name=getStr(0)},terrainRules[numTerrain*res+terrainType])
+    applyRuleRow(defaultTerrain,{name=getStr(0),errorGen = terrainErrorGenerator},terrainRules[numTerrain*res+terrainType])
     return baseNewDefaultTerrain(defaultTerrain)
 end
 
