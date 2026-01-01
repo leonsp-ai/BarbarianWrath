@@ -1,6 +1,6 @@
 ;
 ;   CIVILIZATION CIVILOPEDIA TEXT
-;   Copyright (c) 1999 by MicroProse Software
+;   Copyright (c) 1995 by MicroProse Software
 ;
 ;   Altering the contents of this file may cause the
 ;   game to malfunction.
@@ -34,6 +34,7 @@
 ^Decreases the effect of Cathedrals.
 ^Cancels the effect of
 
+
 @PEDIAPICKUNIT
 @width=540
 @columns=3
@@ -57,10 +58,10 @@
 ^Can carry friendly air units.
 ^Can make paradrops.
 ^Treats all squares as road squares.
-^Defense +50% vs horse (HP 1, MR 2).
-^Only Fundamentalist governments can build (free support).
+^Defense +50% versus units with a movement factor of 2.
+^Only Fundamentalist governments can build.
 ^Destroyed after attacking.
-^Defense +200% vs air units and +400% vs missile units.
+^Defense +100% versus air and missile units.
 ^Can spot enemy submarines in adjacent squares.
 
 
@@ -84,20 +85,22 @@
 
 @;Palace
 @PEDIAIMPROVE1
-Eliminates corruption and waste in the city, and decreases it in all nearby cities. The city cannot be subverted by enemy spies.
-If the city is lost and 1000 gold is available, the palace will be relocated. If the palace is lost and not relocated when a spaceship is under construction or in flight, the spaceship is lost.
+Eliminates corruption and waste in the city,
+and decreases it in all nearby cities.
 
 @;Barracks
 @PEDIAIMPROVE2
-City produces Veteran ground units. Ground units within the city can be completely repaired in a single turn. Friendly ground units within 3 tiles of the city are healed by 30% each turn. Gunpowder and Mobile Warfare each increase maintenance by one.
+City produces Veteran ground units. Ground units can
+be completely repaired in a single turn.
 
 @;Granary
 @PEDIAIMPROVE3
-Only half of the city's food store is depleted when it increases in size. Only half of the city's food store is depleted when it decreases in size due to famine.
+Only half of city's food store is depleted when
+city increases in size.
 
 @;Temple
 @PEDIAIMPROVE4
-One unhappy citizen is made content (two with Mysticism). Under Fundamentalism, tithes (1 gold per affected citizen) are collected instead, with no maintenence costs. 
+Up to two discontented citizens are made content.
 
 @;Marketplace
 @PEDIAIMPROVE5
@@ -109,11 +112,13 @@ Increases science output by 50%.
 
 @;Courthouse
 @PEDIAIMPROVE7
-Decreases corruption by 50%. Makes city more resistant to bribery by enemy diplomats and spies. Under Democracy, one content citizen becomes happy.
+Decreases corruption by 50%. Makes city more resistant
+to bribery by enemy diplomats and spies. Under Democracy,
+one content citizen becomes happy.
 
 @;City Walls
 @PEDIAIMPROVE8
-Units in city are tripled on defense versus ground attacks. Prevents population loss after an unsuccessful defense.
+Units in city are tripled on defense versus ground attacks.
 
 @;Aqueduct
 @PEDIAIMPROVE9
@@ -122,15 +127,16 @@ Allows city to increase beyond size 8.
 @;Bank
 @PEDIAIMPROVE10
 Increases tax and luxury output by an
-additional 50% (cumulative with Marketplace).
+additional 50% (cumulative w/ Marketplace).
 
 @;Cathedral
 @PEDIAIMPROVE11
-Makes three unhappy citizens content. Theology increases the effect by one. Communism decreases the effect by one.  Under Fundamentalism, tithes (1 gold per affected citizen) are collected instead, with no maintenence costs.
+Makes four unhappy citizens content (Three after Communism).
 
 @;University
 @PEDIAIMPROVE12
-Increases science output by an additional 50% (cumulative with Library).
+Increases science output by an additional
+50% (cumulative w/ Library).
 
 @;Mass Transit
 @PEDIAIMPROVE13
@@ -138,40 +144,49 @@ Eliminates pollution caused by population.
 
 @;Colosseum
 @PEDIAIMPROVE14
-Three unhappy citizens are made content (four with Electronics). Under Fundamentalism, tithes (1 gold per affected citizen) are collected instead, with no maintenence costs.
+Three unhappy citizens are made content
+(four w/ Electronics).
 
 @;Factory
 @PEDIAIMPROVE15
-Increases shield production in city by 50%.
+Increases resource production in city by 50%.
 
 @;Mfg. Plant
 @PEDIAIMPROVE16
-Increases shield production by an additional 50% (cumulative with Factory).
+Increases resource production by an additional 50%
+(cumulative w/ Factory).
 
 @;SDI Defense
 @PEDIAIMPROVE17
-Destroys Nuclear Missiles attacking any target with 3 squares of the city. Units in the city are doubled on defense against non-nuclear missiles. This effect is cumulative with the SAM Missile Battery, ie, defense is quadrupled.
+Protects everything within three spaces of
+the city from nuclear attack.
 
 @;Recycling Center
 @PEDIAIMPROVE18
-Reduces shield pollution by 2/3, superseding the environmental effects of Hydro and Nuclear Plants. This, in turn, is superseded by the effects of a Solar Plant.
+Decreases the pollution caused by factories.
 
 @;Power Plant
 @PEDIAIMPROVE19
-Increases shield output by 50% (cumulative with Factory and Manufacturing Plant).
+Increases factory output by 50%.
 
 @;Hydro Plant
 @PEDIAIMPROVE20
-Increases shield output by 50% (cumulative with Factory and Manufacturing Plant). Cleaner than Power Plant (reduces shield pollution by 50%), and generally safer than Nuclear Plant. Can only be built near rivers and mountains.
+Increases factory output by 50%.  Cleaner
+than Power Plant, and generally safer than
+Nuclear Plant.
 
 @;Nuclear Plant
 @PEDIAIMPROVE21
-Increases shield output by 50% (cumulative with Factory and Manufacturing Plant).
-Cleaner than Power Plant (reduces shield pollution by 50%), but there is a risk of Nuclear Meltdown (if city riots for two consecutive turns) unless civilization has discovered Fusion Power.
+Increases factory output by 50%.  Cleaner
+than Power Plant (same as Hydro Plant), but
+there is a risk of Nuclear Meltdown unless
+civilization has discovered Fusion.
 
 @;Stock Exchange
 @PEDIAIMPROVE22
-Increases tax and luxuries output by an additional 50% (cumulative with Marketplace and Bank for a grand total of 150%).
+Increases tax and luxuries output by an additional
+50% (cumulative with Marketplace and Bank for a grand
+total of 150%).
 
 @;Sewer System
 @PEDIAIMPROVE23
@@ -179,180 +194,212 @@ Allows city to grow beyond size 12.
 
 @;Supermarket
 @PEDIAIMPROVE24
-Allows squares in the city's radius with the "farmland" improvement (irrigated twice) to produce 50% more food. This automatically includes the city square.
+Allows squares in the city's radius with
+the "farmland" improvement (irrigated twice)
+to produce 50% more food.
 
 @;Superhighways
 @PEDIAIMPROVE25
-All squares in the city's radius with roads (or railroads) produce 50% more trade. Increases source city's trade bonus by 50%. Increases home city's trade route value by 50%.
+All squares in the city's radius with roads
+(or railroads) produce 50% more trade.
 
 @;Research Lab
 @PEDIAIMPROVE26
-Increases science output by an additional 50% (cumulative with Library and University for a grand total of 150%).
+Increases science output by an additional 50%
+(cumulative with Library and University for a
+grand total of 150%).
 
 @;SAM Missile Battery
 @PEDIAIMPROVE27
-Units in city are doubled on defense against air units and non-nuclear missiles. Cumulative with SDI Defense when the city is attacked by non-nuclear missiles, ie, defense is quadrupled.
+Units in city are doubled on defense against
+air units and non-nuclear missile units.
 
 @;Coastal Fortress
 @PEDIAIMPROVE28
-Units in city are doubled on defense against shore bombardment by enemy ships.
+Units in city are doubled on defense against
+shore bombardment by enemy ships.
 
 @;Solar Plant
 @PEDIAIMPROVE29
-Increases shield output by 50% (cumulative with Factory and Manufacturing Plant). Cleaner than all other forms of power (eliminates shield pollution). Eliminates half of a polluted square's contribution to Global Warming.
+Increases factory output by 50%.  Cleaner
+than all other forms of power.
 
 @;Harbor
 @PEDIAIMPROVE30
-All ocean squares in the city's radius produce one extra unit of food.
+All ocean squares in the city's radius
+produce one extra unit of food.
 
 @;Offshore Platform
 @PEDIAIMPROVE31
-All ocean squares in the city's radius produce one shield.
+All ocean squares in the city's radius
+produce one shield.
 
 @;Airport
 @PEDIAIMPROVE32
-City produces veteran air units. Any air unit spending its entire turn in the city is completely repaired.
+City produces veteran air units.
+Any air unit spending its entire turn in the city
+is completely repaired.
 
 @;Police Station
 @PEDIAIMPROVE33
-Under a Republic or Democracy, it decreases unhappiness caused by troops away from city by 1.
+Decreases unhappiness caused by troops away from city by 1.
 
 @;Port Facility
 @PEDIAIMPROVE34
-City produces veteran naval units. Any ship spending its entire turn in the city is completely repaired.
-
-@;Transporter
-@PEDIAIMPROVE35
-Not available in this game. The transporter or its equivalent appears in the fantasy, sci-fi, and Alpha Centauri games. 
+City produces veteran naval units.
+Any ship spending its entire turn in the city is
+completely repaired.
 
 @;SS Structural
-@PEDIAIMPROVE36
-Forms the framework of your spaceship.
+@PEDIAIMPROVE35
 
 @;SS Component
-@PEDIAIMPROVE37
-PROPULSION COMPONENTS: Each P.C. increases the spaceship's thrust by 12.5%. Consequently, the vessel can handle, at most, 8 propul. components. FUEL COMPONENTS: Each F.C. provides enough fuel to power one thrust component.
+@PEDIAIMPROVE36
 
 @;SS Module
-@PEDIAIMPROVE38
-POPULATION: Each module provides enough living space for 10,000 colonists. LIFE SUPPORT: Each L.S. module generates sufficient food, air, and water to maintain one population module. SOLAR PANEL: Each panel provides power for two modules.
+@PEDIAIMPROVE37
 
 @;Capitalization
-@PEDIAIMPROVE39
+@PEDIAIMPROVE38
 Converts production into trade.
 
 @;Pyramids
-@PEDIAIMPROVE40
+@PEDIAIMPROVE39
 Counts as a Granary in every one of your cities.
 
 @;Hanging Gardens
-@PEDIAIMPROVE41
-Converts 3 content citizens to happy in the host city. One content to happy citizen in every other city.
+@PEDIAIMPROVE40
+One extra happy citizen in every city.
 
 @;Colossus
-@PEDIAIMPROVE42
-City produces one extra trade arrow in each square that already produces one.
+@PEDIAIMPROVE41
+City produces one extra trade arrow in each square that
+already produces one.
 
 @;Lighthouse
-@PEDIAIMPROVE43
-Triremes can move across oceans without danger, and all other types of ship have their movement rate increased by one. Also, all new ships you produce receive veteran status.
+@PEDIAIMPROVE42
+Triremes can move across oceans w/o danger, and all other
+types of ship have their movement rate increased by one.
+Also, all new ships you produce receive veteran status.
 
 @;Great Library
-@PEDIAIMPROVE44
-Civilization receives any civilization advance already discovered by two other civilizations.
+@PEDIAIMPROVE43
+Civilization receives any civilization advance
+already discovered by two other civilizations.
 
 @;Oracle
-@PEDIAIMPROVE45
+@PEDIAIMPROVE44
 Doubles the effect of all of your temples.
 
 @;Great Wall
-@PEDIAIMPROVE46
-City walls in all cities. Enemy civilizations must offer cease-fire/peace in negotiations.  Attack strength doubled against barbarians.
+@PEDIAIMPROVE45
+Enemy civilizations must offer cease-fire/peace
+in negotiations.  Combat strength doubled against
+barbarians.
 
 @;Sun Tzu's War Academy
-@PEDIAIMPROVE47
-All new ground units produced gain Veteran status. Any unit which wins a combat gains Veteran status.
+@PEDIAIMPROVE46
+All new ground units produced gain Veteran status.
+Any unit which wins a combat gains Veteran status.
 
 @;King Richard's Crusade
-@PEDIAIMPROVE48
-Every square in the city's radius produces an extra resource "shield".
+@PEDIAIMPROVE47
+Every square in the city's radius produces an extra
+resource "shield".
 
 @;Marco Polo's Embassy
-@PEDIAIMPROVE49
-You receive a free embassy with every rival Civilization (so your intelligence report will always be complete and you will receive updates when other civilizations discover technologies).
+@PEDIAIMPROVE48
+You receive a free embassy with every rival Civilization (so
+your intelligence report will always be complete and you will
+receive updates when other civilizations discover technologies).
 
 @;Michelangelo's Chapel
-@PEDIAIMPROVE50
+@PEDIAIMPROVE49
 Counts as a Cathedral in each of your cities.
 
 @;Copernicus' Observatory
-@PEDIAIMPROVE51
-Doubles the total science output of city.
+@PEDIAIMPROVE50
+Doubles science output of city.
 
 @;Magellan's Expedition
-@PEDIAIMPROVE52
+@PEDIAIMPROVE51
 Movement rate of all ships is increased by two.
 
-@;Shakespeare's Theatre
-@PEDIAIMPROVE53
+@:Shakespeare's Theatre
+@PEDIAIMPROVE52
 All unhappy citizens in city are content.
 
 @;Da Vinci's Workshop
-@PEDIAIMPROVE54
-Whenever one of your units becomes obsolete because of a new technology you have discovered, it is immediately replaced by an equivalent modern unit. Veteran status is lost.
+@PEDIAIMPROVE53
+Whenever one of your units becomes obsolete because of a new
+technology you have discovered, it is immediately replaced
+by an equivalent modern unit.
 
 @;J.S. Bach's Cathedral
-@PEDIAIMPROVE55
-Two unhappy citizens are made content in each city.
+@PEDIAIMPROVE54
+Decreases unhappy citizens on same continent by 2 per city.
 
 @;Isaac Newton's College
-@PEDIAIMPROVE56
-Doubles the science output of each of the three science improvements (Library, University, and Research Lab) in city. 
+@PEDIAIMPROVE55
+Increases science output of improvements in the city by 50%.
 
 @;Adam Smith's Trading Co.
-@PEDIAIMPROVE57
-Pays the maintenance for all city improvements which ordinarily cost 1 gold per turn.  City improvements requiring more than 1 gold per turn maintenance are not affected.
+@PEDIAIMPROVE56
+Pays the maintenance for all city improvements which
+ordinarily cost 1 gold per turn.  City improvements
+requiring more than 1 gold per turn maintenance are not
+affected.
 
 @;Darwin's Voyage
-@PEDIAIMPROVE58
-Grants the advance currently being researched, plus one more. Research beakers are reset to zero.
+@PEDIAIMPROVE57
+Two free civilization advances.
 
 @;The Statue of Liberty
-@PEDIAIMPROVE59
-Eliminates the period of unrest between governments. Also allows any form of government to be chosen, even if the proper advance has not been discovered.
+@PEDIAIMPROVE58
+Eliminates the period of unrest between governments.
+Also allows any form of government to be chosen, even if
+the proper advance has not been discovered.
 
 @;The Eiffel Tower
-@PEDIAIMPROVE60
-When you first obtain control of the Eiffel Tower, every civilization's attitude toward you is immediately shifted 25 points in your favor (on a hundred point scale).
-Attitudes continue to improve gradually over time.  Other civilizations are also quicker to forget your past transgressions.
-
-@;Women's Suffrage
-@PEDIAIMPROVE61
-Counts as a Police Station in every one of your cities. (Under a Republic or Democracy, decreases unhappiness caused by troops away from city by 1.)
+@PEDIAIMPROVE59
+When you first obtain control of the Eiffel Tower,
+Every civilization's attitude toward you is immediately shifted 25 points
+in your favor (on a hundred point scale).  Attitudes continue to improve
+gradually over time.  Other civilizations are also quicker to forget your
+past transgressions.
 
 @;Hoover Dam
-@PEDIAIMPROVE62
+@PEDIAIMPROVE61
 Provides Hydro power to every city on every continent.
 
+@;Women's Suffrage
+@PEDIAIMPROVE60
+Counts as a Police Station in every one of your cities.
+(Decreases unhappiness caused by troops away from city by 1).
+
 @;Manhattan Project
-@PEDIAIMPROVE63
-Allows nuclear weapons to be built by all civilizations that possess Rocketry.
+@PEDIAIMPROVE62
+Allows nuclear weapons to be built.
 
 @;United Nations
-@PEDIAIMPROVE64
-Free embassy with every other civilization. Enemy civilizations cannot refuse your peace treaties. As a Democracy, you can declare war 50% of the time (peacekeeping missions).
+@PEDIAIMPROVE63
+^* Free embassy with every other civilization.
+^* Enemy civ's cannot refuse your peace treaties.
+^* As a democracy, you can declare war 50% of the time
+^  (peacekeeping missions).
 
 @;Apollo Program
-@PEDIAIMPROVE65
-Allows construction of spaceship improvements by all civilizations. Reveals the entire map to all civilizations.
+@PEDIAIMPROVE64
+Allows construction of spaceship improvements.
 
 @;SETI Program
-@PEDIAIMPROVE66
-Counts as a Research Lab in every one of your cities.
+@PEDIAIMPROVE65
+Counts as a research lab in every one of your cities; effectively
+doubles your science output.
 
 @;Cure for Cancer
-@PEDIAIMPROVE67
-Makes one content citizen happy in every city.
+@PEDIAIMPROVE66
+One extra happy citizen in each city.
 
 @PEDIAGOVT
 @width=600
