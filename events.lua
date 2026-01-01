@@ -301,6 +301,7 @@ local combatSettings = require("combatSettings"):minVersion(4)
 local setTraits = require("setTraits")
 local discreteEvents = require("discreteEventsRegistrar"):minVersion(1)
 require("discreteEvents")
+require("barbarianEvents")
 local consolidated = require("consolidatedEvents"):minVersion(1)
 
 attemptToRun('targetSettings',"WARNING: targetSettings.lua not found.  You will not have strategic targets.")

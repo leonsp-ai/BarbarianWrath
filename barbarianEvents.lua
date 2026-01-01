@@ -41,6 +41,8 @@ local fileModified = false -- set this to true if you change this file for your 
 
 ---@module "discreteEventsRegistrar"
 local discreteEvents = require("discreteEventsRegistrar"):minVersion(4)
+---@module "data"
+local data = require("data"):minVersion(2)
 ---@module "generalLibrary"
 local gen = require("generalLibrary"):minVersion(1)
 ---@module "param"
@@ -83,16 +85,25 @@ local unitAliases = {
     swordsmen = civ.getUnitType(5),
 
     boudica = civ.getUnitType(76),
+    che_guevara = civ.getUnitType(51),
+    florine = civ.getUnitType(53),
     hengist = civ.getUnitType(78),
+    joan = civ.getUnitType(54),
     pyrrhus = civ.getUnitType(52),
     spartacus = civ.getUnitType(77),
 }
 
 local heroes = {
-    boudica = {retinue="chariot", taunt="'Heave we not been robbed entirely of our possessions, while for what litle remains we must pay tribute?'\n\nBoudica of the Iceni leads a horde of chariots against the cities of the world."},
-    spartacus = {retinue="legion", taunt="'Maybe there's no peace in this world, for us or for anyone else. I don't know. But I do know that as long as we live, we must stay true to ourselves. We march tonight!'\n\nSpartacus leads legions of the enslaved in revolt against the cities of the world."},
-    hengist = {retinue="swordsmen", taunt="'The people are worthless, but the land is rich!'\n\nHengist leads a horde of swordsmen against the cities of the world."},
-    florine = {retinue="crusaders", taunt="'Pierced by seven arrows but still fighting, she seeks to open a passage towards the mountains!'\n\nFlorine of Burgundy leads rampaging crusaders against the cities of the world."},
+    bolivar = {retinue="cavalry", taunt="'When tyranny becomes law, rebellion is a right!'\n\n Simon Bolivar leads the colonized and the dispossed in a ride across the continent."},
+    boudica = {retinue="chariot", taunt="'Heave we not been robbed entirely of our possessions, while for what litle remains we must pay tribute?'\n\n Boudica of the Iceni leads a horde of chariots against the cities of the world."},
+    che_guevara = {retinue="marines", taunt="'We cannot be sure of having something to live for unless we are willing to die for it.'\n\n Che Guevara leads a rebel army against injustice."},
+    florine = {retinue="crusaders", taunt="'Pierced by seven arrows but still fighting, she seeks to open a passage towards the mountains!'\n\n Florine of Burgundy leads rampaging crusaders against the cities of the world."},
+    hengist = {retinue="swordsmen", taunt="'The people are worthless, but the land is rich!'\n\n Hengist leads a horde of swordsmen against the cities of the world."},
+    joan = {retinue="knights", taunt="'Courage! Do not fall back; in a little the place will be ours. Watch! When the wind blows my banner against the bulwark, we shall take it. I am the drum with which God beats out His message.'\n\n Joan of Arc leads the faithful against the cities of the unholy."},
+    pyrrhus = {retinue="elephant", taunt="'A victory? Another such victory and we are ruined!'\n\n Pyrrhus of Epirus leads his war elephants against the cities of the world."},
+    spartacus = {retinue="legion", taunt="'Maybe there's no peace in this world, for us or for anyone else. I don't know. But I do know that as long as we live, we must stay true to ourselves. We march tonight!'\n\n Spartacus leads legions of the enslaved in revolt against the cities of the world."},
+    toussant = {retinue="grenadiers", taunt="'I have undertaken vengeance. I want Liberty and Equality to reign. I work to bring them into existence. Unite yourselves to us, brothers, and fight with us for the same cause!' Toussant Louverture frees the people and leads the revolution across the lands."},
+    wallenstein = {retinue="dragoons", taunt="'What do I care for this land? I detest her worse than the pit of hell.'\n\n Albrecht von Wallenstein commands dragoons to ravage and raze the cities of the world."},
 }
 
 discreteEvents.onScenarioLoaded(
@@ -106,6 +117,7 @@ discreteEvents.onScenarioLoaded(
 -- handle barbarian management
 discreteEvents.onTurn(
     function(turn)
+        civ.ui.text("DEBUG: Events are working")
         local barbSummary
         if #barbUnitsTwinnedList >= 3 then
             barbSummary = string.format(
@@ -215,6 +227,31 @@ discreteEvents.onTurn(
     end
 )
 
+local function emergeHeroAtUnit(unit, hero)
+    local retinue = unitAliases[heroes[hero].retinue]
+    local heroType = unitAliases[hero]
+    local taunt = heroes[hero].taunt
+
+    if unit.type == retinue and not data.flagGetValue(hero) then
+        local heroUnit = gen.createUnit(heroType, unit.owner, {unit.location}, {homeCity = nil, veteran = true})
+        local _ = gen.createUnit(retinue, unit.owner, {unit.location}, {count = 3, homeCity = nil, veteran = true})
+
+        if #heroUnit > 0 then
+            data.flagSetTrue(hero)
+            -- civ.ui.text(taunt)
+            local dialog = civ.ui.createDialog()
+            local filename = string.format("hero_%s.gif", hero)
+            local heroImage = civ.ui.loadImage(filename);
+            dialog.title = "THE WORLD SHAKES!"
+            dialog:addImage(heroImage)
+            dialog:addText(taunt)
+            dialog:show()
+        else
+            civ.ui.text(string.format("DEBUG: Failed to emerge hero: %s", hero))
+        end
+    end
+end
+
 discreteEvents.onActivateUnit(
     function(unit, source, repeatMove)
         if unit.owner.id ~= 0 then
@@ -258,25 +295,11 @@ discreteEvents.onActivateUnit(
             table.insert(barbUnitsTwinnedList, unit.type.name)
         end
 
-        for hero, details in pairs(heroes) do
-            emergeHeroAtUnit(unit, unitAliases[details.retinue], hero, unitAliases[hero], details.taunt)
+        for hero, _details in pairs(heroes) do
+            emergeHeroAtUnit(unit, hero)
         end
     end
 )
-
-local function emergeHeroAtUnit(unit, retinue, flagName, hero, taunt)
-    if unit.type == retinue and not data.flagGetValue(flagName) then
-        local heroUnit = gen.createUnit(hero, unit.owner, {unit.location}, {homeCity = nil, veteran = true})
-        local retinue = gen.createUnit(retinue, unit.owner, {unit.location}, {count = 3, homeCity = nil, veteran = true})
-
-        if #heroUnit > 0 then
-            data.flagSetTrue(flagName)
-            civ.ui.text(taunt)
-        else
-            civ.ui.text(string.format("DEBUG: Failed to emerge hero: %s", flagName))
-        end
-    end
-end
 
 discreteEvents.onCityTaken(
     function(city, defender)

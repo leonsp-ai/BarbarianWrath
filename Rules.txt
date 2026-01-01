@@ -436,12 +436,12 @@ Spy,          nil, 0,  3.,0,  0a,0d,  1h,1f,  3,0,  6, Esp, 0000000000000011
 Caravan,      Cor, 0,  1.,0,  0a,1d,  1h,1f,  5,0,  7, Tra, 0000000000000010
 Freight,      nil, 0,  2.,0,  0a,1d,  1h,1f,  5,0,  7, Cor, 0000000000000010
 Explorer,     Gue, 0,  1.,0,  0a,1d,  1h,1f,  3,0,  0, Sea, 0000001000000010 ; 50
-TODO Marines,   nil, 0,  1.,0,  1a,1d,  1h,1f,  5,0,  0, no,  0000000000000000
+Che Guevara,  nil, 0,  1.,0,  9a,5d,  3h,1f,  6,0,  0, no, 0000000000000100 ; Marine hero
 Pyrrhus,      nil, 0,  2.,0,  5a,2d,  2h,1f,  4,0,  0, no,  0000000000000000 ; Elephant hero
 Florine,      nil, 0,  2.,0,  6a,2d,  2h,1f,  4,0,  0, no,  0000000000000000 ; Crusader hero
-Jeanne d'Arc, nil, 0,  2.,0,  6a,2d,  2h,1f,  4,0,  0, no,  0000000000000000 ; Knight hero
-TODO Dragoons,   nil, 0,  1.,0,  0a,1d,  2h,1f,  4,0,  5, no,  0000000000000000 ; 55
-TODO Cavalry,   nil, 0,  1.,0,  0a,1d,  2h,1f,  4,0,  5, no,  0000000000000000
+Joan,         nil, 0,  2.,0,  6a,2d,  2h,1f,  4,0,  0, no,  0000000000000000 ; Knight hero
+Wallenstein,  nil, 0,  2.,0,  7a,3d,  2h,1f,  5,0,  0, no,  0000000000000000 ; 55 Dragoon hero
+Bolivar,      nil, 0,  2.,0,  9a,4d,  2h,1f,  6,0,  0, no,  0000000000000000 ; Cavalry hero
 not used d,   nil, 0,  1.,0,  0a,1d,  2h,1f,  4,0,  5, no,  0000000000000000
 not used e,   nil, 0,  1.,0,  0a,1d,  2h,1f,  4,0,  5, no,  0000000000000000
 not used f,   nil, 0,  1.,0,  0a,1d,  2h,1f,  4,0,  5, no,  0000000000000000
@@ -464,7 +464,7 @@ Zeppelin,     AFl, 1,  8.,2,  8a,1d,  1h,2f, 12,0,  0, Cmb, 0000000000000001 ; 7
 Boudica,      nil, 0,  2.,0,  4a,2d,  2h,1f,  3,0,  0, no,  0000000000000000 ; Chariot hero
 Spartacus,    nil, 0,  1.,0,  5a,2d,  2h,1f,  4,0,  0, no,  0000000000000000 ; Legion hero
 Hengist,      nil, 0,  1.,0,  6a,2d,  2h,1f,  4,0,  0, no,  0000000000000100 ; Swordsmen hero
-TODO Grenadiers,   nil, 0,  1.,0,  0a,1d,  2h,1f,  4,0,  5, no,  0000000000000000 ; Grenadier hero
+Toussant,     nil, 0,  1.,0,  7a,4d,  2h,1f,  3,0,  0, no,  0000000000000100 ; Grenadier hero
 
 ;
 ; Note: the above 11 unit types (extra land, ship, air, and test units) are
@@ -712,7 +712,7 @@ Genghis Khan, Bortei,              0, 6, 0, Mongols,     Mongol,      1,  1, -1,
 Mohandas Gandhi,Indira Gandhi,     0, 7, 2, Indians,     Indian,     -1, -1,  0,     2, Maharaja, Maharaja,
 Lenin,        Catherine the Great, 1, 1, 3, Russians,    Russian,     1,  0, -1,     2, Czar, Czarina, 4, Patriarch, Matriarch
 Shaka,        Mkabi,               0, 2, 0, Zulus,       Zulu,        1,  0,  0,
-Louis XIV,    Joan of Arc,         0, 3, 3, French,      French,      1,  1,  1,     4, Archbishop, Archbishop, 6, Premier, Premier
+Louis XIV,    Alienor,             0, 3, 3, French,      French,      1,  1,  1,     4, Archbishop, Archbishop, 6, Premier, Premier
 Montezuma,    Tlapalizquixochtzin, 0, 4, 0, Aztecs,      Aztec,       0, -1,  1,
 Mao Tse Tung, Wu Zhao,             0, 5, 2, Chinese,     Chinese,     0,  0,  1,     3, Chairman, Chairperson
 Henry VIII,   Elizabeth I,         1, 6, 3, English,     English,     0,  1,  0,     4, Lord Protector, Lady Protector, 6, Prime Minister, Prime Minister
@@ -991,12 +991,12 @@ Enraged
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;Caravan
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;Freight
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;50 Explorer
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010001000  ;Extra Land
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010001000  ;Che Guevara (Extra Land)
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010001000  ;Pyrrhus (Extra Ship)
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010001000  ;Florine (Extra Air)
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;Test Unit a
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;55 Test Unit b
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;Test Unit c
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010001000  ;Joan (Test unit a)
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010001000  ;55 Wallenstein (Test Unit b)
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010001000  ;Bolivar (Test Unit c)
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;Test Unit d
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;Test Unit e
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;Test Unit f
@@ -1019,7 +1019,7 @@ Enraged
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010001000  ;Boudica (Test Unit w)
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010001000  ;Spartacus (Test Unit x)
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010001000  ;Hengist (Test Unit y)
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010001000  ;Test Unit z
+11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010001000  ;Toussant (Test Unit z)
 		
 
 @MAP_TRANSPORT_RELATIONSHIPS
@@ -1057,7 +1057,7 @@ Enraged
 <none>  	    ; Engineers
 Warrior.wav  	; Warriors
 <none>  	    ; Phalanx
-<none>  	    ; Legion (Archers)
+Swordfgt.wav  	; Legion (Archers)
 <none>  	    ; Swordsmen (Legion)
 Warrior.wav  	; Pikemen
 <none>  	    ; Grenadiers (Musketeers)
@@ -1070,10 +1070,10 @@ Riflemen.wav  	; Riflemen (Marines)
 <none>  	    ; Mech. Inf.
 Chariot.wav  	; Chariot (Horsemen)
 Elephant.wav  	; Elephant (Chariot)
-<none>  	; Crusaders (Elephant)
+Swrdhors.wav  	; Crusaders (Elephant)
 <none>  	; Knights (Crusaders)
 <none>  	; Dragoons (Knights)
-<none>  	; Cavalry (Dragoons)
+Cavalry.wav  	; Cavalry (Dragoons)
 Oldcannons.wav  ; Early Armor (Cavalry)
 Oldcannons.wav  ; Armor
 <none>  	; Catapult
@@ -1104,12 +1104,12 @@ Spysilencer.wav ; Spy
 <none>  	; Caravan
 <none>  	; Freight
 <none>  	; Explorer
-<none>  	; Extra Land
-<none>  	; Extra Ship
-<none>  	; Extra Air
-<none>  	; New Unit a
-<none>  	; New Unit b
-<none>  	; New Unit c
+Marines.wav     ; Che Guevara (Extra Land)
+Elephant.wav  	; Pyrrhus (Extra Ship)
+Swrdhors.wav  	; Florine (Extra Air)
+Swrdhors.wav  	; Joan (New Unit a)
+Swrdhors.wav  	; Wallenstein (New Unit b)
+Cavalry.wav  	; Bolivar (New Unit c)
 <none>  	; New Unit d
 <none>  	; New Unit e
 <none>  	; New Unit f
@@ -1129,10 +1129,10 @@ Archers.wav  	; Archers (New Unit q)
 Oldcannons.wav  ; Modern Armor (New Unit t)
 Stinger.Wav     ; Drone (New Unit u)
 Gyrfalcon.Wav  	; Zeppelin (New Unit v)
-<none>  	; New Unit w
-<none>  	; New Unit x
-<none>  	; New Unit y
-<none>  	; New Unit z
+Chariot.wav  	; Boudica (New Unit w)
+Swordfgt.wav  	; Spartacus (New Unit x)
+Swordfgt.wav  	; Hengist (New Unit y)
+Infantry.wav  	; Toussant (New Unit z)
 
 @RIVERS
 River,          ; map 1
