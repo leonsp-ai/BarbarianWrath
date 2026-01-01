@@ -980,12 +980,12 @@ Failed to load game: file has more recent version number than game.
 @width=320
 @title=Select Difficulty Level
 @options
-Chieftain (easiest)
+Chieftain
 Warlord
 Prince
-King
+King (recommended)
 Emperor
-Deity (toughest)
+Deity
 
 @SIZEOFMAP
 @width=320

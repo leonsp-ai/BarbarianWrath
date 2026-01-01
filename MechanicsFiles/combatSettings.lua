@@ -126,7 +126,18 @@ Modifiers that can be disabled by setting their value to "0" (the numeric value,
 
 local function computeCombatStatistics(attacker, defender, isSneakAttack)
     
-    local combatModifierOverride = {aCustomMult=1,dCustomMult=1}
+    local combatModifierOverride = {
+        aCustomMult=1,
+        dCustomMult=1,
+        aBarbarianAttackerVsHumanDefender=1.5,
+        aBarbarianAttackerVsAiDefender=1,
+        aBarbarianAttackerVsDefendersOnlyCity=1,
+        aBarbarianAttackerVsDefendersCapitalCity=1,
+        aBarbarianAttackerVsDefenderWithGreatWall=.9,
+        aGreatWallVsBarbarianDefender=1.1,
+        dBarbarianDefenderArchers=1,
+        dBarbarianDefenderLegion=1,
+    }
     -- Modifier from rules files:
     --local aMult, dMult = rules.combatGroupCustomModifiers(attacker,defender)
     local aMult, dMult = 1,1
