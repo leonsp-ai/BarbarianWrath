@@ -180,11 +180,11 @@ discreteEvents.onCityProcessingComplete(
         local foodSupport = settlerSupport(tribe, capital)
         local foodSurplus = foodProd - (2 * capital.size + foodSupport)
         if foodSurplus > 0  then
-            if lastSizeFixTurn[capital.name] and lastSizeFixTurn[capital.name] - turn <= 5 then
+            if lastSizeFixTurn[capital.name] and turn - lastSizeFixTurn[capital.name] <= 5 then
                 civ.ui.text(
                     string.format(
                         "DEBUG: We last fixed %s's population %d turns ago. Accelerating.",
-                        capital.name, lastSizeFixTurn[capital.name] - turn
+                        capital.name, turn - lastSizeFixTurn[capital.name]
                     )
                 )
                 maxCapitalSize[capital.name] = maxCapitalSize[capital.name] + 1
@@ -230,10 +230,13 @@ local function emergeHeroAtUnit(unit, hero)
     local retinue = unitAliases[heroes[hero].retinue]
     local heroType = unitAliases[hero]
     local taunt = heroes[hero].taunt
+    local retinueCount = 2
 
     if unit.type == retinue and not data.flagGetValue(hero) then
         local heroUnit = gen.createUnit(heroType, unit.owner, {unit.location}, {homeCity = nil, veteran = true})
-        local _ = gen.createUnit(retinue, unit.owner, {unit.location}, {count = 3, homeCity = nil, veteran = true})
+        if retinueCount > 0 then
+            gen.createUnit(retinue, unit.owner, {unit.location}, {count = retinueCount, homeCity = nil, veteran = true})
+        end
 
         if #heroUnit > 0 then
             data.flagSetTrue(hero)
@@ -300,6 +303,21 @@ discreteEvents.onActivateUnit(
     end
 )
 
+discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation,winnerVetStatus,loserVetStatus)
+    for hero, _details in pairs(heroes) do
+        if loser.type == unitAliases[hero] then
+            civ.ui.text(
+                string.format(
+                    "THE WORLDS BREATHES EASY! %s was slain by %s forces. Their retinue is scattered and leaderless.",
+                    loser.type.name,
+                    winner.owner.adjective
+                )
+            )
+            break
+        end
+    end
+end)
+
 discreteEvents.onCityTaken(
     function(city, defender)
         if city.owner.id ~= 0 then
@@ -320,6 +338,12 @@ discreteEvents.onCityTaken(
         end
         if not civ.isUnit(unit_or_units) and #unit_or_units >= too_many_per_tile then
             return -- don't multiply plentiful barbarians
+        end
+        for hero, details in pairs(heroes) do
+            if new_unit_type == unitAliases[hero] then
+                new_unit_type = unitAliases[details.retinue]
+                break
+            end
         end
         local newUnits = gen.createUnit(new_unit_type, city.owner, {city.location}, {count = reward_unit_count, homeCity = nil, veteran = true})
         if #newUnits == 0 then
