@@ -69,6 +69,10 @@ local barbUnitsTwinnedCount = 0
 local barbUnitsTwinnedList = {}
 local maxCapitalSize = {}
 local lastSizeFixTurn = {}
+
+local improvementAliases = {
+    courthouse = civ.getImprovement(7)
+}
 local unitAliases = {
     diplomat = civ.getUnitType(46),
 
@@ -84,6 +88,7 @@ local unitAliases = {
     marines = civ.getUnitType(11),
     swordsmen = civ.getUnitType(5),
 
+    bolivar = civ.getUnitType(56),
     boudica = civ.getUnitType(76),
     che_guevara = civ.getUnitType(51),
     florine = civ.getUnitType(53),
@@ -91,19 +96,61 @@ local unitAliases = {
     joan = civ.getUnitType(54),
     pyrrhus = civ.getUnitType(52),
     spartacus = civ.getUnitType(77),
+    toussant = civ.getUnitType(79),
+    wallenstein = civ.getUnitType(55),
 }
 
 local heroes = {
-    bolivar = {retinue="cavalry", taunt="'When tyranny becomes law, rebellion is a right!' \r\n\r\n Simon Bolivar leads the colonized and the dispossed in a ride across the continent."},
-    boudica = {retinue="chariot", taunt="'Heave we not been robbed entirely of our possessions, while for what litle remains we must pay tribute?' \r\n\r\n Boudica of the Iceni leads a horde of chariots against the cities of the world."},
-    che_guevara = {retinue="marines", taunt="'We cannot be sure of having something to live for unless we are willing to die for it.' \r\n\r\n Che Guevara leads a rebel army against injustice."},
-    florine = {retinue="crusaders", taunt="'Pierced by seven arrows but still fighting, she seeks to open a passage towards the mountains!' \r\n\r\n Florine of Burgundy leads rampaging crusaders against the cities of the world."},
-    hengist = {retinue="swordsmen", taunt="'The people are worthless, but the land is rich!' \r\n\r\n Hengist leads a horde of swordsmen against the cities of the world."},
-    joan = {retinue="knights", taunt="'Courage! Do not fall back; in a little the place will be ours. Watch! When the wind blows my banner against the bulwark, we shall take it. I am the drum with which God beats out His message.' \r\n\r\n Joan of Arc leads the faithful against the cities of the unholy."},
-    pyrrhus = {retinue="elephant", taunt="'A victory? Another such victory and we are ruined!' \r\n\r\n Pyrrhus of Epirus leads his war elephants against the cities of the world."},
-    spartacus = {retinue="legion", taunt="'Maybe there's no peace in this world, for us or for anyone else. I don't know. But I do know that as long as we live, we must stay true to ourselves. We march tonight!'\r\n\r\n Spartacus leads legions of the enslaved in revolt against the cities of the world."},
-    toussant = {retinue="grenadiers", taunt="'I have undertaken vengeance. I want Liberty and Equality to reign. I work to bring them into existence. Unite yourselves to us, brothers, and fight with us for the same cause!' Toussant Louverture frees the people and leads the revolution across the lands."},
-    wallenstein = {retinue="dragoons", taunt="'What do I care for this land? I detest her worse than the pit of hell.'\r\n\r\n Albrecht von Wallenstein commands dragoons to ravage and raze the cities of the world."},
+    bolivar = {
+        retinue="cavalry",
+        taunt="When tyranny becomes law, rebellion is a right!",
+        bio="Simon Bolivar leads the colonized and the dispossed in a ride across the continent.",
+    },
+    boudica = {
+        retinue="chariot",
+        taunt="Heave we not been robbed entirely of our possessions, while for what litle remains we must pay tribute?",
+        bio="Boudica of the Iceni leads a horde of chariots against the cities of the world."
+    },
+    che_guevara = {
+        retinue="marines",
+        taunt="We cannot be sure of having something to live for unless we are willing to die for it.",
+        bio="Che Guevara leads a rebel army against injustice.",
+    },
+    florine = {
+        retinue="crusaders",
+        taunt="Pierced by seven arrows but still fighting, she seeks to open a passage towards the mountains!",
+        bio="Florine of Burgundy leads rampaging crusaders against the cities of the world.",
+    },
+    hengist = {
+        retinue="swordsmen",
+        taunt="The people are worthless, but the land is rich!",
+        bio="Hengist leads a horde of swordsmen against the cities of the world."
+    },
+    joan = {
+        retinue="knights",
+        taunt="Courage! Do not fall back; in a little the place will be ours. Watch! When the wind blows my banner against the bulwark, we shall take it. I am the drum with which God beats out His message.",
+        bio="Joan of Arc leads the faithful against the cities of the unholy."
+    },
+    pyrrhus = {
+        retinue="elephant",
+        taunt="A victory? Another such victory and we are ruined!",
+        bio="Pyrrhus of Epirus leads his war elephants against the cities of the world."
+    },
+    spartacus = {
+        retinue="legion",
+        taunt="Maybe there's no peace in this world, for us or for anyone else. I don't know. But I do know that as long as we live, we must stay true to ourselves. We march tonight!",
+        bio="Spartacus leads legions of the enslaved in revolt against the cities of the world."
+    },
+    toussant = {
+        retinue="grenadiers",
+        taunt="I have undertaken vengeance. I want Liberty and Equality to reign. I work to bring them into existence. Unite yourselves to us, brothers, and fight with us for the same cause!",
+        bio="Toussant Louverture frees the people and leads the revolution across the lands.",
+    },
+    wallenstein = {
+        retinue="dragoons",
+        taunt="What do I care for this land? I detest her worse than the pit of hell.",
+        bio="Albrecht von Wallenstein commands dragoons to ravage and raze the cities of the world.",
+    },
 }
 
 discreteEvents.onScenarioLoaded(
@@ -180,21 +227,21 @@ discreteEvents.onCityProcessingComplete(
         local foodSupport = settlerSupport(tribe, capital)
         local foodSurplus = foodProd - (2 * capital.size + foodSupport)
         if foodSurplus > 0  then
-            if lastSizeFixTurn[capital.name] and turn - lastSizeFixTurn[capital.name] <= 5 then
-                civ.ui.text(
-                    string.format(
-                        "DEBUG: We last fixed %s's population %d turns ago. Accelerating.",
-                        capital.name, turn - lastSizeFixTurn[capital.name]
-                    )
-                )
+            if lastSizeFixTurn[capital.name] and turn - lastSizeFixTurn[capital.name] <= 3 and maxCapitalSize[capital.name] < 6 then
+                -- civ.ui.text(
+                --     string.format(
+                --         "DEBUG: We last fixed %s's population %d turns ago. Accelerating.",
+                --         capital.name, turn - lastSizeFixTurn[capital.name]
+                --     )
+                -- )
                 maxCapitalSize[capital.name] = maxCapitalSize[capital.name] + 1
             end
-            civ.ui.text(
-                string.format(
-                    "BUG FIX! %s is smaller at %d than the all time high of %d. Restoring the %s population.",
-                    capital.name, capital.size, maxCapitalSize[capital.name], tribe.adjective
-                )
-            )
+            -- civ.ui.text(
+            --     string.format(
+            --         "BUG FIX! %s is smaller at %d than the all time high of %d. Restoring the %s population.",
+            --         capital.name, capital.size, maxCapitalSize[capital.name], tribe.adjective
+            --     )
+            -- )
             capital.size = maxCapitalSize[capital.name]
             lastSizeFixTurn[capital.name] = turn
         end
@@ -230,24 +277,54 @@ local function emergeHeroAtUnit(unit, hero)
     local retinue = unitAliases[heroes[hero].retinue]
     local heroType = unitAliases[hero]
     local taunt = heroes[hero].taunt
+    local bio = heroes[hero].bio
     local retinueCount = 2
+    local costMultiplier = 300
+
+    if retinue == nil then
+        civ.ui.text(strings.format("ERROR: %s missing from unitAliases", heroes[hero].retinue))
+        return
+    end
+    if heroType == nil then
+        civ.ui.text(strings.format("ERROR: %s missing from unitAliases", hero))
+        return
+    end
 
     if unit.type == retinue and not data.flagGetValue(hero) then
-        local heroUnit = gen.createUnit(heroType, unit.owner, {unit.location}, {homeCity = nil, veteran = true})
-        if retinueCount > 0 then
-            gen.createUnit(retinue, unit.owner, {unit.location}, {count = retinueCount, homeCity = nil, veteran = true})
+        local dialog = civ.ui.createDialog()
+        local filename = string.format("hero_%s.bmp", hero)
+        local heroImage = civ.ui.loadImage(filename);
+        local player = civ.getPlayerTribe()
+        local playerCapital = civlua.findCapital(player)
+        dialog.title = "THE WORLD SHAKES!"
+        dialog.width = 800
+        dialog:addImage(heroImage)
+        dialog:addText(string.format("'%s'", taunt))
+        dialog:addText(string.format("\n^\n^%s", bio))
+        if player.money > heroType.cost * costMultiplier then
+            dialog:addOption(
+                string.format(
+                    "We could do more together! Join the %s. Here's %d to get things started",
+                    player.name, heroType.cost * costMultiplier
+                ), 1
+            )
+            dialog:addOption("Get lost, scrounger", 2)
+        end
+        local answer = dialog:show()
+        local heroUnit
+
+        if answer == 1 and playerCapital ~= nil then
+            player.money = player.money - heroType.cost * costMultiplier
+            heroUnit = gen.createUnit(heroType, player, {playerCapital.location}, {homeCity = nil, veteran = true})
+        else
+            heroUnit = gen.createUnit(heroType, unit.owner, {unit.location}, {homeCity = nil, veteran = true})
+            if retinueCount > 0 then
+                gen.createUnit(retinue, unit.owner, {unit.location}, {count = retinueCount, homeCity = nil, veteran = true})
+            end
         end
 
         if #heroUnit > 0 then
             data.flagSetTrue(hero)
-            -- civ.ui.text(taunt)
-            local dialog = civ.ui.createDialog()
-            local filename = string.format("hero_%s.bmp", hero)
-            local heroImage = civ.ui.loadImage(filename);
-            dialog.title = "THE WORLD SHAKES!"
-            dialog:addImage(heroImage)
-            dialog:addText(taunt)
-            dialog:show()
         else
             civ.ui.text(string.format("DEBUG: Failed to emerge hero: %s", hero))
         end
@@ -305,12 +382,32 @@ discreteEvents.onActivateUnit(
 
 discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation,winnerVetStatus,loserVetStatus)
     for hero, _details in pairs(heroes) do
-        if loser.type == unitAliases[hero] then
+        if loser.type == unitAliases[hero] and loser.owner.id == 0 then
             civ.ui.text(
                 string.format(
-                    "THE WORLDS BREATHES EASY! %s was slain by %s forces. Their retinue is scattered and leaderless.",
+                    "THE WORLDS BREATHES EASY! %s was slain by %s forces. Their retinue scatters in despair.",
                     loser.type.name,
                     winner.owner.adjective
+                )
+            )
+            break
+        elseif loser.type == unitAliases[hero] and loser.owner.id ~= 0 then
+            civ.ui.text(
+                string.format(
+                    "The %s lose %s in the fog of war. Only a note is found: %s WILL RETURN.",
+                    loser.owner.name,
+                    loser.type.name,
+                    string.upper(loser.type.name)
+                )
+            )
+            data.flagSetFalse(hero)
+        elseif winner.type == unitAliases[hero] then
+            civ.ui.text(
+                string.format(
+                    "THE ESTABLISHMENT TREMBLES! %s dispatches %s %s. The raiders rejoice.",
+                    winner.type.name,
+                    loser.owner.adjective,
+                    loser.type.name
                 )
             )
             break
@@ -339,9 +436,14 @@ discreteEvents.onCityTaken(
         if not civ.isUnit(unit_or_units) and #unit_or_units >= too_many_per_tile then
             return -- don't multiply plentiful barbarians
         end
+        local heroMode = false
+        local heroType
         for hero, details in pairs(heroes) do
             if new_unit_type == unitAliases[hero] then
                 new_unit_type = unitAliases[details.retinue]
+                heroMode = true
+                heroType = unitAliases[hero]
+                reward_unit_count = reward_unit_count * 2
                 break
             end
         end
@@ -349,16 +451,29 @@ discreteEvents.onCityTaken(
         if #newUnits == 0 then
             civ.ui.text(
                 string.format(
-                    "BARBARIANS TAKE %s! %s devastated. The outpost is too remote to reinforce.",
+                    "BARBARIANS TAKE %s! %s are devastated. The outpost is too remote to reinforce.",
                     string.upper(city.name),
                     defender.name
                 )
             )
             return -- could not reinforce
         end
+        if heroMode then
+            civ.addImprovement(city, improvementAliases.courthouse)
+            city.owner.money = city.owner.money + 2000
+            civ.ui.text(
+                string.format(
+                    "%s TAKES %s! %s are devastated. %s orders the construction of a Courthouse. More %s flock to the red banner.",
+                    string.upper(heroType.name),
+                    string.upper(city.name),
+                    defender.name,
+                    new_unit_type.name
+                )
+            )
+        end
         civ.ui.text(
             string.format(
-                "BARBARIANS TAKE %s! %s devastated. More %s flock to the red banner.",
+                "BARBARIANS TAKE %s! %s are devastated. More %s flock to the red banner.",
                 string.upper(city.name),
                 defender.name,
                 new_unit_type.name
