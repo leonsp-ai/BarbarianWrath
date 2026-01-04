@@ -110,104 +110,114 @@ local heroes = {
         taunt=[[
 'When tyranny becomes law, rebellion is a right!'
 ^
-^ Simon Bolivar leads the colonized and the dispossed in a ride across
-^ the continent.]],
+^ Simon Bolivar leads the colonized and the dispossed
+^ in a ride across the continents.]],
     },
     boudica = {
         retinue="chariot",
         taunt=[[
-'Have we not been robbed entirely of our possessions, while for what litle
-^ remains we must pay tribute?'
+'Have we not been robbed entirely of our possessions,
+^ while for what litle remains we must pay tribute?'
 ^
-^ Boudica of the Iceni leads a horde of chariots against the cities of
-^ the world.]]
+^ Boudica of the Iceni leads a horde of chariots
+^ against the cities of the world.]]
     },
     che_guevara = {
         retinue="marines",
         taunt=[[
-'We cannot be sure of having something to live for unless we are willing to
-^ die for it.'
+'We cannot be sure of having something to live for
+^ unless we are willing to die for it.'
 ^
 ^Che Guevara leads a rebel army against injustice.]]
     },
     florine = {
         retinue="crusaders",
         taunt=[[
-'Pierced by seven arrows but still fighting, she seeks to open a passage
-^ towards the mountains!'
+'Pierced by seven arrows but still fighting, she seeks
+^ to open a passage towards the mountains!'
 ^
-^ Florine of Burgundy leads rampaging crusaders against the cities of
-^ the world.]]
+^ Florine of Burgundy leads rampaging crusaders
+^ against the cities of the world.]]
     },
     hengist = {
         retinue="swordsmen",
         taunt=[[
 'The people are worthless, but the land is rich!'
 ^
-^ Hengist leads a horde of swordsmen against the cities of the world.]]
+^ Hengist leads a horde of swordsmen against
+^ the cities of the world.]]
     },
     joan = {
         retinue="knights",
         taunt=[[
-'Courage! Do not fall back; in a little the place will be ours. Watch! When
-^ the wind blows my banner against the bulwark, we shall take it. I am the
-^ drum with which God beats out His message.'
+'Courage! Do not fall back; in a little the place will
+^ be ours. Watch! When the wind blows my banner
+^ against the bulwark, we shall take it. I am the drum
+^ with which God beats out His message.'
 ^
-^ Joan of Arc leads the faithful against the cities of the unholy.]]
+^ Joan of Arc leads the faithful against the cities
+^ of the unholy.]]
     },
     napoleon = {
         retinue="artillery",
         taunt=[[
-'The battlefield is a scene of constant chaos. The winner will be the one who
-^ controls that chaos, both his own and the enemies.'
+'The battlefield is a scene of constant chaos.
+^ The winner will be the one who controls that chaos,
+^ both his own and the enemies.'
 ^
-^ Napoleon Bonaparte leads big batallions of artillery against the cities of
-^ the old regime, whether it is for the republic or for himself.]]
+^ Napoleon Bonaparte leads big batallions of artillery
+^ against the cities of the old regime, whether it is
+^ for the republic or for himself.]]
     },
     pyrrhus = {
         retinue="elephant",
         taunt=[[
 'A victory? Another such victory and we are ruined!'
 ^
-^ Pyrrhus of Epirus leads his war elephants against the cities of the world.]]
+^ Pyrrhus of Epirus leads his war elephants against
+^ the cities of the world.]]
     },
     spartacus = {
         retinue="legion",
         taunt=[[
-'Maybe there's no peace in this world, for us or for anyone else. I don't know.
-^ But I do know that as long as we live, we must stay true to ourselves. We
-^ march tonight!'
+'Maybe there's no peace in this world, for us or for
+^ anyone else. I don't know. But I do know that
+^ as long as we live, we must stay true to ourselves.
+^ We march tonight!'
 ^
-^ Spartacus leads legions of the enslaved in revolt against the cities of
-^ the world.]]
+^ Spartacus leads legions of the enslaved in revolt
+^ against the cities of the world.]]
     },
     toussant = {
         retinue="grenadiers",
         taunt=[[
-'I have undertaken vengeance. I want Liberty and Equality to reign. I work
-^ to bring them into existence. Unite yourselves to us, brothers, and fight
-^ with us for the same cause!
+'I have undertaken vengeance. I want Liberty and
+^ Equality to reign. I work to bring them into
+^ existence. Unite yourselves to us, brothers, and
+^ fight with us for the same cause!
 ^
-^ Toussant Louverture frees the people and leads the revolution across
-^ the lands.]]
+^ Toussant Louverture frees the people and leads
+^ the revolution across the lands.]]
     },
     wallenstein = {
         retinue="dragoons",
         taunt=[[
-'What do I care for this land? I detest her worse than the pit of hell.'
+'What do I care for this land? I detest her worse than
+^ the pit of hell.'
 ^
-^ Albrecht von Wallenstein commands dragoons to ravage and raze the
-^ cities of the world.]]
+^ Albrecht von Wallenstein commands dragoons to ravage
+^ and raze the cities of the world.]]
     },
 }
 
-discreteEvents.onScenarioLoaded(
-    function()
-        for hero, _ in pairs(heroes) do
-            data.defineFlag(hero)
-        end
-    end
-)
+for hero, _ in pairs(heroes) do
+    data.defineFlag(hero)
+end
+
+-- discreteEvents.onScenarioLoaded(
+--     function()
+--     end
+-- )
 
 -- handle barbarian management
 discreteEvents.onTurn(
@@ -445,10 +455,9 @@ discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation
         elseif loser.type == unitAliases[hero] and winner.owner ~= player and winnerCapital ~= nil then
             text.simple(
                 string.format(
-                    "THE WORLDS BREATHES EASY! The %s capture and recruit %s",
-                    loser.type.name,
-                    winner.owner.adjective,
-                    string.upper(loser.type.name)
+                    "THE WORLDS BREATHES EASY! The %s capture and recruit %s.",
+                    winner.owner.name,
+                    loser.type.name
                 ), "Foreign Minister", text.unitTypeImage(loser.type)
             )
             local newUnits = gen.createUnit(loser.type, winner.owner, {winnerCapital.location}, {homeCity = nil, veteran = true})
