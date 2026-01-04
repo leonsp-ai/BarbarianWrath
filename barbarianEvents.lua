@@ -88,6 +88,8 @@ local unitAliases = {
     marines = civ.getUnitType(11),
     swordsmen = civ.getUnitType(5),
 
+    artillery = civ.getUnitType(24),
+
     bolivar = civ.getUnitType(56),
     boudica = civ.getUnitType(76),
     che_guevara = civ.getUnitType(51),
@@ -95,71 +97,107 @@ local unitAliases = {
     hengist = civ.getUnitType(78),
     joan = civ.getUnitType(54),
     pyrrhus = civ.getUnitType(52),
+    napoleon = civ.getUnitType(57),
     spartacus = civ.getUnitType(77),
     toussant = civ.getUnitType(79),
     wallenstein = civ.getUnitType(55),
 }
+text.registerUnitsImage("Units.bmp")
 
 local heroes = {
     bolivar = {
         retinue="cavalry",
-        taunt=[['When tyranny becomes law, rebellion is a right!'
+        taunt=[[
+'When tyranny becomes law, rebellion is a right!'
 ^
-^Simon Bolivar leads the colonized and the dispossed in a ride across the continent.]],
+^ Simon Bolivar leads the colonized and the dispossed in a ride across
+^ the continent.]],
     },
     boudica = {
         retinue="chariot",
-        taunt=[['Have we not been robbed entirely of our possessions, while for what litle remains we must pay tribute?'
+        taunt=[[
+'Have we not been robbed entirely of our possessions, while for what litle
+^ remains we must pay tribute?'
 ^
-^Boudica of the Iceni leads a horde of chariots against the cities of the world.]]
+^ Boudica of the Iceni leads a horde of chariots against the cities of
+^ the world.]]
     },
     che_guevara = {
         retinue="marines",
-        taunt=[['We cannot be sure of having something to live for unless we are willing to die for it.'
+        taunt=[[
+'We cannot be sure of having something to live for unless we are willing to
+^ die for it.'
 ^
 ^Che Guevara leads a rebel army against injustice.]]
     },
     florine = {
         retinue="crusaders",
-        taunt=[['Pierced by seven arrows but still fighting, she seeks to open a passage towards the mountains!'
+        taunt=[[
+'Pierced by seven arrows but still fighting, she seeks to open a passage
+^ towards the mountains!'
 ^
-^ Florine of Burgundy leads rampaging crusaders against the cities of the world.]]
+^ Florine of Burgundy leads rampaging crusaders against the cities of
+^ the world.]]
     },
     hengist = {
         retinue="swordsmen",
-        taunt=[['The people are worthless, but the land is rich!'
+        taunt=[[
+'The people are worthless, but the land is rich!'
 ^
 ^ Hengist leads a horde of swordsmen against the cities of the world.]]
     },
     joan = {
         retinue="knights",
-        taunt=[['Courage! Do not fall back; in a little the place will be ours. Watch! When the wind blows my banner against the bulwark, we shall take it. I am the drum with which God beats out His message.'
+        taunt=[[
+'Courage! Do not fall back; in a little the place will be ours. Watch! When
+^ the wind blows my banner against the bulwark, we shall take it. I am the
+^ drum with which God beats out His message.'
 ^
 ^ Joan of Arc leads the faithful against the cities of the unholy.]]
     },
+    napoleon = {
+        retinue="artillery",
+        taunt=[[
+'The battlefield is a scene of constant chaos. The winner will be the one who
+^ controls that chaos, both his own and the enemies.'
+^
+^ Napoleon Bonaparte leads big batallions of artillery against the cities of
+^ the old regime, whether it is for the republic or for himself.]]
+    },
     pyrrhus = {
         retinue="elephant",
-        taunt=[['A victory? Another such victory and we are ruined!'
+        taunt=[[
+'A victory? Another such victory and we are ruined!'
 ^
 ^ Pyrrhus of Epirus leads his war elephants against the cities of the world.]]
     },
     spartacus = {
         retinue="legion",
-        taunt=[['Maybe there's no peace in this world, for us or for anyone else. I don't know. But I do know that as long as we live, we must stay true to ourselves. We march tonight!'
+        taunt=[[
+'Maybe there's no peace in this world, for us or for anyone else. I don't know.
+^ But I do know that as long as we live, we must stay true to ourselves. We
+^ march tonight!'
 ^
-^ Spartacus leads legions of the enslaved in revolt against the cities of the world.]]
+^ Spartacus leads legions of the enslaved in revolt against the cities of
+^ the world.]]
     },
     toussant = {
         retinue="grenadiers",
-        taunt=[['I have undertaken vengeance. I want Liberty and Equality to reign. I work to bring them into existence. Unite yourselves to us, brothers, and fight with us for the same cause!
+        taunt=[[
+'I have undertaken vengeance. I want Liberty and Equality to reign. I work
+^ to bring them into existence. Unite yourselves to us, brothers, and fight
+^ with us for the same cause!
 ^
-^ Toussant Louverture frees the people and leads the revolution across the lands.]]
+^ Toussant Louverture frees the people and leads the revolution across
+^ the lands.]]
     },
     wallenstein = {
         retinue="dragoons",
-        taunt=[['What do I care for this land? I detest her worse than the pit of hell.'
+        taunt=[[
+'What do I care for this land? I detest her worse than the pit of hell.'
 ^
-^ Albrecht von Wallenstein commands dragoons to ravage and raze the cities of the world.]]
+^ Albrecht von Wallenstein commands dragoons to ravage and raze the
+^ cities of the world.]]
     },
 }
 
@@ -189,7 +227,7 @@ discreteEvents.onTurn(
         if #barbUnitsTwinnedList > 0 then
             text.simple(
                 string.format("BARBARIANS ON A RAMPAGE! The ranks of the red horde swell with %s.", barbSummary),
-                "DEFENCE MINISTER", text.unitTypeImage(unitAliases.diplomat)
+                "Defence Minister", text.unitTypeImage(unitAliases.diplomat)
             )
         end
         barbUnitsTwinnedCount = 0
@@ -308,12 +346,12 @@ local function emergeHeroAtUnit(unit, hero)
 
         local choices = {
             string.format(
-                "We could do more together! Join the %s. Here's %d to get things started",
+                "Join the %s! Here's %d gold.",
                 player.name, heroType.cost * costMultiplier
             ),
             "Get lost, scrounger."
         }
-        local title = "THE WORLD SHAKES!"
+        local title = "Foreign Minister"
 
         local answer
         if player.money > heroType.cost * costMultiplier then
@@ -325,7 +363,7 @@ local function emergeHeroAtUnit(unit, hero)
 
         if answer == 1 and playerCapital ~= nil then
             player.money = player.money - heroType.cost * costMultiplier
-            heroUnit = gen.createUnit(heroType, player, {playerCapital.location}, {homeCity = nil, veteran = true})
+            heroUnit = gen.createUnit(heroType, player, {playerCapital.location}, {homeCity = nil, veteran = false})
         else
             heroUnit = gen.createUnit(heroType, unit.owner, {unit.location}, {homeCity = nil, veteran = true})
             if retinueCount > 0 then
@@ -391,36 +429,42 @@ discreteEvents.onActivateUnit(
 )
 
 discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation,winnerVetStatus,loserVetStatus)
+    local player = civ.getPlayerTribe()
+    local winnerCapital = civlua.findCapital(winner.owner)
     for hero, _details in pairs(heroes) do
-        if loser.type == unitAliases[hero] and loser.owner.id == 0 then
+        if loser.type == unitAliases[hero] and (winner.owner == player or winnerCapital == nil) then
             text.simple(
                 string.format(
-                    "THE WORLDS BREATHES EASY! %s was slain by %s forces. Their retinue scatters in despair.",
+                    "THE WORLDS BREATHES EASY! %s disappears while fighting %s forces. Their retinue scatters for now, but a note is found: %s WILL RETURN.",
                     loser.type.name,
-                    winner.owner.adjective
-                ), "FOREIGN MINISTER", text.unitTypeImage(loser.type)
-            )
-            break
-        elseif loser.type == unitAliases[hero] and loser.owner.id ~= 0 then
-            text.simple(
-                string.format(
-                    "The %s lose %s in the fog of war. Only a note is found: %s WILL RETURN.",
-                    loser.owner.name,
-                    loser.type.name,
+                    winner.owner.adjective,
                     string.upper(loser.type.name)
-                ), "FOREIGN MINISTER", text.unitTypeImage(loser.type)
+                ), "Foreign Minister", text.unitTypeImage(loser.type)
             )
             data.flagSetFalse(hero)
-        elseif winner.type == unitAliases[hero] then
+        elseif loser.type == unitAliases[hero] and winner.owner ~= player and winnerCapital ~= nil then
+            text.simple(
+                string.format(
+                    "THE WORLDS BREATHES EASY! The %s capture and recruit %s",
+                    loser.type.name,
+                    winner.owner.adjective,
+                    string.upper(loser.type.name)
+                ), "Foreign Minister", text.unitTypeImage(loser.type)
+            )
+            local newUnits = gen.createUnit(loser.type, winner.owner, {winnerCapital.location}, {homeCity = nil, veteran = true})
+            if #newUnits == 0 then
+                data.flagSetFalse(hero)
+            end
+        end
+        if winner.type == unitAliases[hero] and winner.owner.id ~= 0 then
             text.simple(
                 string.format(
                     "THE ESTABLISHMENT TREMBLES! %s dispatches %s %s. The raiders rejoice.",
                     winner.type.name,
                     loser.owner.adjective,
                     loser.type.name
-                ), "DEFENCE MINISTER", text.unitTypeImage(winner.type)
+                ), "Defence Minister", text.unitTypeImage(winner.type)
             )
-            break
         end
     end
 end)
@@ -431,6 +475,8 @@ discreteEvents.onCityTaken(
             return -- only for barbarians
         end
         local reward_unit_count = 2
+        local heroMultipliyer = 2
+        local playerMultipliyer = 3
         local too_many_per_tile = 3
         local unit_or_units = city.location.units()
         local new_unit_type
@@ -453,8 +499,16 @@ discreteEvents.onCityTaken(
                 new_unit_type = unitAliases[details.retinue]
                 heroMode = true
                 heroType = unitAliases[hero]
-                reward_unit_count = reward_unit_count * 2
+                reward_unit_count = reward_unit_count * heroMultipliyer
                 break
+            end
+        end
+        if defender == civ.getPlayerTribe() then
+            reward_unit_count = reward_unit_count * playerMultipliyer
+        else
+            local defenderCapital = civlua.findCapital(defender)
+            if defenderCapital ~= nil then
+                gen.createUnit(unitAliases.diplomat, defender, {defenderCapital.location}, {homeCity = nil})
             end
         end
         local newUnits = gen.createUnit(new_unit_type, city.owner, {city.location}, {count = reward_unit_count, homeCity = nil, veteran = true})
@@ -464,7 +518,7 @@ discreteEvents.onCityTaken(
                     "BARBARIANS TAKE %s! %s are devastated. The outpost is too remote to reinforce.",
                     string.upper(city.name),
                     defender.name
-                ), "DEFENCE MINISTER", text.unitTypeImage(new_unit_type)
+                ), "Defence Minister", text.unitTypeImage(new_unit_type)
             )
             return -- could not reinforce
         end
@@ -477,8 +531,9 @@ discreteEvents.onCityTaken(
                     string.upper(heroType.name),
                     string.upper(city.name),
                     defender.name,
+                    unitAliases[hero].name,
                     new_unit_type.name
-                ), "DEFENCE MINISTER", text.unitTypeImage(heroType)
+                ), "Defence Minister", text.unitTypeImage(heroType)
             )
         end
         text.simple(
@@ -487,7 +542,7 @@ discreteEvents.onCityTaken(
                 string.upper(city.name),
                 defender.name,
                 new_unit_type.name
-            ), "DEFENCE MINISTER", text.unitTypeImage(new_unit_type)
+            ), "Defence Minister", text.unitTypeImage(new_unit_type)
         )
     end
 )
