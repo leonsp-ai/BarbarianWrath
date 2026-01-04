@@ -469,6 +469,18 @@ discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation
     end
 end)
 
+discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation,winnerVetStatus,loserVetStatus)
+    local player = civ.getPlayerTribe()
+    local goldBonus = 100
+    if loser.owner.id ~= 0 then
+        return -- not barbarians
+    end
+    if winner.owner == player then
+        return -- only help the AI
+    end
+    winner.owner.money = winner.owner.money + goldBonus
+end)
+
 discreteEvents.onCityTaken(
     function(city, defender)
         if city.owner.id ~= 0 then

@@ -393,7 +393,7 @@ Legion,       Feu, 0,  1.,0,  4a,2d,  1h,1f,  4,0,  0, Iro, 0000000000000000 ; w
 Swordsmen,    Exp, 0,  1.,0,  5a,2d,  1h,1f,  4,0,  0, Feu, 0000000000000100 ; 5 was Legion
 Pikemen,      Gun, 0,  1.,0,  1a,2d,  1h,1f,  2,0,  1, Feu, 0000010000000000
 Grenadiers,   Amp, 0,  1.,0,  6a,3d,  2h,1f,  3,0,  0, Exp, 0000000000000100 ; was Musketeers
-Alpine Troops,nil, 0,  1.,0,  5a,5d,  2h,1f,  5,0,  1, Tac, 0000001000000000 ; was Fanatics
+Alpine Troops,nil, 0,  1.,0,  5a,5d,  2h,1f,  5,0,  1, no,  0000001000000000 ; was Fanatics
 Partisans,    nil, 0,  1.,0,  4a,4d,  2h,1f,  5,0,  1, Gue, 0000001000000010
 Fanatics,     nil, 0,  1.,0,  4a,4d,  2h,1f,  2,0,  1, Fun, 0000100000000000 ; 10 was Alpine Troops
 Marines,      nil, 0,  1.,0,  8a,5d,  2h,1f,  6,0,  0, Amp, 0000000000000100 ; was Riflemen
@@ -443,7 +443,7 @@ Joan,         nil, 0,  2.,0,  6a,2d,  2h,1f,  8,0,  0, no,  0000000000000000 ; K
 Wallenstein,  nil, 0,  2.,0,  7a,3d,  2h,1f, 10,0,  0, no,  0000000000000000 ; 55 Dragoon hero
 Bolivar,      nil, 0,  2.,0,  9a,4d,  2h,1f, 12,0,  0, no,  0000000000000000 ; Cavalry hero
 Napoleon,     nil, 0,  2.,0, 11a,3d,  2h,2f, 10,0,  0, no,  0000000000000000 ; Artillery hero
-not used e,   nil, 0,  1.,0,  0a,1d,  2h,1f,  4,0,  5, no,  0000000000000000
+Alpine Troops,nil, 0,  1.,0,  5a,5d,  2h,1f,  5,0,  1, Tac, 0000001000000000 ; was not used e
 not used f,   nil, 0,  1.,0,  0a,1d,  2h,1f,  4,0,  5, no,  0000000000000000
 not used g,   nil, 0,  1.,0,  0a,1d,  2h,1f,  4,0,  5, no,  0000000000000000 ; 60
 not used h,   nil, 0,  1.,0,  0a,1d,  2h,1f,  4,0,  5, no,  0000000000000000
@@ -1111,7 +1111,7 @@ Swrdhors.wav  	; Joan (New Unit a)
 Swrdhors.wav  	; Wallenstein (New Unit b)
 Cavalry.wav  	; Bolivar (New Unit c)
 Largexpl.wav  	; Napoleon (New Unit d)
-<none>  	; New Unit e
+Marines.wav  	; Alpine Troops (New Unit e)
 <none>  	; New Unit f
 <none>  	; New Unit g
 <none>  	; New Unit h
