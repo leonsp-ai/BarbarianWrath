@@ -1,3 +1,13 @@
+## 2.0.0
+
+- Barbarian hordes are now led by unique hero units: Simon Bolivar, Boudica, Che Guevara, Florine of Burgundy, Hengist, Joan of Arc, Napoleon Bonaparte, Pyrrhus of Epirus, Spartacus, Toussant Louverture, or Albrecht von Wallenstein.
+- Heroes are hard to bribe, but can be recruited by the player or the computer opponents.
+- Heroes can come back at the head of the next barbarian horde.
+- Made Alienor of Aquitaine the French leader since Joan of Arc is now a hero unit.
+- Fixed inability to build Alpine Troops.
+- Put in a floor to capital size to address a city growth bug.
+- Updated the Lua event template to latest.
+
 ## 1.3.1
 
 - Fixed Barbarian unit creation so that it correctly sets the veteran flag. This prevents creating an infinite wave of new units. Thank you Prof. Garfield!
