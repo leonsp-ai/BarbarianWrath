@@ -139,7 +139,7 @@ Fundamentalism,     3,-2,  MT,  Csc, 2, 2    ; Fun
 Fusion Power,       3, 0,  NP,  Sup, 3, 3    ; FP
 Genetic Engineering,3, 2,  Min, Rfg, 3, 3    ; Gen (Med & Cor)
 Guerrilla Warfare,  4, 1,  Cmn, Tac, 3, 0    ; Gue
-Gunpowder,          8,-2,  Inv, Iro, 1, 0    ; Gun
+Gunpowder,          8,-2,  Inv, Iro, 1, 0    ; Gun35
 Horseback Riding,   4,-1,  nil, nil, 0, 0    ; Hor
 Industrialization,  6, 0,  RR,  Ban, 2, 1    ; Ind
 Invention,          6, 0,  Eng, Lit, 1, 4    ; Inv
@@ -189,7 +189,7 @@ Tactics,            6,-1,  Csc, Ldr, 2, 0    ; Tac
 Theology,           3, 2,  MT,  Feu, 1, 2    ; The
 Theory of Gravity,  4, 0,  Ast, Uni, 1, 3    ; ToG
 Trade,              4, 2,  Cur, CoL, 0, 1    ; Tra
-University,         5, 1,  Mat, Phi, 1, 3    ; Uni
+University,         5, 1,  Mat, Phi, 1, 3    ; Uni85
 Warrior Code,       4,-1,  nil, nil, 0, 0    ; War
 Wheel,              4,-1,  Hor, nil, 0, 4    ; Whe
 Writing,            4, 2,  Alp, nil, 0, 3    ; Wri
@@ -436,7 +436,7 @@ Spy,          nil, 0,  3.,0,  0a,0d,  1h,1f,  3,0,  6, Esp, 0000000000000011
 Caravan,      Cor, 0,  1.,0,  0a,1d,  1h,1f,  5,0,  7, Tra, 0000000000000010
 Freight,      nil, 0,  2.,0,  0a,1d,  1h,1f,  5,0,  7, Cor, 0000000000000010
 Explorer,     Gue, 0,  1.,0,  0a,1d,  1h,1f,  3,0,  0, Sea, 0000001000000010 ; 50
-Che Guevara,  nil, 0,  1.,0,  9a,5d,  3h,1f, 12,0,  0, no,  0000000000000100 ; Marine hero
+Che Guevara,  nil, 0,  1.,0, 10a,5d,  3h,2f, 12,0,  0, no,  0000000000000100 ; Marine hero
 Pyrrhus,      nil, 0,  2.,0,  5a,2d,  2h,1f,  8,0,  0, no,  0000000000000000 ; Elephant hero
 Florine,      nil, 0,  2.,0,  6a,2d,  2h,1f,  8,0,  0, no,  0000000000000000 ; Crusader hero
 Joan,         nil, 0,  2.,0,  6a,2d,  2h,1f,  8,0,  0, no,  0000000000000000 ; Knight hero
@@ -444,8 +444,8 @@ Wallenstein,  nil, 0,  2.,0,  7a,3d,  2h,1f, 10,0,  0, no,  0000000000000000 ; 5
 Bolivar,      nil, 0,  2.,0,  9a,4d,  2h,1f, 12,0,  0, no,  0000000000000000 ; Cavalry hero
 Napoleon,     nil, 0,  2.,0, 11a,3d,  2h,2f, 10,0,  0, no,  0000000000000000 ; Artillery hero
 Alpine Troops,nil, 0,  1.,0,  5a,5d,  2h,1f,  5,0,  1, Tac, 0000001000000000 ; was not used e
-not used f,   nil, 0,  1.,0,  0a,1d,  2h,1f,  4,0,  5, no,  0000000000000000
-not used g,   nil, 0,  1.,0,  0a,1d,  2h,1f,  4,0,  5, no,  0000000000000000 ; 60
+Rozka Korzak, nil, 0,  1.,0,  6a,6d,  2h,2f, 10,0,  1, no,  0000001000000010 ; TODO Partisan leader
+Aarne Juutilainen,nil, 0,  1.,0,  7a,6d,  2h,2f, 10,0,  1, no,  0000001000000000 ; 60 Alpine hero
 not used h,   nil, 0,  1.,0,  0a,1d,  2h,1f,  4,0,  5, no,  0000000000000000
 not used i,   nil, 0,  1.,0,  0a,1d,  2h,1f,  4,0,  5, no,  0000000000000000
 not used j,   nil, 0,  1.,0,  0a,1d,  2h,1f,  4,0,  5, no,  0000000000000000
@@ -999,8 +999,8 @@ Enraged
 11111111, 00000000, 1800, 0000000000000000,0000000000000000,0000000000000000, 010001010  ;Bolivar (Test Unit c)
 11111111, 00000000, 1500, 0000000000000000,0000000000000000,0000000000000000, 010001010  ;Napoleon (Test Unit d)
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;Test Unit e
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;Test Unit f
-11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;60 Test Unit g
+11111111, 00000000, 1500, 0000000000000000,0000000000000000,0000000000000000, 010001010  ;Rozka Korczak (Test Unit f)
+11111111, 00000000, 1500, 0000000000000000,0000000000000000,0000000000000000, 010001010  ;60 Aarne Juutilainen (Test Unit g)
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;Test Unit h
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;Test Unit i
 11111111, 00000000, 0, 0000000000000000,0000000000000000,0000000000000000, 010000000  ;Test Unit j
@@ -1112,8 +1112,8 @@ Swrdhors.wav  	; Wallenstein (New Unit b)
 Cavalry.wav  	; Bolivar (New Unit c)
 Largexpl.wav  	; Napoleon (New Unit d)
 Marines.wav  	; Alpine Troops (New Unit e)
-<none>  	; New Unit f
-<none>  	; New Unit g
+Infantry.wav  	; Rozka Korczak (New Unit f)
+Infantry.wav  	; Aarne Juutilainen (New Unit g)
 <none>  	; New Unit h
 <none>  	; New Unit i
 <none>  	; New Unit j

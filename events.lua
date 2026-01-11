@@ -302,6 +302,7 @@ local setTraits = require("setTraits")
 local discreteEvents = require("discreteEventsRegistrar"):minVersion(1)
 require("discreteEvents")
 require("barbarianEvents")
+require("randomEvents")
 local consolidated = require("consolidatedEvents"):minVersion(1)
 
 attemptToRun('targetSettings',"WARNING: targetSettings.lua not found.  You will not have strategic targets.")

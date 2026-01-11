@@ -1,3 +1,12 @@
+## 2.1.0
+
+- New Barbarian heroes: Rozka Korzak as a partisan hero and Aarne Juutilainen as an alpine troops hero.
+- Buffed computer players with a science bonus for dispatching barbarian units.
+- Barbarians can now capture siege units.
+- Barbarians can now found cities when they attack settler or trade units.
+- Fixed the message when a barbarian hero captures a city.
+- Modularized event files into barbarianEvents.lua, randomEvents.lua, and bw.lua.
+
 ## 2.0.0
 
 - Barbarian hordes are now led by unique hero units: Simon Bolivar, Boudica, Che Guevara, Florine of Burgundy, Hengist, Joan of Arc, Napoleon Bonaparte, Pyrrhus of Epirus, Spartacus, Toussant Louverture, or Albrecht von Wallenstein.

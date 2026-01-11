@@ -57,7 +57,7 @@ local delayed = require("delayedAction"):minVersion(1)
 local calendar = require("calendar")
 local keyboard = require("keyboard")
 local civlua = require("civluaModified")
-
+local bw = require("bw")
 
 -- ===============================================================================
 --
@@ -70,41 +70,18 @@ local barbUnitsTwinnedList = {}
 local maxCapitalSize = {}
 local lastSizeFixTurn = {}
 
-local improvementAliases = {
-    courthouse = civ.getImprovement(7)
-}
-local unitAliases = {
-    diplomat = civ.getUnitType(46),
-
-    cavalry = civ.getUnitType(20),
-    chariot = civ.getUnitType(15),
-    crusaders = civ.getUnitType(17),
-    elephant = civ.getUnitType(16),
-    dragoons = civ.getUnitType(19),
-    knights = civ.getUnitType(18),
-
-    grenadiers = civ.getUnitType(7),
-    legion = civ.getUnitType(4),
-    marines = civ.getUnitType(11),
-    swordsmen = civ.getUnitType(5),
-
-    artillery = civ.getUnitType(24),
-
-    bolivar = civ.getUnitType(56),
-    boudica = civ.getUnitType(76),
-    che_guevara = civ.getUnitType(51),
-    florine = civ.getUnitType(53),
-    hengist = civ.getUnitType(78),
-    joan = civ.getUnitType(54),
-    pyrrhus = civ.getUnitType(52),
-    napoleon = civ.getUnitType(57),
-    spartacus = civ.getUnitType(77),
-    toussant = civ.getUnitType(79),
-    wallenstein = civ.getUnitType(55),
-}
 text.registerUnitsImage("Units.bmp")
 
 local heroes = {
+    aarne_juutilainen = {
+        retinue="alpine_troops",
+        taunt=[[
+'We will hold, unless we are told to run!'
+^
+^ Aarne Juutilainen leads the resistance against the
+^ invader and brings the White Death upon the head
+^ of the occupier.]],
+    },
     bolivar = {
         retinue="cavalry",
         taunt=[[
@@ -177,6 +154,18 @@ local heroes = {
 ^ Pyrrhus of Epirus leads his war elephants against
 ^ the cities of the world.]]
     },
+    rozka_korczak = {
+        retinue="partisans",
+        taunt=[[
+'We do not have the privilege of choosing between
+^ submitting or becoming martyrs—in this we differ
+^ from our ancestors. We have a choice of the manner
+^ in which to live to the very end as a free people
+^ and to die as a liberated people.'
+^
+^ Rozka Korczak leads her Avengers in resistance
+^ against the invader and the occupier.]]
+    },
     spartacus = {
         retinue="legion",
         taunt=[[
@@ -237,7 +226,7 @@ discreteEvents.onTurn(
         if #barbUnitsTwinnedList > 0 then
             text.simple(
                 string.format("BARBARIANS ON A RAMPAGE! The ranks of the red horde swell with %s.", barbSummary),
-                "Defence Minister", text.unitTypeImage(unitAliases.diplomat)
+                "Defence Minister", text.unitTypeImage(bw.unitAliases.diplomat)
             )
         end
         barbUnitsTwinnedCount = 0
@@ -318,14 +307,14 @@ discreteEvents.onTurn(
                 return -- not building a unit
             end
             for hero, details in pairs(heroes) do
-                if city.currentProduction == unitAliases[hero] then
+                if city.currentProduction == bw.unitAliases[hero] then
                     -- civ.ui.text(
                     --     string.format(
                     --         "DEBUG: %s is building a %s. Setting it to build %s instead",
                     --         city.name, hero, details.retinue
                     --     )
                     -- )
-                    city.currentProduction = unitAliases[retinue]
+                    city.currentProduction = bw.unitAliases[retinue]
                 end
             end
         end
@@ -333,23 +322,23 @@ discreteEvents.onTurn(
 )
 
 local function emergeHeroAtUnit(unit, hero)
-    local retinue = unitAliases[heroes[hero].retinue]
-    local heroType = unitAliases[hero]
+    local retinue = bw.unitAliases[heroes[hero].retinue]
+    local heroType = bw.unitAliases[hero]
     local taunt = heroes[hero].taunt
     local retinueCount = 2
     local costMultiplier = 300
 
     if retinue == nil then
-        civ.ui.text(strings.format("ERROR: %s missing from unitAliases", heroes[hero].retinue))
+        civ.ui.text(strings.format("ERROR: %s missing from bw.unitAliases", heroes[hero].retinue))
         return
     end
     if heroType == nil then
-        civ.ui.text(strings.format("ERROR: %s missing from unitAliases", hero))
+        civ.ui.text(strings.format("ERROR: %s missing from bw.unitAliases", hero))
         return
     end
 
     if unit.type == retinue and not data.flagGetValue(hero) then
-        local filename = string.format("hero_%s.bmp", hero)
+        local filename = string.format("images/hero_%s.bmp", hero)
         local heroImage = civ.ui.loadImage(filename);
         local player = civ.getPlayerTribe()
         local playerCapital = civlua.findCapital(player)
@@ -425,7 +414,7 @@ discreteEvents.onActivateUnit(
 
         local newUnits = gen.createUnit(unit.type, unit.owner, {unit.location}, {count = twin_unit_count, homeCity = nil, veteran = true})
         if #newUnits > 0 then
-            if unit.type ~= unitAliases.diplomat then
+            if unit.type ~= bw.unitAliases.diplomat then
                 -- Barbarian leaders don't count against the limit
                 barbUnitsTwinnedCount = barbUnitsTwinnedCount + 1
             end
@@ -442,7 +431,7 @@ discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation
     local player = civ.getPlayerTribe()
     local winnerCapital = civlua.findCapital(winner.owner)
     for hero, _details in pairs(heroes) do
-        if loser.type == unitAliases[hero] and (winner.owner == player or winnerCapital == nil) then
+        if loser.type == bw.unitAliases[hero] and (winner.owner == player or winnerCapital == nil) then
             text.simple(
                 string.format(
                     "THE WORLDS BREATHES EASY! %s disappears while fighting %s forces. Their retinue scatters for now, but a note is found: %s WILL RETURN.",
@@ -452,7 +441,7 @@ discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation
                 ), "Foreign Minister", text.unitTypeImage(loser.type)
             )
             data.flagSetFalse(hero)
-        elseif loser.type == unitAliases[hero] and winner.owner ~= player and winnerCapital ~= nil then
+        elseif loser.type == bw.unitAliases[hero] and winner.owner ~= player and winnerCapital ~= nil then
             text.simple(
                 string.format(
                     "THE WORLDS BREATHES EASY! The %s capture and recruit %s.",
@@ -465,7 +454,7 @@ discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation
                 data.flagSetFalse(hero)
             end
         end
-        if winner.type == unitAliases[hero] and winner.owner.id ~= 0 then
+        if winner.type == bw.unitAliases[hero] and winner.owner.id == 0 then
             text.simple(
                 string.format(
                     "THE ESTABLISHMENT TREMBLES! %s dispatches %s %s. The raiders rejoice.",
@@ -480,7 +469,8 @@ end)
 
 discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation,winnerVetStatus,loserVetStatus)
     local player = civ.getPlayerTribe()
-    local goldBonus = 100
+    local goldBonus = 25
+    local scienceBonus = 50
     if loser.owner.id ~= 0 then
         return -- not barbarians
     end
@@ -488,6 +478,88 @@ discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation
         return -- only help the AI
     end
     winner.owner.money = winner.owner.money + goldBonus
+    winner.owner.researchProgress = math.min(winner.owner.researchProgress + scienceBonus, winner.owner.researchCost)
+end)
+
+discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation,winnerVetStatus,loserVetStatus)
+    if winner.owner.id ~= 0 then
+        return -- not barbarians
+    end
+    local victims = {
+        [bw.unitAliases.artillery.id] = bw.unitAliases.artillery,
+        [bw.unitAliases.cannon.id] = bw.unitAliases.cannon,
+        [bw.unitAliases.catapult.id] = bw.unitAliases.catapult,
+        [bw.unitAliases.howitzer.id] = bw.unitAliases.howitzer,
+    }
+    local victim = victims[loser.type.id]
+    if victim == nil then
+        return -- not a siege unit
+    end
+    text.simple(
+        string.format(
+            "Barbarian %s encircle a %s siege train. They now have a %s of their own.",
+            winner.type.name,
+            loser.owner.adjective,
+            loser.type.name
+        ), "Defence Minister", text.unitTypeImage(victim)
+    )
+    gen.createUnit(victim, winner.owner, {winner.location}, {homeCity = nil, veteran = true})
+end)
+
+discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation,winnerVetStatus,loserVetStatus)
+    if winner.owner.id ~= 0 then
+        return -- not barbarians
+    end
+    local victims = {
+        [bw.unitAliases.caravan.id] = bw.unitAliases.caravan,
+        [bw.unitAliases.engineers.id] = bw.unitAliases.engineers,
+        [bw.unitAliases.freight.id] = bw.unitAliases.freight,
+        [bw.unitAliases.settlers.id] = bw.unitAliases.settlers,
+    }
+    local victim = victims[loser.type.id]
+    if victim == nil then
+        return -- not a settler
+    end
+    local buildable = {
+        Drt = true,
+        Pln = true,
+        Grs = true,
+        For = true,
+        Hil = true,
+        Tun = true,
+        Swa = true,
+        Jun = true,
+    }
+    if not buildable[winner.location.baseTerrain.abbrev] then
+        return -- can't build a city here
+    end
+    for _i, adjacent in ipairs(gen.getAdjacentTiles(winner.location)) do
+        if adjacent.city then
+            return -- adjacent to an existing city
+        end
+    end
+    local city = civ.createCity(winner.owner, winner.location)
+    if city == nil then
+        text.simple(
+            string.format(
+                "Barbarian %s encircle a %s %s. They only destroy, never build.",
+                winner.type.name,
+                loser.owner.adjective,
+                loser.type.name
+            ), "Defence Minister", text.unitTypeImage(victim)
+        )
+        return
+    end
+    city.currentProduction = winner.type
+    text.simple(
+        string.format(
+            "Barbarian %s encircle a %s %s. They establish the city of %s on the spot.",
+            winner.type.name,
+            loser.owner.adjective,
+            loser.type.name,
+            city.name
+        ), "Defence Minister", text.unitTypeImage(victim)
+    )
 end)
 
 discreteEvents.onCityTaken(
@@ -516,10 +588,10 @@ discreteEvents.onCityTaken(
         local heroMode = false
         local heroType
         for hero, details in pairs(heroes) do
-            if new_unit_type == unitAliases[hero] then
-                new_unit_type = unitAliases[details.retinue]
+            if new_unit_type == bw.unitAliases[hero] then
+                new_unit_type = bw.unitAliases[details.retinue]
                 heroMode = true
-                heroType = unitAliases[hero]
+                heroType = bw.unitAliases[hero]
                 reward_unit_count = reward_unit_count * heroMultipliyer
                 break
             end
@@ -529,7 +601,7 @@ discreteEvents.onCityTaken(
         else
             local defenderCapital = civlua.findCapital(defender)
             if defenderCapital ~= nil then
-                gen.createUnit(unitAliases.diplomat, defender, {defenderCapital.location}, {homeCity = nil})
+                gen.createUnit(bw.unitAliases.diplomat, defender, {defenderCapital.location}, {homeCity = nil})
             end
         end
         local newUnits = gen.createUnit(new_unit_type, city.owner, {city.location}, {count = reward_unit_count, homeCity = nil, veteran = true})
@@ -544,7 +616,7 @@ discreteEvents.onCityTaken(
             return -- could not reinforce
         end
         if heroMode then
-            civ.addImprovement(city, improvementAliases.courthouse)
+            civ.addImprovement(city, bw.improvementAliases.courthouse)
             city.owner.money = city.owner.money + 2000
             text.simple(
                 string.format(
@@ -552,19 +624,20 @@ discreteEvents.onCityTaken(
                     string.upper(heroType.name),
                     string.upper(city.name),
                     defender.name,
-                    unitAliases[hero].name,
+                    heroType.name,
                     new_unit_type.name
                 ), "Defence Minister", text.unitTypeImage(heroType)
             )
+        else
+            text.simple(
+                string.format(
+                    "BARBARIANS TAKE %s! %s are devastated. More %s flock to the red banner.",
+                    string.upper(city.name),
+                    defender.name,
+                    new_unit_type.name
+                ), "Defence Minister", text.unitTypeImage(new_unit_type)
+            )
         end
-        text.simple(
-            string.format(
-                "BARBARIANS TAKE %s! %s are devastated. More %s flock to the red banner.",
-                string.upper(city.name),
-                defender.name,
-                new_unit_type.name
-            ), "Defence Minister", text.unitTypeImage(new_unit_type)
-        )
     end
 )
 
