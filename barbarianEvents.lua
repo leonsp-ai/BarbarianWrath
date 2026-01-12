@@ -551,6 +551,7 @@ discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation
         return
     end
     city.currentProduction = winner.type
+    gen.revealTile(city.location, civ.getPlayerTribe())
     text.simple(
         string.format(
             "Barbarian %s encircle a %s %s. They establish the city of %s on the spot.",

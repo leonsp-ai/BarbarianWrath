@@ -3,7 +3,7 @@
 - New Barbarian heroes: Rozka Korzak as a partisan hero and Aarne Juutilainen as an alpine troops hero.
 - Buffed computer players with a science bonus for dispatching barbarian units.
 - Barbarians can now capture siege units.
-- Barbarians can now found cities when they attack settler or trade units.
+- Barbarians can now found cities when they attack settler or trade units. For now they use the Roman city list.
 - Fixed the message when a barbarian hero captures a city.
 - Modularized event files into barbarianEvents.lua, randomEvents.lua, and bw.lua.
 
