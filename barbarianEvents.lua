@@ -202,6 +202,7 @@ local heroes = {
 for hero, _ in pairs(heroes) do
     data.defineFlag(hero)
 end
+data.defineFlag("barbCityName")
 
 -- discreteEvents.onScenarioLoaded(
 --     function()
@@ -561,6 +562,20 @@ discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation
             city.name
         ), "Defence Minister", text.unitTypeImage(victim)
     )
+    civ.removeImprovement(city, bw.improvementAliases.palace)
+    local barbCityName = data.flagGetValue("barbCityName")
+    if not data.flagGetValue(hero) then
+        barbCityName = bw.barbCapital
+    end
+    local barbCityIndex = bw.indexOf(bw.barbCityNames, barbCityName)
+    if barbCityIndex == null then
+        data.flagSetValue("barbCityName", bw.barbCapital)
+    elseif barbCityIndex + 1 <= #bw.barbCityNames then
+        data.flagSetValue("barbCityName", bw.barbCityNames[barbCityIndex + 1])
+    else
+        data.flagSetValue("barbCityName", bw.barbCapital)
+    end
+    city.name = barbCityName
 end)
 
 discreteEvents.onCityTaken(

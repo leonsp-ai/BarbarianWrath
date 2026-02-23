@@ -7,6 +7,7 @@ local bw = {}  -- create a table to represent the module
 
 ---@field bw.improvementAliases bw.improvementAliases
 bw.improvementAliases = {
+    palace = civ.getImprovement(1),
     courthouse = civ.getImprovement(7)
 }
 
@@ -59,11 +60,77 @@ bw.unitAliases = {
     wallenstein = civ.getUnitType(55),
 }
 
+bw.barbCapital = "Attila's Court"
+bw.barbCityNames = {
+    bw.barbCapital,
+    "Margus",
+    "Singidunum",
+    "Viminacium",
+    "Aurariola",
+    "Pavia",
+    "Braga",
+    "Exning",
+    "Gipeswic",
+    "Sutton Hoo",
+    "Dunwich",
+    "Blythburgh",
+    "Cnobheresburg",
+    "Maldon",
+    "Lundenvic",
+    "Repton",
+    "Tamworth",
+    "Marklo",
+    "Aalborg",
+    "Vejle",
+    "Sirmium",
+    "Ungvar",
+    "Emerita",
+    "Conimbriga",
+    "Olisipo",
+    "Pliska",
+    "Preslav",
+    "Skopje",
+    "Ohrid",
+    "Bitola",
+    "Ribe",
+    "Cait",
+    "Friuli",
+    "Inaliyi",
+    "Cayoka",
+    "Echota",
+    "Mesa Verde",
+    "Chaco Canyon",
+    "Gila Cliff",
+    "Cirta",
+    "Siga",
+    "Gordion",
+    "Kerma",
+    "Kush",
+    "Khotan",
+    "Yarkant",
+    "Qiemo",
+    "Tortuga",
+    "Matanzas",
+    "Port Royal",
+    "Virgin Gorda",
+    "Libertatia",
+}
+
 text.registerUnitsImage("Units.bmp")
 -- ---@field bw.imageTable bw.imageTable
 -- bw.imageTable = {
 --     archer = text.unitTypeImage(bw.unitAliases.archer),
 -- }
 -- text.setImageTable(bw.imageTable, "imageTable")
+
+-- Return the first index with the given value (or nil if not found).
+bw.indexOf = function (array, value)
+    for i, v in ipairs(array) do
+        if v == value then
+            return i
+        end
+    end
+    return nil
+end
 
 return bw
