@@ -202,7 +202,7 @@ local heroes = {
 for hero, _ in pairs(heroes) do
     data.defineFlag(hero)
 end
-data.defineFlag("barbCityName")
+data.defineGeneric("barbCityName")
 
 -- discreteEvents.onScenarioLoaded(
 --     function()
@@ -472,7 +472,7 @@ discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation
     local player = civ.getPlayerTribe()
     local goldBonus = 25
     local scienceBonus = 50
-    if loser.owner.id ~= 0 then
+    if winner.owner.id ~= 0 then
         return -- not barbarians
     end
     if winner.owner == player then
@@ -506,6 +506,22 @@ discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation
     )
     gen.createUnit(victim, winner.owner, {winner.location}, {homeCity = nil, veteran = true})
 end)
+
+local function determineBarbCityName()
+    local barbCityName = data.genericGetValue("barbCityName")
+    if not barbCityName then
+        barbCityName = bw.barbCapital
+    end
+    local barbCityIndex = bw.indexOf(bw.barbCityNames, barbCityName)
+    if barbCityIndex == nil then
+        data.genericSetValue("barbCityName", bw.barbCapital)
+    elseif barbCityIndex + 1 <= #bw.barbCityNames then
+        data.genericSetValue("barbCityName", bw.barbCityNames[barbCityIndex + 1])
+    else
+        data.genericSetValue("barbCityName", bw.barbCapital)
+    end
+    return barbCityName
+end
 
 discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation,winnerVetStatus,loserVetStatus)
     if winner.owner.id ~= 0 then
@@ -552,7 +568,7 @@ discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation
         return
     end
     city.currentProduction = winner.type
-    gen.revealTile(city.location, civ.getPlayerTribe())
+    city.name = determineBarbCityName()
     text.simple(
         string.format(
             "Barbarian %s encircle a %s %s. They establish the city of %s on the spot.",
@@ -563,19 +579,7 @@ discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation
         ), "Defence Minister", text.unitTypeImage(victim)
     )
     civ.removeImprovement(city, bw.improvementAliases.palace)
-    local barbCityName = data.flagGetValue("barbCityName")
-    if not data.flagGetValue(hero) then
-        barbCityName = bw.barbCapital
-    end
-    local barbCityIndex = bw.indexOf(bw.barbCityNames, barbCityName)
-    if barbCityIndex == null then
-        data.flagSetValue("barbCityName", bw.barbCapital)
-    elseif barbCityIndex + 1 <= #bw.barbCityNames then
-        data.flagSetValue("barbCityName", bw.barbCityNames[barbCityIndex + 1])
-    else
-        data.flagSetValue("barbCityName", bw.barbCapital)
-    end
-    city.name = barbCityName
+    gen.revealTile(city.location, civ.getPlayerTribe())
 end)
 
 discreteEvents.onCityTaken(

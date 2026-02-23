@@ -1,3 +1,9 @@
+## 2.2.0
+
+- Cities founded by Barbarians now have their own city names.
+- Fix: Gold will go to computer players for defeating barbarians, not vice versa.
+- Fix: The first city founded by Barbarians will not receive a Palace.
+
 ## 2.1.0
 
 - New Barbarian heroes: Rozka Korzak as a partisan hero and Aarne Juutilainen as an alpine troops hero.
