@@ -239,7 +239,7 @@ local function countSettlers(city)
     local settlers = 0
     for unit in civ.iterateUnits() do
         if unit.homeCity and unit.homeCity == city and gen.isRequiresFoodSupport(unit.type) then
-            settlers = settlers +1
+            settlers = settlers + 1
         end
     end
     return settlers
@@ -272,11 +272,14 @@ discreteEvents.onCityProcessingComplete(
         if capital.size >= maxCapitalSize[capital.name] then
             return
         end
+        if capital.size >= bw.maxCapitalSizeForGrowthBugFix then
+            return
+        end
         local foodProd = gen.computeBaseProduction(capital)
         local foodSupport = settlerSupport(tribe, capital)
         local foodSurplus = foodProd - (2 * capital.size + foodSupport)
         if foodSurplus > 0  then
-            if lastSizeFixTurn[capital.name] and turn - lastSizeFixTurn[capital.name] <= 3 and maxCapitalSize[capital.name] < 6 then
+            if lastSizeFixTurn[capital.name] and turn - lastSizeFixTurn[capital.name] <= 3 then
                 -- civ.ui.text(
                 --     string.format(
                 --         "DEBUG: We last fixed %s's population %d turns ago. Accelerating.",
@@ -326,8 +329,8 @@ local function emergeHeroAtUnit(unit, hero)
     local retinue = bw.unitAliases[heroes[hero].retinue]
     local heroType = bw.unitAliases[hero]
     local taunt = heroes[hero].taunt
-    local retinueCount = 2
-    local costMultiplier = 300
+    local retinueCount = bw.barbarianHeroRetinueCount
+    local costMultiplier = bw.barbarianHeroBribeCostMultiplier
 
     if retinue == nil then
         civ.ui.text(strings.format("ERROR: %s missing from bw.unitAliases", heroes[hero].retinue))
@@ -354,7 +357,7 @@ local function emergeHeroAtUnit(unit, hero)
         local title = "Foreign Minister"
 
         local answer
-        if player.money > heroType.cost * costMultiplier then
+        if player.money >= heroType.cost * costMultiplier then
             answer = text.menu(choices, taunt, title, heroImage)
         else
             text.simple(taunt, title, heroImage)
@@ -388,11 +391,11 @@ discreteEvents.onActivateUnit(
             return -- skip veterans
         end
 
-        local too_many_per_tile = 6
-        local twin_unit_count = 1
+        local too_many_per_tile = bw.barbarianTwinMaxUnitPerTile
+        local twin_unit_count = bw.barbarianTwinAtATime
         local unit_or_units = unit.location.units()
         local w, h, maps = civ.getAtlasDimensions()
-        local twin_limit = math.ceil(math.sqrt(w * h) / 6)
+        local twin_limit = math.ceil(math.sqrt(w * h) / bw.barbarianTwinLimitDenominator)
         if not civ.isUnit(unit_or_units) and #unit_or_units >= too_many_per_tile then
             return -- don't multiply plentiful barbarians
         end
@@ -470,8 +473,8 @@ end)
 
 discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation,winnerVetStatus,loserVetStatus)
     local player = civ.getPlayerTribe()
-    local goldBonus = 25
-    local scienceBonus = 50
+    local goldBonus = bw.computerGoldBonusOnBarbKill
+    local scienceBonus = bw.computerScienceBonusOnBarbKill
     if winner.owner.id ~= 0 then
         return -- not barbarians
     end
@@ -490,6 +493,7 @@ discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation
         [bw.unitAliases.artillery.id] = bw.unitAliases.artillery,
         [bw.unitAliases.cannon.id] = bw.unitAliases.cannon,
         [bw.unitAliases.catapult.id] = bw.unitAliases.catapult,
+        [bw.unitAliases.diplomat.id] = bw.unitAliases.diplomat,
         [bw.unitAliases.howitzer.id] = bw.unitAliases.howitzer,
     }
     local victim = victims[loser.type.id]
@@ -587,10 +591,10 @@ discreteEvents.onCityTaken(
         if city.owner.id ~= 0 then
             return -- only for barbarians
         end
-        local reward_unit_count = 2
-        local heroMultipliyer = 2
-        local playerMultipliyer = 3
-        local too_many_per_tile = 3
+        local reward_unit_count = bw.barbarianCityCaptureReinforcements
+        local heroMultipliyer = bw.barbarianCityCaptureHeroMultiplier
+        local playerMultipliyer = bw.barbarianCityCapturePlayerMultiplier
+        local too_many_per_tile = bw.barbarianCityCaptureMaxAlreadyHere
         local unit_or_units = city.location.units()
         local new_unit_type
         if civ.isUnit(unit_or_units) then
@@ -619,11 +623,13 @@ discreteEvents.onCityTaken(
         if defender == civ.getPlayerTribe() then
             reward_unit_count = reward_unit_count * playerMultipliyer
         else
+            -- give the computer a diplomat to encourage some bribery
             local defenderCapital = civlua.findCapital(defender)
             if defenderCapital ~= nil then
                 gen.createUnit(bw.unitAliases.diplomat, defender, {defenderCapital.location}, {homeCity = nil})
             end
         end
+        reward_unit_count = math.min(reward_unit_count, bw.barbarianCityCaptureMaxReinforcements)
         local newUnits = gen.createUnit(new_unit_type, city.owner, {city.location}, {count = reward_unit_count, homeCity = nil, veteran = true})
         if #newUnits == 0 then
             text.simple(
@@ -637,7 +643,7 @@ discreteEvents.onCityTaken(
         end
         if heroMode then
             civ.addImprovement(city, bw.improvementAliases.courthouse)
-            city.owner.money = city.owner.money + 2000
+            city.owner.money = city.owner.money + bw.barbarianCityCaptureHeroGoldBonus
             text.simple(
                 string.format(
                     "%s TAKES %s! %s are devastated. %s orders the construction of a Courthouse. More %s flock to the red banner.",

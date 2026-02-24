@@ -116,6 +116,25 @@ bw.barbCityNames = {
     "Libertatia",
 }
 
+bw.barbarianCityCaptureReinforcements = 2
+bw.barbarianCityCaptureHeroGoldBonus = 2000
+bw.barbarianCityCaptureHeroMultiplier = 2
+bw.barbarianCityCapturePlayerMultiplier = 2
+bw.barbarianCityCaptureMaxAlreadyHere = 2
+bw.barbarianCityCaptureMaxReinforcements = 5
+
+bw.barbarianHeroRetinueCount = 2
+bw.barbarianHeroBribeCostMultiplier = 300
+
+bw.barbarianTwinMaxUnitPerTile = 2
+bw.barbarianTwinAtATime = 1
+bw.barbarianTwinLimitDenominator = 6
+
+bw.computerGoldBonusOnBarbKill = 25
+bw.computerScienceBonusOnBarbKill = 50
+
+bw.maxCapitalSizeForGrowthBugFix = 5
+
 text.registerUnitsImage("Units.bmp")
 -- ---@field bw.imageTable bw.imageTable
 -- bw.imageTable = {
