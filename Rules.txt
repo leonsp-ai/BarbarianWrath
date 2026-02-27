@@ -710,7 +710,7 @@ Ramesses,     Hatshepsut,          1, 4, 0, Egyptians,   Egyptian,    0,  0,  1,
 Abe Lincoln,  E. Roosevelt,        0, 5, 1, Americans,   American,   -1,  0,  1,     4, Reverend, Reverend, 5, Speaker, Speaker
 Genghis Khan, Bortei,              0, 6, 0, Mongols,     Mongol,      1,  1, -1,
 Mohandas Gandhi,Indira Gandhi,     0, 7, 2, Indians,     Indian,     -1, -1,  0,     2, Maharaja, Maharaja,
-Lenin,        Catherine the Great, 1, 1, 3, Russians,    Russian,     1,  0, -1,     2, Czar, Czarina, 4, Patriarch, Matriarch
+Rurik,        Olha,                1, 1, 3, Rus,         Ruthenian,   1,  0, -1,     1, Knyaz, Knyahynya, 2, Velykyy Knyaz, Velyka Knyahynya
 Shaka,        Mkabi,               0, 2, 0, Zulus,       Zulu,        1,  0,  0,
 Louis XIV,    Alienor,             0, 3, 3, French,      French,      1,  1,  1,     4, Archbishop, Archbishop, 6, Premier, Premier
 Montezuma,    Tlapalizquixochtzin, 0, 4, 0, Aztecs,      Aztec,       0, -1,  1,

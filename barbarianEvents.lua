@@ -527,6 +527,31 @@ local function determineBarbCityName()
     return barbCityName
 end
 
+local function canBuildCityHere(location)
+    local buildable = {
+        Drt = true,
+        Pln = true,
+        Grs = true,
+        For = true,
+        Hil = true,
+        Tun = true,
+        Swa = true,
+        Jun = true,
+    }
+    if not buildable[location.baseTerrain.abbrev] then
+        return false
+    end
+    if location.city then
+        return false
+    end
+    for _i, adjacent in ipairs(gen.getAdjacentTiles(location)) do
+        if adjacent.city then
+            return false
+        end
+    end
+    return true
+end
+
 discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation,winnerVetStatus,loserVetStatus)
     if winner.owner.id ~= 0 then
         return -- not barbarians
@@ -541,23 +566,8 @@ discreteEvents.onUnitKilled(function(loser,winner,aggressor,victim,loserLocation
     if victim == nil then
         return -- not a settler
     end
-    local buildable = {
-        Drt = true,
-        Pln = true,
-        Grs = true,
-        For = true,
-        Hil = true,
-        Tun = true,
-        Swa = true,
-        Jun = true,
-    }
-    if not buildable[winner.location.baseTerrain.abbrev] then
-        return -- can't build a city here
-    end
-    for _i, adjacent in ipairs(gen.getAdjacentTiles(winner.location)) do
-        if adjacent.city then
-            return -- adjacent to an existing city
-        end
+    if not canBuildCityHere(winner.location) then
+        return -- not buildable
     end
     local city = civ.createCity(winner.owner, winner.location)
     if city == nil then

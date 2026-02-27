@@ -117,7 +117,7 @@ bw.barbCityNames = {
 }
 
 bw.barbarianCityCaptureReinforcements = 2
-bw.barbarianCityCaptureHeroGoldBonus = 2000
+bw.barbarianCityCaptureHeroGoldBonus = 250
 bw.barbarianCityCaptureHeroMultiplier = 2
 bw.barbarianCityCapturePlayerMultiplier = 2
 bw.barbarianCityCaptureMaxAlreadyHere = 2

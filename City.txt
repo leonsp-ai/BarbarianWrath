@@ -394,6 +394,45 @@ Indus
 Ganges
 @STOP
 
+@RUS
+Kyiv
+Chernihiv
+Pereyaslavl
+Halych
+Volodymyr
+Smolensk
+Polotsk
+Novhorod
+Rostov
+Suzdal
+Murom
+Ryazan
+Belaya Vezha
+Oleshia
+Chersonesos
+Tmutarakan
+Bilhorod
+Kiliya
+Kalius
+Terebovl
+Rodka
+Peremyshl
+Holm
+Lublin
+Luboml
+Dorogochyn
+Grodno
+Minsk
+Turov
+Stepan
+Iskorosten
+Hubyn
+Horchevsk
+Pskov
+Vladimir
+Staraya Ladoha
+@STOP
+
 @RUSSIANS
 Moscow
 St. Petersburg

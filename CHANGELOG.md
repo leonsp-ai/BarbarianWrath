@@ -1,8 +1,14 @@
 ## 2.2.0
 
 - Cities founded by Barbarians now have their own city names.
+- Barbarians can now abduct diplomats.
+- Bundled the original game's world maps and Kull's Ancient Empires map with the mod.
+- Replaced Russians with Kyivan Rus.
 - Fix: Gold will go to computer players for defeating barbarians, not vice versa.
 - Fix: The first city founded by Barbarians will not receive a Palace.
+- Fix: Barbarians cannot found cities on top of other cities.
+- Nerf: Reduced the twinning rate for Barbarian units.
+- Nerf: Reduced the Barbarian gold bonus for city capture to keep them bribable.
 
 ## 2.1.0
 
